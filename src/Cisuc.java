@@ -38,7 +38,7 @@ class Cisuc {
         // Ask for username and password
         Scanner scanner = new Scanner(System.in);
         System.out.println();
-        System.out.print("Username: ");
+        System.out.print("Ufgdgsername: ");
         String nome = scanner.nextLine();
         System.out.print("Password: ");
         String password = scanner.nextLine();
