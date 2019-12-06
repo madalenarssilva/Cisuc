@@ -16,6 +16,10 @@ public class Cisuc {
 
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Projeto> projetos;
+    //Array com todos os docentes.
+    private ArrayList<Docente> docentes = new ArrayList<>();
+    //Array com todos os bolseiros.
+    private ArrayList<Bolseiro> bolseiros = new ArrayList<>();
     private String nome;
     private String password;
     private boolean exitMenu = false;
@@ -169,8 +173,6 @@ public class Cisuc {
                     FileReader fr = new FileReader(fich_texto);
                     BufferedReader br = new BufferedReader(fr);
 
-                    ArrayList<Docente> docentes = new ArrayList<>();
-
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
                         System.out.println(line);
@@ -188,9 +190,10 @@ public class Cisuc {
                                 ArrayList<Docente> orientadores_lic = new ArrayList<>();
 
                                 //Obter objetos Docente dos orientadores.
-                                for (String orientador : s[5].split(";")) {
+                                for (String orientador : s[5].split(",")) {
+                                    int numOrientador = Integer.parseInt(orientador);
                                     for (Docente doc : docentes) {
-                                        if (doc.getNome().equals(orientador))
+                                        if (doc.getNumeroMecanografico() == numOrientador)
                                             orientadores_lic.add(doc);
                                     }
                                 }
@@ -202,9 +205,10 @@ public class Cisuc {
                                 ArrayList<Docente> orientadores_mestre = new ArrayList<>();
 
                                 //Obter objetos Docente dos orientadores.
-                                for (String orientador : s[5].split(";")) {
+                                for (String orientador : s[5].split(",")) {
+                                    int numOrientador = Integer.parseInt(orientador);
                                     for (Docente doc : docentes) {
-                                        if (doc.getNome().equals(orientador))
+                                        if (doc.getNumeroMecanografico() == numOrientador)
                                             orientadores_mestre.add(doc);
                                     }
                                 }
@@ -245,8 +249,43 @@ public class Cisuc {
         File fich_objetos = new File("projetos");
         File fich_texto = new File("projetos.txt");
 
+        try {
+            FileInputStream f = new FileInputStream(fich_objetos);
+            ObjectInputStream o = new ObjectInputStream(f);
+            projetos_lidos = (ArrayList<Projeto>) o.readObject();
+
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            //Se o ficheiro de objetos não existir, tentar ler ficheiro de texto.
+            if (fich_texto.exists() && fich_texto.isFile()) { //Verificar se o ficheiro de texto existe.
+                try {
+                    FileReader fr = new FileReader(fich_texto);
+                    BufferedReader br = new BufferedReader(fr);
+
+                    String line;
+                    while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
+                        System.out.println(line);
+                        String[] s = line.split("|"); //Separar cada linha nos vários campos.
+
+                        Projeto projeto = new Projeto(s[0], s[1], s[2], s[3]);
+                        projetos_lidos.add(projeto);
+                    }
+                    br.close();
+                } catch (IOException ex) {
+                    System.out.println("Erro a ler ficheiro de texto.");
+                }
+            } else {
+                System.out.println("Não foram encontrados ficheiros.");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return projetos_lidos;
     }
+
+    public ArrayList<Projeto> lerFicheirosTarefas() {}
 
     //                                          CRIAR PROJETOS E PESSOAS
 

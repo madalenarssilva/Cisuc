@@ -2,10 +2,10 @@ DOCENTE|Rui Pereira|ruiper@gmail.com|123|Desenvolvimento de Software
 DOCENTE|Beatriz Hipólito|bhipolito@gmail.com|555|Sistemas Operativos
 DOCENTE|Miguel Borges|mb@gmail.com|590|Sistemas Operativos
 DOCENTE|Helena Machado|helenartmachado@hotmail.com|11|Teoria da Informação
-LICENCIADO|Ana Luísa Martins|almartins@hotmail.com|2017-09-05|2019-09-05|Rui Pereira
-LICENCIADO|Carlos Ferrer|ferrer_carlos@gmail.com|2016-11-21|2019-12-20|Rui Pereira
-MESTRE|Agostinho Mota|agosti@hotmail.com|2018-03-04|2019-02-05|Beatriz Hipólito,Rui Pereira
+LICENCIADO|Ana Luísa Martins|almartins@hotmail.com|2017-09-05|2019-09-05|123
+LICENCIADO|Carlos Ferrer|ferrer_carlos@gmail.com|2016-11-21|2019-12-20|123
+MESTRE|Agostinho Mota|agosti@hotmail.com|2018-03-04|2019-02-05|555,123
 DOUTORADO|Ricardo Nunes|ricknunes@gmail.com|2015-02-02|2020-02-02
-MESTRE|Tiago Fonseca|tfonseca@gmail.com|2017-01-11|2020-11-01|Miguel Borges,Beatriz Hipólito
-MESTRE|Carolina Lencastre|carolencastre@gmail.com|2019-04-11|2020-06-19|Rui Pereira
+MESTRE|Tiago Fonseca|tfonseca@gmail.com|2017-01-11|2020-11-01|590,555
+MESTRE|Carolina Lencastre|carolencastre@gmail.com|2019-04-11|2020-06-19|123
 
