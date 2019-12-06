@@ -37,12 +37,26 @@ class Projeto {
      * @param dataInicio
      * @param dataFim
      */
-    public Projeto(String nome, String acronimo, Docente ip, String dataInicio,String dataFim) {
+    public Projeto(String nome, String acronimo, Docente ip, String dataInicio, String dataFim) {
         this.nome = nome;
         this.acronimo = acronimo;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.ip = ip;
+    }
+
+    /**
+     * Constructor
+     * @param nome
+     * @param acronimo
+     * @param dataInicio
+     * @param dataFim
+     */
+    public Projeto(String nome, String acronimo, String dataInicio, String dataFim) {
+        this.nome = nome;
+        this.acronimo = acronimo;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
     }
 
     /**

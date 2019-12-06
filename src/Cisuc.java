@@ -284,7 +284,9 @@ public class Cisuc {
         return projetos_lidos;
     }
 
-    public ArrayList<Projeto> lerFicheirosTarefas() {}
+    public ArrayList<Projeto> lerFicheirosTarefas() {
+        return null;
+    }
 
     //                                          CRIAR PROJETOS E PESSOAS
 
