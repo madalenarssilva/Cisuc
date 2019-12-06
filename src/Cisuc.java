@@ -31,6 +31,8 @@ public class Cisuc {
 
     Cisuc() {
 
+        System.out.print("Merge");
+
         System.out.println("-----------Inicio----------");
         pessoas = new ArrayList<Pessoa>();
         projetos = new ArrayList<Projeto>();
