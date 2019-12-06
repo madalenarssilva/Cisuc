@@ -291,6 +291,7 @@ public class Cisuc {
                 switch (opcaoB) {
                     case 1:
                         System.out.println("Adicione Orientador: ");
+
                         // Lista de todos os docentes
                         ArrayList<Docente> docentes = new ArrayList<>();
 

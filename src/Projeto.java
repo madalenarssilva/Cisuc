@@ -26,7 +26,7 @@ class Projeto {
      */
 
     Projeto() {
-        pessoasEnvolvidas = new ArrayList<>();
+        pessoasEnvolvidas = new ArrayList<Pessoa>();
         tarefas = new ArrayList<Tarefa>();
     }
 
