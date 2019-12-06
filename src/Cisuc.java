@@ -141,11 +141,11 @@ public class Cisuc {
     public ArrayList<Pessoa> lerFicheirosPessoas() {
 
         /**
-         * Method to read people info from file and use it to create instances of object Pessoa.
+         * Method to read people's info from file and use it to create instances of object Pessoa.
          * Docentes appear in the top of the file so that we can get Licenciados' and Mestres' orientadores.
-         * If object file exists, that is the file that's read. Otherwise, text file is read.
+         * If objects file exists, that is the file that's read. Otherwise, text file is read.
          *
-         * @return ArrayList of the objects Pessoa of people read from file.
+         * @return ArrayList of objects Pessoa, representing the people read from file.
          */
 
         //Array para guardar todas as pessoas lidas do ficheiro.
@@ -228,6 +228,23 @@ public class Cisuc {
             e.printStackTrace();
         }
         return pessoas_lidas;
+    }
+
+    public ArrayList<Projeto> lerFicheirosProjetos() {
+
+        /**
+         * Method to read projects' info from file and use it to create instances of object Projeto.
+         * If objects file exists, that is the file that's read. Otherwise, text file is read.
+         *
+         * @return ArrayList of objects Projeto, representing the projects read from file.
+         */
+
+        //Array para guardar todas as pessoas lidas do ficheiro.
+        ArrayList<Projeto> projetos_lidos = new ArrayList<>();
+        File fich_objetos = new File("projetos");
+        File fich_texto = new File("projetos.txt");
+
+        return projetos_lidos;
     }
 
     //                                          CRIAR PROJETOS E PESSOAS
