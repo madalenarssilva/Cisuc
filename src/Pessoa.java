@@ -76,4 +76,8 @@ abstract class Pessoa {
 
     public abstract long calculaCusto();
 
+    public String toString() {
+        return "Nome:" + nome + "\nMail:" + mail;
+    }
 }
+

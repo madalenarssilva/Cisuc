@@ -56,7 +56,6 @@ public class Cisuc {
         System.exit(0);
 
         System.out.println("-----------Fim----------");
-
     }
 
     public void Menu() {
@@ -296,12 +295,18 @@ public class Cisuc {
         String nome = scanner.nextLine();
         System.out.println("Acrónimo: ");
         String acronimo = scanner.nextLine();
+        System.out.println("Investigador principal: ");
+        ArrayList<Docente> docentes = new ArrayList();
+        imprimirDocentes(docentes);
+        System.out.println("Escolha o Investigador principal.");
+        int n= scanner.nextInt();
+        Docente ip = docentes.get(n-1);
         System.out.println("DataInicio: ");
         String dataInicioP = scanner.nextLine();
         System.out.println("DataFim: ");
         String dataFimP = scanner.nextLine();
 
-        Projeto p = new Projeto(nome, acronimo, dataInicioP, dataFimP);
+        Projeto p = new Projeto(nome, acronimo, ip, dataInicioP, dataFimP);
         projetos.add(p);
     }
 
@@ -441,18 +446,30 @@ public class Cisuc {
          * @param ArrayList of docentes
          */
 
-        // Imprimir lista de todos os docentes para o utilizador escolher
-        for (Pessoa p : pessoas) {
-            // Ver se é Docente ou Bolseiro
-            if (p.getNumeroMecanografico() > 0) {
-                int i = 1;
-                // Imprimir todos os docentes
-                System.out.println(i + "." + p.getNome());
-                Docente dc = (Docente) p;
-                docentes.add(dc);
-                i++;
-            }
-        }
+         if(pessoas.size() != 0) {
+             // Imprimir lista de todos os docentes para o utilizador escolher
+             for (Pessoa p : pessoas) {
+                 // Ver se é Docente ou Bolseiro
+                 if (p.getNumeroMecanografico() > 0) {
+                     int i = 1;
+                     // Imprimir todos os docentes
+                     System.out.println(i + "." + p.getNome());
+                     Docente dc = (Docente) p;
+                     docentes.add(dc);
+                     i++;
+                 }
+                 else{
+                     //Não existem docentes
+                     System.out.println("Insira Docentes na aplicação");
+                     Menu();
+                 }
+             }
+         }
+         else{
+             //A lista das pessoas está vazia
+             System.out.println("Insira Pessoas na aplicação.");
+             Menu();
+         }
     }
 }
 

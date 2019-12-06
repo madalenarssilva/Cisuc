@@ -9,7 +9,9 @@ class Licenciado extends Bolseiro{
     /**
      * Empty Constructor
      */
-    Licenciado(){}
+    Licenciado(){
+       ArrayList<Docente> orientadores = new ArrayList<>();
+    }
 
     /**
      * Constructor

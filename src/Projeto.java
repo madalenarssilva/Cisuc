@@ -26,7 +26,7 @@ class Projeto {
      */
 
     Projeto() {
-        pessoasEnvolvidas = new ArrayList<>();
+        pessoasEnvolvidas = new ArrayList<Pessoa>();
         tarefas = new ArrayList<Tarefa>();
     }
 
@@ -37,11 +37,12 @@ class Projeto {
      * @param dataInicio
      * @param dataFim
      */
-    public Projeto(String nome, String acronimo, String dataInicio,String dataFim) {
+    public Projeto(String nome, String acronimo, Docente ip, String dataInicio,String dataFim) {
         this.nome = nome;
         this.acronimo = acronimo;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.ip = ip;
     }
 
     /**
@@ -110,7 +111,23 @@ class Projeto {
     }
 
     /**
-     * Method to calculate the duration of the project based on its beggining date and its ending date.
+     * Get Ip
+     * @return ip
+     */
+    public Docente getIp() {
+        return ip;
+    }
+
+    /**
+     * Set Ip
+     * @param ip
+     */
+    public void setIp(Docente ip) {
+        this.ip = ip;
+    }
+
+    /**
+     * Method to calculate the duration of the project based on its beginning date and its ending date.
      * @param dataInicio
      * @param dataFim
      * @return duracao
