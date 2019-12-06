@@ -6,12 +6,15 @@ abstract class Pessoa {
 
     private String nome;
     private String mail;
+    private int numeroMecanografico;
 
     /**
-     * Empty Constructor
+     * Constructor inicializing numeroMecanografico.
      */
 
-    Pessoa() { }
+    Pessoa() {
+        numeroMecanografico = 0;
+    }
 
     /**
      * Constructor
@@ -21,6 +24,22 @@ abstract class Pessoa {
     public Pessoa(String nome, String mail) {
         this.nome = nome;
         this.mail = mail;
+    }
+
+    /**
+     * Get numeroMecanografic
+     * @return numeroMecanografico
+     */
+    public int getNumeroMecanografico() {
+        return numeroMecanografico;
+    }
+
+    /**
+     * Set numeroMecanografico
+     * @param numeroMecanografico
+     */
+    public void setNumeroMecanografico(int numeroMecanografico){
+        this.numeroMecanografico = numeroMecanografico;
     }
 
     /**
