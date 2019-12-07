@@ -4,11 +4,11 @@
  * We can also calculate the duration of the task.
  */
 
-class Tarefa {
+abstract class Tarefa {
     private String dataInicio;
     private int percentagemConclusao;
     private String dataFim;
-    private String responsavel;
+    private Pessoa responsavel;
 
     /**
      * Empty Constructor
@@ -23,11 +23,17 @@ class Tarefa {
      * @param responsavel
      *
      */
-    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, String responsavel) {
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
         this.dataInicio = dataInicio;
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
         this.responsavel = responsavel;
+    }
+
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim) {
+        this.dataInicio = dataInicio;
+        this.percentagemConclusao = percentagemConclusao;
+        this.dataFim = dataFim;
     }
 
     /**
@@ -82,7 +88,7 @@ class Tarefa {
      * Get Responsable
      * @return responsable
      */
-    public String getResponsavel() {
+    public Pessoa getResponsavel() {
         return responsavel;
     }
 
@@ -90,7 +96,7 @@ class Tarefa {
      * Set Responsable
      * @param responsavel
      */
-    public void setResponsavel(String responsavel) {
+    public void setResponsavel(Pessoa responsavel) {
         this.responsavel = responsavel;
     }
 
@@ -105,5 +111,5 @@ class Tarefa {
         return duracao;
     }
 
-
+    public abstract long calculaTaxa();
 }

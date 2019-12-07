@@ -222,11 +222,12 @@ public class Cisuc {
                         }
                     }
                     br.close();
+
                 } catch (IOException ex) {
-                    System.out.println("Erro a ler ficheiro de texto.");
+                    System.out.println("Erro a ler ficheiro de texto das pessoas.");
                 }
             } else {
-                System.out.println("Não foram encontrados ficheiros.");
+                System.out.println("Não foram encontrados ficheiros de pessoas.");
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -243,7 +244,7 @@ public class Cisuc {
          * @return ArrayList of objects Projeto, representing the projects read from file.
          */
 
-        //Array para guardar todas as pessoas lidas do ficheiro.
+        //Array para guardar todas os projetos lidos do ficheiro.
         ArrayList<Projeto> projetos_lidos = new ArrayList<>();
         File fich_objetos = new File("projetos");
         File fich_texto = new File("projetos.txt");
@@ -273,10 +274,10 @@ public class Cisuc {
                     }
                     br.close();
                 } catch (IOException ex) {
-                    System.out.println("Erro a ler ficheiro de texto.");
+                    System.out.println("Erro a ler ficheiro de texto dos projetos.");
                 }
             } else {
-                System.out.println("Não foram encontrados ficheiros.");
+                System.out.println("Não foram encontrados ficheiros de projetos.");
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -284,8 +285,118 @@ public class Cisuc {
         return projetos_lidos;
     }
 
-    public ArrayList<Projeto> lerFicheirosTarefas() {
-        return null;
+    public ArrayList<Tarefa> lerFicheirosTarefas() {
+
+        /**
+         * Method to read tasks' info from file and use it to create instances of object Tarefa.
+         * If objects file exists, that is the file that's read. Otherwise, text file is read.
+         *
+         * @return ArrayList of objects Tarefa, representing the tasks read from file.
+         */
+
+        //Array para guardar todas as tarefas lidas do ficheiro.
+        ArrayList<Tarefa> tarefas_lidas = new ArrayList<>();
+        File fich_objetos = new File("tarefas");
+        File fich_texto = new File("tarefas.txt");
+
+        try {
+            FileInputStream f = new FileInputStream(fich_objetos);
+            ObjectInputStream o = new ObjectInputStream(f);
+            tarefas_lidas = (ArrayList<Tarefa>) o.readObject();
+
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            //Se o ficheiro de objetos não existir, tentar ler ficheiro de texto.
+            if (fich_texto.exists() && fich_texto.isFile()) { //Verificar se o ficheiro de texto existe.
+                try {
+                    FileReader fr = new FileReader(fich_texto);
+                    BufferedReader br = new BufferedReader(fr);
+
+                    String line;
+                    while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
+                        System.out.println(line);
+                        String[] s = line.split("|"); //Separar cada linha nos vários campos.
+
+                        switch (s[0]) {
+                            case "DESIGN":
+                                Design design = new Design();
+                                tarefas_lidas.add(design);
+                                break;
+                            case "DESENVOLVIMENTO":
+                                Desenvolvimento desenvolvimento = new Desenvolvimento();
+                                tarefas_lidas.add(desenvolvimento);
+                                break;
+                            case "DOCUMENTACAO":
+                                Documentacao documentacao = new Documentacao();
+                                tarefas_lidas.add(documentacao);
+                                break;
+                        }
+                    }
+                    br.close();
+                } catch (IOException ex) {
+                    System.out.println("Erro a ler ficheiro de texto das tarefas.");
+                }
+            } else {
+                System.out.println("Não foram encontrados ficheiros de tarefas.");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return tarefas_lidas;
+    }
+
+    public void escreverFicheirosObjetos(ArrayList<Pessoa> pessoas_lidas, ArrayList<Projeto> projetos_lidos, ArrayList<Tarefa> tarefas_lidas) {
+
+        /**
+         * Method used to write all of the read information from text files to object files pessoas, projetos and locais.
+         */
+
+        //Ficheiro das Pessoas.
+        try {
+            File f1 = new File("pessoas");
+            FileOutputStream f = new FileOutputStream(f1);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            o.writeObject(pessoas_lidas);
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro de objetos das pessoas não encontrado.");
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever ficheiro de objetos das pessoas"); }
+
+        //Ficheiro dos Projetos.
+        try {
+            File f1 = new File("projetos");
+            FileOutputStream f = new FileOutputStream(f1);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            o.writeObject(projetos_lidos);
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro de objetos dos projetos não encontrado.");
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever ficheiro de objetos dos projetos"); }
+
+        //Ficheiro das Tarefas.
+        try {
+            File f1 = new File("tarefas");
+            FileOutputStream f = new FileOutputStream(f1);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            o.writeObject(tarefas_lidas);
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro de objetos das tarefas não encontrado.");
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever ficheiro de objetos das tarefas"); }
     }
 
     //                                          CRIAR PROJETOS E PESSOAS
