@@ -1,7 +1,6 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.*;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -79,7 +78,6 @@ public class Cisuc {
         System.out.println("5. Sair");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
-
         switch (opcao) {
             case 1:
                 criarProjetos();
@@ -451,11 +449,12 @@ public class Cisuc {
         }
     }
 
-    //                                          CRIAR PROJETOS E PESSOAS
+    //                                           CRIAR PROJETOS E PESSOAS
 
     public void criarProjetos() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Criação do Projeto------");
+        // NOME
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
         // Não aceitar inputs vazios
@@ -464,7 +463,21 @@ public class Cisuc {
             System.out.println("Nome: ");
             nome = scanner.nextLine();
         }
+        // Não aceitar nomes repetidos
+        Boolean flag= true;
+            for (Projeto p : projetos) {
+                while(flag) {
+                if (p.getNome().equals(nome)) {
+                    System.out.println("Nome já existente. Introduza outro.");
+                    System.out.println("Nome: ");
+                    nome = scanner.nextLine();
+                } else {
+                    flag = false;
+                }
+            }
+        }
 
+        // ACRONIMO
         System.out.println("Acrónimo: ");
         String acronimo = scanner.nextLine();
         // Não aceitar inputs vazios
@@ -473,21 +486,38 @@ public class Cisuc {
             System.out.println("Acrónimo: ");
             acronimo = scanner.nextLine();
         }
+        // Não aceitar acronimos repetidos
+        Boolean flagA= true;
+        for (Projeto p : projetos) {
+            while(flagA) {
+                if (p.getNome().equals(nome)) {
+                    System.out.println("Acronimo já existente. Introduza outro.");
+                    System.out.println("Acrónimo: ");
+                    acronimo = scanner.nextLine();
+                } else {
+                    flagA = false;
+                }
+            }
+        }
+
+        // DATA INICIO
         System.out.println("DataInicio (yyyy-MM-dd): ");
         String dataInicio = scanner.nextLine();
         // Não aceitar inputs vazios
         while(dataInicio.isEmpty()){
             System.out.println("Input vazio");
-            System.out.println("Data início: ");
+            System.out.println("DataInicio (yyyy-MM-dd): ");
             dataInicio = scanner.nextLine();
         }
+
+        // DATA FIM
         System.out.println("DataFim (yyyy-MM-dd): ");
         String dataFim = scanner.nextLine();
         // Não aceitar inputs vazios
-        while(acronimo.isEmpty()){
+        while(dataFim.isEmpty()){
             System.out.println("Input vazio");
-            System.out.println("Acrónimo: ");
-            acronimo = scanner.nextLine();
+            System.out.println("DataFim (yyyy-MM-dd): ");
+            dataFim = scanner.nextLine();
         }
 
         Projeto p = new Projeto(nome, acronimo, dataInicio, dataFim);
@@ -502,7 +532,7 @@ public class Cisuc {
 
     public void criarPessoas() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("-----Criação Pessoas------");
+        System.out.println("-----Criação da Pessoa------");
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
         System.out.println("Mail: ");
