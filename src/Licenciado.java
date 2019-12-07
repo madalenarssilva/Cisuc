@@ -7,13 +7,12 @@ import java.util.ArrayList;
  */
 public class Licenciado extends Bolseiro{
     private ArrayList<Docente> orientadores;
-    private int custo;
+    private int custo = 500;
 
     /**
      * Empty Constructor
      */
     Licenciado(){
-        custo = 500;
         ArrayList<Docente> orientadores;
     }
 
@@ -61,8 +60,8 @@ public class Licenciado extends Bolseiro{
 
     @Override
     public String toString() {
-        return super.toString() + "Licenciado{" +
-                "orientadores=" + orientadores +
-                '}';
+        return super.toString() + "\nLicenciado:" +
+                "\norientadores=" + orientadores +
+                "\nCusto:" + custo;
     }
 }

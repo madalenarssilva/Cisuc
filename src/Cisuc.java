@@ -587,20 +587,40 @@ public class Cisuc {
         int opcao = scanner.nextInt();
         switch (opcao) {
             case 1:
-                System.out.print("Numero mecanográfico: ");
+                System.out.println("Numero mecanográfico: ");
                 int numMecanografico = scanner.nextInt();
-                System.out.print("Área Investigação: ");
-                String areaInvestigacao = scanner.nextLine();
-
-                Docente d = new Docente(nome, mail, numMecanografico, areaInvestigacao);
+                while(numMecanografico == 0){
+                    System.out.println("Numero mecanográfico: ");
+                    numMecanografico = scanner.nextInt();
+                }
+                System.out.println("Área Investigação: ");
+                String aI = scanner.next();
+                // Não aceitar inputs vazios
+                while(aI.isEmpty()){
+                    System.out.println("Input vazio");
+                    System.out.println("Área Investigação: ");
+                    aI = scanner.next();
+                }
+                Docente d = new Docente(nome, mail, numMecanografico, aI);
                 pessoas.add(d);
                 break;
             case 2:
                 System.out.println("Data inicio: ");
-                String dataInicio = scanner.nextLine();
+                String dataInicio = scanner.next();
+                // Não aceitar input vazio
+                while(dataInicio.isEmpty()){
+                    System.out.println("Input vazio");
+                    System.out.println("Data inicio: ");
+                    dataInicio = scanner.next();
+                }
                 System.out.println("Data fim: ");
-                String dataFim = scanner.nextLine();
-
+                String dataFim = scanner.next();
+                // Não aceitar input vazio
+                while(dataFim.isEmpty()){
+                    System.out.println("Input vazio");
+                    System.out.println("Data fim: ");
+                    dataFim = scanner.next();
+                }
                 System.out.println("Escolha entre as opções:");
                 System.out.println("1.Licenciatura");
                 System.out.println("2.Mestrado");

@@ -1,7 +1,7 @@
 /**
  * <h1>Class Docente</h1>
  */
-class Docente extends Pessoa {
+public class Docente extends Pessoa {
     private int numeroMecanografico;
     private String areaInvestigacao;
 
@@ -74,9 +74,8 @@ class Docente extends Pessoa {
 
     @Override
     public String toString() {
-        return super.toString() + "Docente{" +
-                "numeroMecanografico=" + numeroMecanografico +
-                ", areaInvestigacao='" + areaInvestigacao + '\'' +
-                '}';
+        return super.toString() + "\nDocente:" +
+                "\nnumeroMecanografico:" + numeroMecanografico +
+                "\nareaInvestigacao:'" + areaInvestigacao;
     }
 }

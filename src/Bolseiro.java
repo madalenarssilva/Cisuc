@@ -1,6 +1,3 @@
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
 /**
  * <h1>Class Bolseiro</h1>
  */
@@ -11,7 +8,8 @@ public abstract class Bolseiro extends Pessoa{
     /**
      * Empty Constructor
      */
-    Bolseiro(){}
+    Bolseiro(){
+    }
 
     /**
      * Constructor
@@ -61,9 +59,8 @@ public abstract class Bolseiro extends Pessoa{
 
     @Override
     public String toString() {
-        return super.toString() + "Bolseiro{" +
-                "dataInicio='" + dataInicio + '\'' +
-                ", dataFim='" + dataFim + '\'' +
-                '}';
+        return super.toString() + "\nBolseiro:" +
+                "\ndataInicio:" + dataInicio +
+                "\ndataFim:" + dataFim;
     }
 }
