@@ -61,7 +61,7 @@ public abstract class Bolseiro extends Pessoa{
 
     @Override
     public String toString() {
-        return "Bolseiro{" +
+        return super.toString() + "Bolseiro{" +
                 "dataInicio='" + dataInicio + '\'' +
                 ", dataFim='" + dataFim + '\'' +
                 '}';

@@ -35,6 +35,9 @@ public class Doutorado extends Bolseiro{
         return duracao_bolsa*custo;
     }
 
-
+    @Override
+    public String toString() {
+        return super.toString() + "Doutorado" + "Custo:" + custo;
+    }
 }
 

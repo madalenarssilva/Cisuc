@@ -1,17 +1,19 @@
 /**
  * <h1>Class Docente</h1>
  */
-class Docente extends Pessoa{
+class Docente extends Pessoa {
     private int numeroMecanografico;
     private String areaInvestigacao;
 
     /**
      * Empty Constructor
      */
-    Docente(){}
+    Docente() {
+    }
 
     /**
      * Constructor
+     *
      * @param nome
      * @param mail
      * @param numeroMecanografico
@@ -25,6 +27,7 @@ class Docente extends Pessoa{
 
     /**
      * Get numeroMecanografico
+     *
      * @return numeroMecanografico
      */
     public int getNumeroMecanografico() {
@@ -33,6 +36,7 @@ class Docente extends Pessoa{
 
     /**
      * Set numeroMecanografico
+     *
      * @param numeroMecanografico
      */
     public void setNumeroMecanografico(int numeroMecanografico) {
@@ -41,6 +45,7 @@ class Docente extends Pessoa{
 
     /**
      * Get areaInvestigacao
+     *
      * @return areaInvestigacao
      */
     public String getAreaInvestigacao() {
@@ -49,26 +54,29 @@ class Docente extends Pessoa{
 
     /**
      * Set areaInvestigacao
+     *
      * @param areaInvestigacao
      */
     public void setAreaInvestigacao(String areaInvestigacao) {
         this.areaInvestigacao = areaInvestigacao;
     }
 
+    /**
+     * Method that calculates the cost for the project of a Docente.
+     *
+     * @return total cost for the project
+     */
+
+
+    public double calculaCusto() {
+        return 0;
+    }
+
     @Override
     public String toString() {
-        return "Docente{" +
+        return super.toString() + "Docente{" +
                 "numeroMecanografico=" + numeroMecanografico +
                 ", areaInvestigacao='" + areaInvestigacao + '\'' +
                 '}';
     }
-
-    /**
-     * Method that calculates the cost for the project of a Docente.
-     * @return total cost for the project
-     */
-    public double calculaCusto() {
-        return 0;
-    }
 }
-

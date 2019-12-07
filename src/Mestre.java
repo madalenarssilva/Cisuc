@@ -62,7 +62,7 @@ public class Mestre extends Bolseiro{
 
     @Override
     public String toString() {
-        return "Mestre{" +
+        return super.toString() + "Mestre{" +
                 "orientadores=" + orientadores +
                 '}';
     }
