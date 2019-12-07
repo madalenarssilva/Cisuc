@@ -33,18 +33,29 @@ public class Projeto {
      * Constructor
      * @param nome
      * @param acronimo
+     * @param ip
      * @param dataInicio
      * @param dataFim
+     * @param pessoasEnvolvidas
      */
-    public Projeto(String nome, String acronimo, Docente ip, String dataInicio, String dataFim) {
+    public Projeto(String nome, String acronimo, Docente ip, String dataInicio, String dataFim, ArrayList<Pessoa> pessoasEnvolvidas) {
         this.nome = nome;
         this.acronimo = acronimo;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.ip = ip;
+        this.pessoasEnvolvidas = pessoasEnvolvidas;
     }
 
-    public Projeto(String nome, String acronimo, String dataInicio, String dataFim) {
+    /**
+     * Constructor
+     * @param nome
+     * @param acronimo
+     * @param ip
+     * @param dataInicio
+     * @param dataFim
+     */
+    public Projeto(String nome, String acronimo, Docente ip, String dataInicio, String dataFim) {
         this.nome = nome;
         this.acronimo = acronimo;
         this.dataInicio = dataInicio;
@@ -130,6 +141,38 @@ public class Projeto {
      */
     public void setIp(Docente ip) {
         this.ip = ip;
+    }
+
+    /**
+     * Get Pessoas Envolvidas
+     * @return pessoasEnvolvidas
+     */
+    public ArrayList<Pessoa> getPessoasEnvolvidas() {
+        return pessoasEnvolvidas;
+    }
+
+    /**
+     * Set Pessoas Envolvidas
+     * @param pessoasEnvolvidas
+     */
+    public void setPessoasEnvolvidas(ArrayList<Pessoa> pessoasEnvolvidas) {
+        this.pessoasEnvolvidas = pessoasEnvolvidas;
+    }
+
+    /**
+     * Get Tarefas
+     * @return tarefas
+     */
+    public ArrayList<Tarefa> getTarefas() {
+        return tarefas;
+    }
+
+    /**
+     * Set tarefas
+     * @param tarefas
+     */
+    public void setTarefas(ArrayList<Tarefa> tarefas) {
+        this.tarefas = tarefas;
     }
 
     /**

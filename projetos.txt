@@ -1,10 +1,10 @@
-Experimental Analysis on the Energy Efficency of Dynamic Programming Algorithms|EAEEDPA|2018-04-11|2019-02-05
-Experimentation and Evaluation of Innovative Techniques in Generative Game Design|EEITGGD|2018-11-11|2019-02-15
-Desenvolvimento de Aplicação para Melhoria de Desempenho Académico através de Sensores do Telemóvel|DAMDAST|2017-09-05|2019-09-05
-Automatic Classification of Software Defects in Big Data Systems|ACSDBDS|2018-05-13|2019-12-03
-Drone Hijacking|DH|2017-01-01|2018-01-01
-Collecting Individual Traces of Mobility|CITM|2017-11-09|2019-11-01
-Brain Computer Interaction Devices Comparison|BCIDC|2018-02-07|2019-02-07
-Development of a Matlab Querying Interface for the EPILEPSIAE Database|DMQIED|2019-01-01|2019-12-31
-Análise Inteligente de Dados de Sistemas Ciberfísicos|AIDSC|2018-04-11|2019-02-06
-Técnicas de Aprendizagem Automática Aplicadas a Problemas de Audiologia|TAAAPA|2018-06-12|2019-05-05
+Experimental Analysis on the Energy Efficency of Dynamic Programming Algorithms|EAEEDPA|2018-04-11|2019-02-05|123|555|almartins@hotmail.com,agosti@hotmail.com
+Experimentation and Evaluation of Innovative Techniques in Generative Game Design|EEITGGD|2018-11-11|2019-02-15|123|555,590
+Desenvolvimento de Aplicação para Melhoria de Desempenho Académico através de Sensores do Telemóvel|DAMDAST|2017-09-05|2019-09-05|590|11|ricknunes@gmail.com
+Automatic Classification of Software Defects in Big Data Systems|ACSDBDS|2018-05-13|2019-12-03|11|590,555|tfonseca@gmail.com
+Drone Hijacking|DH|2017-01-01|2018-01-01|555|590,123,11
+Collecting Individual Traces of Mobility|CITM|2017-11-09|2019-11-01|11|555,123|ferrer_carlos@gmail.com
+Brain Computer Interaction Devices Comparison|BCIDC|2018-02-07|2019-02-07|555|11
+Development of a Matlab Querying Interface for the EPILEPSIAE Database|DMQIED|2019-01-01|2019-12-31|590|11
+Análise Inteligente de Dados de Sistemas Ciberfísicos|AIDSC|2018-04-11|2019-02-06|123|555,590,11
+Técnicas de Aprendizagem Automática Aplicadas a Problemas de Audiologia|TAAAPA|2018-06-12|2019-05-05|123|555|carolencastre@gmail.com

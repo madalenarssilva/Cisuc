@@ -16,6 +16,7 @@ public class Cisuc {
 
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Projeto> projetos;
+    private ArrayList<Tarefa> tarefas;
     private String nome;
     private String password;
     private boolean exitMenu = false;
@@ -139,25 +140,21 @@ public class Cisuc {
 
     //                                           FICHEIROS
 
-    public ArrayList<Pessoa> lerFicheirosPessoas() {
+    public void lerFicheirosPessoas() {
 
         /**
          * Method to read people's info from file and use it to create instances of object Pessoa.
          * Docentes appear in the top of the file so that we can get Licenciados' and Mestres' orientadores.
          * If objects file exists, that is the file that's read. Otherwise, text file is read.
-         *
-         * @return ArrayList of objects Pessoa, representing the people read from file.
          */
 
-        //Array para guardar todas as pessoas lidas do ficheiro.
-        ArrayList<Pessoa> pessoas_lidas = new ArrayList<>();
         File fich_objetos = new File("pessoas");
         File fich_texto = new File("pessoas.txt");
 
         try {
             FileInputStream f = new FileInputStream(fich_objetos);
             ObjectInputStream o = new ObjectInputStream(f);
-            pessoas_lidas = (ArrayList<Pessoa>) o.readObject();
+            pessoas = (ArrayList<Pessoa>) o.readObject();
 
             o.close();
             f.close();
@@ -169,20 +166,19 @@ public class Cisuc {
                     FileReader fr = new FileReader(fich_texto);
                     BufferedReader br = new BufferedReader(fr);
 
-                    //Array com todos os docentes.
-                    ArrayList<Docente> docentes = new ArrayList<>();
-
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
                         System.out.println(line);
                         String[] s = line.split("|"); //Separar cada linha nos vários campos.
 
+                        //Array com todos os docentes.
+                        ArrayList<Docente> docentes = getDocentes();
+
                         switch (s[0]) {
                             case "DOCENTE":
                                 int numMecanografico = Integer.parseInt(s[3]);
                                 Docente docente = new Docente(s[1], s[2], numMecanografico, s[4]);
-                                docentes.add(docente);
-                                pessoas_lidas.add(docente);
+                                pessoas.add(docente);
                                 break;
 
                             case "LICENCIADO":
@@ -197,7 +193,7 @@ public class Cisuc {
                                     }
                                 }
                                 Licenciado licenciado = new Licenciado(s[1], s[2], s[3], s[4], orientadores_lic);
-                                pessoas_lidas.add(licenciado);
+                                pessoas.add(licenciado);
                                 break;
 
                             case "MESTRE":
@@ -212,12 +208,12 @@ public class Cisuc {
                                     }
                                 }
                                 Mestre mestre = new Mestre(s[1], s[2], s[3], s[4], orientadores_mestre);
-                                pessoas_lidas.add(mestre);
+                                pessoas.add(mestre);
                                 break;
 
                             case "DOUTORADO":
                                 Doutorado doutorado = new Doutorado(s[1], s[2], s[3], s[4]);
-                                pessoas_lidas.add(doutorado);
+                                pessoas.add(doutorado);
                                 break;
                         }
                     }
@@ -232,27 +228,22 @@ public class Cisuc {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return pessoas_lidas;
     }
 
-    public ArrayList<Projeto> lerFicheirosProjetos() {
+    public void lerFicheirosProjetos() {
 
         /**
          * Method to read projects' info from file and use it to create instances of object Projeto.
          * If objects file exists, that is the file that's read. Otherwise, text file is read.
-         *
-         * @return ArrayList of objects Projeto, representing the projects read from file.
          */
 
-        //Array para guardar todas os projetos lidos do ficheiro.
-        ArrayList<Projeto> projetos_lidos = new ArrayList<>();
         File fich_objetos = new File("projetos");
         File fich_texto = new File("projetos.txt");
 
         try {
             FileInputStream f = new FileInputStream(fich_objetos);
             ObjectInputStream o = new ObjectInputStream(f);
-            projetos_lidos = (ArrayList<Projeto>) o.readObject();
+            projetos = (ArrayList<Projeto>) o.readObject();
 
             o.close();
             f.close();
@@ -269,8 +260,40 @@ public class Cisuc {
                         System.out.println(line);
                         String[] s = line.split("|"); //Separar cada linha nos vários campos.
 
-                        Projeto projeto = new Projeto(s[0], s[1], s[2], s[3]);
-                        projetos_lidos.add(projeto);
+                        //Array com todos os docentes.
+                        ArrayList<Docente> docentes = getDocentes();
+                        //Array com todos os bolseiros.
+                        ArrayList<Bolseiro> bolseiros = getBolseiros();
+
+                        //Procurar Docente com o número mecanográfico do ip contido no ficheiro de texto.
+                        //Procurar docentes com números mecanográficos iguais aos dos investigadores contidos no ficheiro de texto.
+                        int numMecanograficoIp = Integer.parseInt(s[4]);
+                        Docente ip = new Docente();
+                        ArrayList<Pessoa> pessoas_envolvidas = new ArrayList<>();
+
+                        for (String investigador : s[5].split(",")) {
+                            int numInvestigador = Integer.parseInt(investigador);
+                            for (Docente doc : docentes) {
+                                //É possível verificar as duas condições em simultâneo porque o ip não vai estar contido na lista dos investigadores.
+                                if (doc.getNumeroMecanografico() == numMecanograficoIp)
+                                    ip = doc;
+                                else if (doc.getNumeroMecanografico() == numInvestigador)
+                                    pessoas_envolvidas.add(doc);
+                            }
+                        }
+
+                        //Se o projeto contiver bolseiros, adicioná-los ao array das pessoas envolvidas no projeto.
+                        if (s.length == 7) {
+                            for (String bolseiro : s[6].split(",")) {
+                                for (Bolseiro bols : bolseiros) {
+                                    if (bols.getMail().equals(bolseiro))
+                                        pessoas_envolvidas.add(bols);
+                                }
+                            }
+                        }
+
+                        Projeto projeto = new Projeto(s[0], s[1], ip, s[2], s[3], pessoas_envolvidas);
+                        projetos.add(projeto);
                     }
                     br.close();
                 } catch (IOException ex) {
@@ -282,27 +305,23 @@ public class Cisuc {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return projetos_lidos;
     }
 
-    public ArrayList<Tarefa> lerFicheirosTarefas() {
+    public void lerFicheirosTarefas() {
 
         /**
          * Method to read tasks' info from file and use it to create instances of object Tarefa.
          * If objects file exists, that is the file that's read. Otherwise, text file is read.
-         *
-         * @return ArrayList of objects Tarefa, representing the tasks read from file.
+         * We assumed that all the tasks in the text file have not been initialized.
          */
 
-        //Array para guardar todas as tarefas lidas do ficheiro.
-        ArrayList<Tarefa> tarefas_lidas = new ArrayList<>();
         File fich_objetos = new File("tarefas");
         File fich_texto = new File("tarefas.txt");
 
         try {
             FileInputStream f = new FileInputStream(fich_objetos);
             ObjectInputStream o = new ObjectInputStream(f);
-            tarefas_lidas = (ArrayList<Tarefa>) o.readObject();
+            tarefas = (ArrayList<Tarefa>) o.readObject();
 
             o.close();
             f.close();
@@ -319,18 +338,46 @@ public class Cisuc {
                         System.out.println(line);
                         String[] s = line.split("|"); //Separar cada linha nos vários campos.
 
+                        //Encontrar o objeto Pessoa correspondente à pessoa responsável pela tarefa (MELHORAR).
+                        Pessoa responsavel = pessoas.get(0);
+                        for (Pessoa pessoa : pessoas) {
+                            if (pessoa.getMail().equals(s[4])) {
+                                responsavel = pessoa;
+                            }
+                        }
                         switch (s[0]) {
                             case "DESIGN":
-                                Design design = new Design();
-                                tarefas_lidas.add(design);
+                                Design design = new Design(s[1], 0, s[2], responsavel);
+
+                                //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
+                                for (Projeto proj : projetos) {
+                                    if (proj.getAcronimo().equals(s[3])) {
+                                        proj.getTarefas().add(design);
+                                    }
+                                }
+                                tarefas.add(design);
                                 break;
                             case "DESENVOLVIMENTO":
-                                Desenvolvimento desenvolvimento = new Desenvolvimento();
-                                tarefas_lidas.add(desenvolvimento);
+                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel);
+
+                                //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
+                                for (Projeto proj : projetos) {
+                                    if (proj.getAcronimo().equals(s[3])) {
+                                        proj.getTarefas().add(des);
+                                    }
+                                }
+                                tarefas.add(des);
                                 break;
                             case "DOCUMENTACAO":
-                                Documentacao documentacao = new Documentacao();
-                                tarefas_lidas.add(documentacao);
+                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel);
+
+                                //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
+                                for (Projeto proj : projetos) {
+                                    if (proj.getAcronimo().equals(s[3])) {
+                                        proj.getTarefas().add(doc);
+                                    }
+                                }
+                                tarefas.add(doc);
                                 break;
                         }
                     }
@@ -344,10 +391,9 @@ public class Cisuc {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return tarefas_lidas;
     }
 
-    public void escreverFicheirosObjetos(ArrayList<Pessoa> pessoas_lidas, ArrayList<Projeto> projetos_lidos, ArrayList<Tarefa> tarefas_lidas) {
+    public void escreverFicheirosObjetos() {
 
         /**
          * Method used to write all of the read information from text files to object files pessoas, projetos and locais.
@@ -359,7 +405,7 @@ public class Cisuc {
             FileOutputStream f = new FileOutputStream(f1);
             ObjectOutputStream o = new ObjectOutputStream(f);
 
-            o.writeObject(pessoas_lidas);
+            o.writeObject(pessoas);
             o.close();
             f.close();
 
@@ -374,7 +420,7 @@ public class Cisuc {
             FileOutputStream f = new FileOutputStream(f1);
             ObjectOutputStream o = new ObjectOutputStream(f);
 
-            o.writeObject(projetos_lidos);
+            o.writeObject(projetos);
             o.close();
             f.close();
 
@@ -389,7 +435,7 @@ public class Cisuc {
             FileOutputStream f = new FileOutputStream(f1);
             ObjectOutputStream o = new ObjectOutputStream(f);
 
-            o.writeObject(tarefas_lidas);
+            o.writeObject(tarefas);
             o.close();
             f.close();
 
@@ -579,7 +625,7 @@ public class Cisuc {
         return docentes;
     }
 
-    public ArrayList<Bolseiro> getBolseiros() {
+    public ArrayList<Bolseiro> getBolseiro() {
         /**
          * Method to get a list of all People who are "Bolseiros".
          * @return ArrayList of bolseiros
@@ -606,6 +652,37 @@ public class Cisuc {
         return bolseiros;
     }
 
+    public ArrayList<Docente> getDocentes() {
+        /**
+         * Method to get a list of all People who are "Docentes".
+         * @return ArrayList of docentes
+         */
+        ArrayList<Docente> docentes = new ArrayList<Docente>();
+        for (Pessoa p : pessoas) {
+            // Ver se é Docente ou Bolseiro
+            if (p.getNumeroMecanografico() > 0) {
+                Docente dc = (Docente) p;
+                docentes.add(dc);
+            }
+        }
+        return docentes;
+    }
+
+    public ArrayList<Bolseiro> getBolseiros() {
+        /**
+         * Method to get a list of all People who are "Bolseiros".
+         * @return ArrayList of bolseiros
+         */
+        ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
+        for (Pessoa p : pessoas) {
+            // Ver se é Docente ou Bolseiro
+            if (p.getNumeroMecanografico() == 0) {
+                Bolseiro bs = (Bolseiro) p;
+                bolseiros.add(bs);
+            }
+        }
+        return bolseiros;
+    }
 
     public void imprimirDocentes(ArrayList<Docente> docentes) {
 
