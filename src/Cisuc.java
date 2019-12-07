@@ -454,6 +454,7 @@ public class Cisuc {
     public void criarProjetos() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Criação do Projeto------");
+
         // NOME
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
@@ -490,8 +491,8 @@ public class Cisuc {
         Boolean flagA= true;
         for (Projeto p : projetos) {
             while(flagA) {
-                if (p.getNome().equals(nome)) {
-                    System.out.println("Acronimo já existente. Introduza outro.");
+                if (p.getAcronimo().equals(acronimo)) {
+                    System.out.println("Acrónimo já existente. Introduza outro.");
                     System.out.println("Acrónimo: ");
                     acronimo = scanner.nextLine();
                 } else {
@@ -520,6 +521,7 @@ public class Cisuc {
             dataFim = scanner.nextLine();
         }
 
+        // Adicionar Projeto
         Projeto p = new Projeto(nome, acronimo, dataInicio, dataFim);
         projetos.add(p);
     }
@@ -533,10 +535,52 @@ public class Cisuc {
     public void criarPessoas() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Criação da Pessoa------");
+
+        // NOME
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(nome.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Nome: ");
+            nome = scanner.nextLine();
+        }
+        // Não aceitar nomes repetidos
+        Boolean flag= true;
+        for (Pessoa p : pessoas) {
+            while(flag) {
+                if (p.getNome().equals(nome)) {
+                    System.out.println("Nome já existente. Introduza outro.");
+                    System.out.println("Nome: ");
+                    nome = scanner.nextLine();
+                } else {
+                    flag = false;
+                }
+            }
+        }
+
+        // MAIL
         System.out.println("Mail: ");
         String mail = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(mail.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Mail: ");
+            mail = scanner.nextLine();
+        }
+        // Não aceitar mails repetidos
+        Boolean flagM= true;
+        for (Pessoa p : pessoas) {
+            while(flagM) {
+                if (p.getMail().equals(mail)) {
+                    System.out.println("Mail já existente. Introduza outro.");
+                    System.out.println("Nome: ");
+                    mail = scanner.nextLine();
+                } else {
+                    flagM = false;
+                }
+            }
+        }
         System.out.println("Escolha entre as opções:");
         System.out.println("1.Docente");
         System.out.println("2.Bolseiro");
