@@ -112,4 +112,14 @@ abstract class Tarefa {
     }
 
     public abstract long calculaTaxa();
+
+    @Override
+    public String toString() {
+        return "Tarefa{" +
+                "dataInicio='" + dataInicio + '\'' +
+                ", percentagemConclusao=" + percentagemConclusao +
+                ", dataFim='" + dataFim + '\'' +
+                ", responsavel=" + responsavel +
+                '}';
+    }
 }

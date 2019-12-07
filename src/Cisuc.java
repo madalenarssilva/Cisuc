@@ -36,8 +36,14 @@ public class Cisuc {
     Cisuc() {
 
         System.out.println("-----------Inicio----------");
-        pessoas = new ArrayList<Pessoa>();
-        projetos = new ArrayList<Projeto>();
+        pessoas = new ArrayList<>();
+        projetos = new ArrayList<>();
+        tarefas = new ArrayList<>();
+
+        lerFicheirosPessoas();
+        lerFicheirosProjetos();
+        lerFicheirosTarefas();
+        printProjetos();
         // Ask for username and password
         Scanner scanner = new Scanner(System.in);
         System.out.println();
@@ -169,8 +175,7 @@ public class Cisuc {
 
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
-                        System.out.println(line);
-                        String[] s = line.split("|"); //Separar cada linha nos vários campos.
+                        String[] s = line.split("[|]"); //Separar cada linha nos vários campos.
 
                         //Array com todos os docentes.
                         ArrayList<Docente> docentes = getDocentes();
@@ -186,7 +191,7 @@ public class Cisuc {
                                 ArrayList<Docente> orientadores_lic = new ArrayList<>();
 
                                 //Obter objetos Docente dos orientadores.
-                                for (String orientador : s[5].split(",")) {
+                                for (String orientador : s[5].split("[,]")) {
                                     int numOrientador = Integer.parseInt(orientador);
                                     for (Docente doc : docentes) {
                                         if (doc.getNumeroMecanografico() == numOrientador)
@@ -201,7 +206,7 @@ public class Cisuc {
                                 ArrayList<Docente> orientadores_mestre = new ArrayList<>();
 
                                 //Obter objetos Docente dos orientadores.
-                                for (String orientador : s[5].split(",")) {
+                                for (String orientador : s[5].split("[,]")) {
                                     int numOrientador = Integer.parseInt(orientador);
                                     for (Docente doc : docentes) {
                                         if (doc.getNumeroMecanografico() == numOrientador)
@@ -258,8 +263,7 @@ public class Cisuc {
 
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
-                        System.out.println(line);
-                        String[] s = line.split("|"); //Separar cada linha nos vários campos.
+                        String[] s = line.split("[|]"); //Separar cada linha nos vários campos.
 
                         //Array com todos os docentes.
                         ArrayList<Docente> docentes = getDocentes();
@@ -272,7 +276,7 @@ public class Cisuc {
                         Docente ip = new Docente();
                         ArrayList<Pessoa> pessoas_envolvidas = new ArrayList<>();
 
-                        for (String investigador : s[5].split(",")) {
+                        for (String investigador : s[5].split("[,]")) {
                             int numInvestigador = Integer.parseInt(investigador);
                             for (Docente doc : docentes) {
                                 //É possível verificar as duas condições em simultâneo porque o ip não vai estar contido na lista dos investigadores.
@@ -285,7 +289,7 @@ public class Cisuc {
 
                         //Se o projeto contiver bolseiros, adicioná-los ao array das pessoas envolvidas no projeto.
                         if (s.length == 7) {
-                            for (String bolseiro : s[6].split(",")) {
+                            for (String bolseiro : s[6].split("[,]")) {
                                 for (Bolseiro bols : bolseiros) {
                                     if (bols.getMail().equals(bolseiro))
                                         pessoas_envolvidas.add(bols);
@@ -336,8 +340,7 @@ public class Cisuc {
 
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
-                        System.out.println(line);
-                        String[] s = line.split("|"); //Separar cada linha nos vários campos.
+                        String[] s = line.split("[|]"); //Separar cada linha nos vários campos.
 
                         //Encontrar o objeto Pessoa correspondente à pessoa responsável pela tarefa (MELHORAR).
                         Pessoa responsavel = pessoas.get(0);
