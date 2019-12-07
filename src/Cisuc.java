@@ -592,7 +592,7 @@ public class Cisuc {
             case 1:
                 System.out.println("Numero mecanográfico: ");
                 int numMecanografico = scanner.nextInt();
-                while(numMecanografico == 0){
+                while(numMecanografico == 0 || numMecanografico < 0){
                     System.out.println("Numero mecanográfico: ");
                     numMecanografico = scanner.nextInt();
                 }

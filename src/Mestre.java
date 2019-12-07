@@ -7,13 +7,12 @@ import java.util.ArrayList;
  */
 public class Mestre extends Bolseiro{
     private ArrayList<Docente> orientadores;
-    private int custo;
+    private int custo = 800;
 
     /**
      * Empty Constructor
      */
     Mestre(){
-        custo= 800;
         ArrayList<Docente> orientadores;
     }
 

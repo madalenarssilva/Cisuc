@@ -6,13 +6,12 @@ import java.time.temporal.ChronoUnit;
  */
 public class Doutorado extends Bolseiro{
 
-    private int custo;
+    private int custo = 1000;
 
     /**
      * Empty Constructor
      */
     Doutorado(){
-        custo=1000;
     }
 
     /**
