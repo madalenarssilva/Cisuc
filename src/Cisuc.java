@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -43,7 +41,7 @@ public class Cisuc {
         lerFicheirosPessoas();
         lerFicheirosProjetos();
         lerFicheirosTarefas();
-        printProjetos();
+        //printProjetos();
         // Ask for username and password
         Scanner scanner = new Scanner(System.in);
         System.out.println();

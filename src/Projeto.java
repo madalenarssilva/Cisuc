@@ -196,14 +196,13 @@ public class Projeto {
 
     @Override
     public String toString() {
-        return "Projeto{" +
-                "nome='" + nome + '\'' +
-                ", acronimo='" + acronimo + '\'' +
-                ", dataInicio='" + dataInicio + '\'' +
-                ", dataFim='" + dataFim + '\'' +
-                ", ip=" + ip +
-                ", pessoasEnvolvidas=" + pessoasEnvolvidas +
-                ", tarefas=" + tarefas +
-                '}';
+        return "Projeto: " +
+                "\nNome: " + nome +
+                "\nAcronimo='" + acronimo +
+                "\nDataInicio='" + dataInicio +
+                "\nDtaFim='" + dataFim +
+                "\nIp=" + ip +
+                "\nPessoasEnvolvidas=" + pessoasEnvolvidas +
+                "\nTarefas=" + tarefas;
     }
 }
