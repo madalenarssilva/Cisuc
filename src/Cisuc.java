@@ -21,6 +21,7 @@ public class Cisuc {
     private boolean exitMenu = false;
 
     public static void main(String[] args) {
+
         new Cisuc();
     }
 
@@ -551,29 +552,38 @@ public class Cisuc {
         }
     }
 
-    public ArrayList<Docente> getDocentes(){
+    public ArrayList<Docente> getDocente() {
         /**
          * Method to get a list of all People who are "Docentes".
-         * @param ArrayList of docentes
+         * @return ArrayList of docentes
          */
         ArrayList<Docente> docentes = new ArrayList<Docente>();
         // Imprimir lista de todos os docentes para o utilizador escolher
-        for (Pessoa p : pessoas) {
-            // Ver se é Docente ou Bolseiro
-            if (p.getNumeroMecanografico() > 0) {
-                Docente dc = (Docente) p;
-                docentes.add(dc);
+        if (pessoas.size() != 0) {
+            for (Pessoa p : pessoas) {
+                // Ver se é Docente ou Bolseiro
+                if (p.getNumeroMecanografico() > 0) {
+                    Docente dc = (Docente) p;
+                    docentes.add(dc);
+                } else {
+                    //Não existem docentes
+                    System.out.println("Insira Docentes na aplicação");
+                    Menu();
+                }
             }
-            else{
-                //Não existem docentes
-                System.out.println("Insira Docentes na aplicação");
-                Menu();
-            }
+        }else{
+            //A lista das pessoas está vazia
+            System.out.println("Insira Pessoas na aplicação.");
+            Menu();
         }
         return docentes;
     }
 
     public ArrayList<Bolseiro> getBolseiros() {
+        /**
+         * Method to get a list of all People who are "Bolseiros".
+         * @return ArrayList of bolseiros
+         */
         ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
         // Imprimir lista de todos os bolseiros para o utilizador escolher
         if (pessoas.size() != 0) {
