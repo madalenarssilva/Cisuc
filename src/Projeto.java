@@ -62,6 +62,13 @@ public class Projeto {
         this.dataFim = dataFim;
     }
 
+    public Projeto(String nome, String acronimo, String dataInicio, String dataFim) {
+        this.nome = nome;
+        this.acronimo = acronimo;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
+
     /**
      * Get nome
      * @return nome
