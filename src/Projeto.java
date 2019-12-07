@@ -17,7 +17,7 @@ public class Projeto {
     private String dataFim;
     private Docente ip;
     private ArrayList<Pessoa> pessoasEnvolvidas;
-    private ArrayList<Tarefa> tarefas;
+    private ArrayList<Tarefa> tarefas = new ArrayList<>();
 
     /**
      * Constructor
@@ -25,8 +25,7 @@ public class Projeto {
      */
 
     Projeto() {
-        pessoasEnvolvidas = new ArrayList<Pessoa>();
-        tarefas = new ArrayList<Tarefa>();
+        pessoasEnvolvidas = new ArrayList<>();
     }
 
     /**
@@ -195,8 +194,16 @@ public class Projeto {
         return duracao_meses;
     }
 
-    public String toString(){
-        return "Nome Projeto: " + nome + "\nAcronimo: " + acronimo + "\nData Inicio: " + dataInicio +
-                "\nData Fim: " + dataFim + "\nDuracao: " + duracao(dataInicio,dataFim);
+    @Override
+    public String toString() {
+        return "Projeto{" +
+                "nome='" + nome + '\'' +
+                ", acronimo='" + acronimo + '\'' +
+                ", dataInicio='" + dataInicio + '\'' +
+                ", dataFim='" + dataFim + '\'' +
+                ", ip=" + ip +
+                ", pessoasEnvolvidas=" + pessoasEnvolvidas +
+                ", tarefas=" + tarefas +
+                '}';
     }
 }
