@@ -1,12 +1,19 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 /**
  * <h1>Class Doutorado</h1>
  */
-class Doutorado extends Bolseiro{
+public class Doutorado extends Bolseiro{
+
+    private int custo;
 
     /**
      * Empty Constructor
      */
-    Doutorado(){}
+    Doutorado(){
+        custo=1000;
+    }
 
     /**
      * Constructor
@@ -16,8 +23,18 @@ class Doutorado extends Bolseiro{
      * @param dataFim
      */
     public Doutorado(String nome, String mail, String dataInicio, String dataFim) {
-        super(nome, mail, dataInicio, dataFim, 1200);
-
+        super(nome, mail, dataInicio, dataFim);
     }
+
+    /**
+     * Method that calculates the cost for the project of a Bolseiro.
+     * @return total cost for the project
+     */
+    public double calculaCusto() {
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataInicio()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        return duracao_bolsa*custo;
+    }
+
+
 }
 

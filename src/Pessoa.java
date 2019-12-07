@@ -2,7 +2,7 @@
  * <h1>Class Pessoa: </h1>
  */
 
-abstract class Pessoa {
+public abstract class Pessoa {
 
     private String nome;
     private String mail;
@@ -74,7 +74,10 @@ abstract class Pessoa {
         this.mail = mail;
     }
 
-    public abstract long calculaCusto();
+    /**
+     * Abstract method
+     */
+    public abstract double calculaCusto();
 
     public String toString() {
         return "Nome:" + nome + "\nMail:" + mail;

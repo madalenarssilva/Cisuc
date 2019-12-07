@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
@@ -10,7 +9,7 @@ import java.util.ArrayList;
  * Finish project
  */
 
-class Projeto {
+public class Projeto {
 
     private String nome;
     private String acronimo;
@@ -45,13 +44,6 @@ class Projeto {
         this.ip = ip;
     }
 
-    /**
-     * Constructor
-     * @param nome
-     * @param acronimo
-     * @param dataInicio
-     * @param dataFim
-     */
     public Projeto(String nome, String acronimo, String dataInicio, String dataFim) {
         this.nome = nome;
         this.acronimo = acronimo;

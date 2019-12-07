@@ -16,10 +16,6 @@ public class Cisuc {
 
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Projeto> projetos;
-    //Array com todos os docentes.
-    private ArrayList<Docente> docentes = new ArrayList<>();
-    //Array com todos os bolseiros.
-    private ArrayList<Bolseiro> bolseiros = new ArrayList<>();
     private String nome;
     private String password;
     private boolean exitMenu = false;
@@ -171,6 +167,9 @@ public class Cisuc {
                 try {
                     FileReader fr = new FileReader(fich_texto);
                     BufferedReader br = new BufferedReader(fr);
+
+                    //Array com todos os docentes.
+                    ArrayList<Docente> docentes = new ArrayList<>();
 
                     String line;
                     while ((line = br.readLine()) != null) { //Ler o ficheiro, linha a linha, até ao fim.
@@ -551,6 +550,52 @@ public class Cisuc {
             System.out.println(p);
         }
     }
+
+    public ArrayList<Docente> getDocentes(){
+        /**
+         * Method to get a list of all People who are "Docentes".
+         * @param ArrayList of docentes
+         */
+        ArrayList<Docente> docentes = new ArrayList<Docente>();
+        // Imprimir lista de todos os docentes para o utilizador escolher
+        for (Pessoa p : pessoas) {
+            // Ver se é Docente ou Bolseiro
+            if (p.getNumeroMecanografico() > 0) {
+                Docente dc = (Docente) p;
+                docentes.add(dc);
+            }
+            else{
+                //Não existem docentes
+                System.out.println("Insira Docentes na aplicação");
+                Menu();
+            }
+        }
+        return docentes;
+    }
+
+    public ArrayList<Bolseiro> getBolseiros() {
+        ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
+        // Imprimir lista de todos os bolseiros para o utilizador escolher
+        if (pessoas.size() != 0) {
+            for (Pessoa p : pessoas) {
+                // Ver se é Docente ou Bolseiro
+                if (p.getNumeroMecanografico() == 0) {
+                    Bolseiro bs = (Bolseiro) p;
+                    bolseiros.add(bs);
+                } else {
+                    //Não existem bolseiros
+                    System.out.println("Insira Bolseiros na aplicação");
+                    Menu();
+                }
+            }
+        }else{
+            //A lista das pessoas está vazia
+            System.out.println("Insira Pessoas na aplicação.");
+            Menu();
+        }
+        return bolseiros;
+    }
+
 
     public void imprimirDocentes(ArrayList<Docente> docentes) {
 

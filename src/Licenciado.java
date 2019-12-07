@@ -1,16 +1,20 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
  * <h1>Class Licenciado</h1>
  */
-class Licenciado extends Bolseiro{
+public class Licenciado extends Bolseiro{
     private ArrayList<Docente> orientadores;
+    private int custo;
 
     /**
      * Empty Constructor
      */
     Licenciado(){
-       ArrayList<Docente> orientadores = new ArrayList<>();
+        custo = 500;
+        ArrayList<Docente> orientadores;
     }
 
     /**
@@ -19,28 +23,36 @@ class Licenciado extends Bolseiro{
      * @param mail
      * @param dataInicio
      * @param dataFim
-     * @param orientadores
      */
     public Licenciado(String nome, String mail, String dataInicio, String dataFim, ArrayList<Docente> orientadores) {
-        super(nome, mail, dataInicio, dataFim, 800);
+        super(nome, mail, dataInicio, dataFim);
         this.orientadores = orientadores;
-
     }
 
     /**
-     * Get orientadores
-     * @return orientadores
+     * Get Custo
+     * @return Custo
      */
-    public ArrayList<Docente> getOrientadores() {
-        return orientadores;
+    public int getCusto() {
+        return custo;
     }
 
     /**
-     * Set orientadores
-     * @param orientadores
+     * Set dataInicio
+     * @param custo
      */
-    public void setOrientadores(ArrayList<Docente> orientadores) {
-        this.orientadores = orientadores;
+    public void setCusto(int custo) {
+        this.custo = custo;
+    }
+
+    /**
+     * Method that calculates the cost for the project of a Bolseiro.
+     * @return total cost for the project
+     */
+    public double calculaCusto() {
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataFim()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+
+        return duracao_bolsa*custo;
     }
 
     @Override

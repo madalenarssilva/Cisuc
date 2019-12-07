@@ -4,10 +4,9 @@ import java.time.temporal.ChronoUnit;
 /**
  * <h1>Class Bolseiro</h1>
  */
-class Bolseiro extends Pessoa{
+public abstract class Bolseiro extends Pessoa{
     private String dataInicio;
     private String dataFim;
-    private long custo;
 
     /**
      * Empty Constructor
@@ -20,13 +19,11 @@ class Bolseiro extends Pessoa{
      * @param mail
      * @param dataInicio
      * @param dataFim
-     * @param custo
      */
-    public Bolseiro(String nome, String mail, String dataInicio, String dataFim, long custo) {
+    public Bolseiro(String nome, String mail, String dataInicio, String dataFim) {
         super(nome, mail);
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.custo = custo;
     }
 
     /**
@@ -61,38 +58,12 @@ class Bolseiro extends Pessoa{
         this.dataFim = dataFim;
     }
 
-    /**
-     * Get custo
-     * @return custo
-     */
-    public long getCusto() {
-        return custo;
-    }
-
-    /**
-     * Set custo
-     * @param custo
-     */
-    public void setCusto(long custo) {
-        this.custo = custo;
-    }
 
     @Override
     public String toString() {
         return "Bolseiro{" +
                 "dataInicio='" + dataInicio + '\'' +
                 ", dataFim='" + dataFim + '\'' +
-                ", custo=" + custo +
                 '}';
-    }
-
-    /**
-     * Method that calculates the cost for the project of a Bolseiro.
-     * @return total cost for the project
-     */
-    public long calculaCusto() {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
-
-        return duracao_bolsa*custo;
     }
 }

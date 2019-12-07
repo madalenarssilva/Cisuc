@@ -67,7 +67,7 @@ class Docente extends Pessoa{
      * Method that calculates the cost for the project of a Docente.
      * @return total cost for the project
      */
-    public long calculaCusto() {
+    public double calculaCusto() {
         return 0;
     }
 }

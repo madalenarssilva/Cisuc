@@ -1,15 +1,21 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
  * <h1>Class Mestre</h1>
  */
-class Mestre extends Bolseiro{
+public class Mestre extends Bolseiro{
     private ArrayList<Docente> orientadores;
+    private int custo;
 
     /**
      * Empty Constructor
      */
-    Mestre(){}
+    Mestre(){
+        custo= 800;
+        ArrayList<Docente> orientadores;
+    }
 
     /**
      * Constructor
@@ -20,25 +26,34 @@ class Mestre extends Bolseiro{
      * @param orientadores
      */
     public Mestre(String nome, String mail, String dataInicio, String dataFim, ArrayList<Docente> orientadores) {
-        super(nome, mail, dataInicio, dataFim, 1000);
+        super(nome, mail, dataInicio, dataFim);
         this.orientadores = orientadores;
 
     }
 
     /**
-     * Get orientadores
-     * @return orientadores
+     * Get Custo
+     * @return Custo
      */
-    public ArrayList<Docente> getOrientadores() {
-        return orientadores;
+    public int getCusto() {
+        return custo;
     }
 
     /**
-     * Set orientadores
-     * @param orientadores
+     * Set dataInicio
+     * @param custo
      */
-    public void setOrientadores(ArrayList<Docente> orientadores) {
-        this.orientadores = orientadores;
+    public void setCusto(int custo) {
+        this.custo = custo;
+    }
+
+    /**
+     * Method that calculates the cost for the project of a Bolseiro.
+     * @return total cost for the project
+     */
+    public double calculaCusto() {
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataInicio()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        return duracao_bolsa*custo;
     }
 
     @Override
