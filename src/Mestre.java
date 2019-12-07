@@ -28,7 +28,11 @@ public class Mestre extends Bolseiro{
     public Mestre(String nome, String mail, String dataInicio, String dataFim, ArrayList<Docente> orientadores) {
         super(nome, mail, dataInicio, dataFim);
         this.orientadores = orientadores;
+    }
 
+    public Mestre(String nome, String mail, String dataInicio, String dataFim) {
+        super(nome, mail, dataInicio, dataFim);
+        this.orientadores = orientadores;
     }
 
     /**

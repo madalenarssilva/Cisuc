@@ -29,6 +29,10 @@ public class Licenciado extends Bolseiro{
         this.orientadores = orientadores;
     }
 
+    public Licenciado(String nome, String mail, String dataInicio, String dataFim) {
+        super(nome, mail, dataInicio, dataFim);
+    }
+
     /**
      * Get Custo
      * @return Custo

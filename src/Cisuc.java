@@ -1,4 +1,7 @@
 import java.io.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -366,7 +369,8 @@ public class Cisuc {
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro de objetos das pessoas não encontrado.");
         } catch (IOException e) {
-            System.out.println("Erro ao escrever ficheiro de objetos das pessoas"); }
+            System.out.println("Erro ao escrever ficheiro de objetos das pessoas");
+        }
 
         //Ficheiro dos Projetos.
         try {
@@ -381,7 +385,8 @@ public class Cisuc {
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro de objetos dos projetos não encontrado.");
         } catch (IOException e) {
-            System.out.println("Erro ao escrever ficheiro de objetos dos projetos"); }
+            System.out.println("Erro ao escrever ficheiro de objetos dos projetos");
+        }
 
         //Ficheiro das Tarefas.
         try {
@@ -396,7 +401,8 @@ public class Cisuc {
         } catch (FileNotFoundException e) {
             System.out.println("Ficheiro de objetos das tarefas não encontrado.");
         } catch (IOException e) {
-            System.out.println("Erro ao escrever ficheiro de objetos das tarefas"); }
+            System.out.println("Erro ao escrever ficheiro de objetos das tarefas");
+        }
     }
 
     //                                          CRIAR PROJETOS E PESSOAS
@@ -406,20 +412,39 @@ public class Cisuc {
         System.out.println("-----Criação do Projeto------");
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(nome.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Nome: ");
+            nome = scanner.nextLine();
+        }
+
         System.out.println("Acrónimo: ");
         String acronimo = scanner.nextLine();
-        System.out.println("Investigador principal: ");
-        ArrayList<Docente> docentes = new ArrayList();
-        imprimirDocentes(docentes);
-        System.out.println("Escolha o Investigador principal.");
-        int n= scanner.nextInt();
-        Docente ip = docentes.get(n-1);
-        System.out.println("DataInicio: ");
-        String dataInicioP = scanner.nextLine();
-        System.out.println("DataFim: ");
-        String dataFimP = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(acronimo.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Acrónimo: ");
+            acronimo = scanner.nextLine();
+        }
+        System.out.println("DataInicio (yyyy-MM-dd): ");
+        String dataInicio = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(dataInicio.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Data início: ");
+            dataInicio = scanner.nextLine();
+        }
+        System.out.println("DataFim (yyyy-MM-dd): ");
+        String dataFim = scanner.nextLine();
+        // Não aceitar inputs vazios
+        while(acronimo.isEmpty()){
+            System.out.println("Input vazio");
+            System.out.println("Acrónimo: ");
+            acronimo = scanner.nextLine();
+        }
 
-        Projeto p = new Projeto(nome, acronimo, ip, dataInicioP, dataFimP);
+        Projeto p = new Projeto(nome, acronimo, dataInicio, dataFim);
         projetos.add(p);
     }
 
@@ -464,77 +489,11 @@ public class Cisuc {
 
                 switch (opcaoB) {
                     case 1:
-                        System.out.println("Adicione Orientador: ");
-                        // Lista de todos os docentes
-                        ArrayList<Docente> docentes = new ArrayList<>();
-
-                        // Imprimir lista de docentes para o utilizador escolher
-                        imprimirDocentes(docentes);
-
-                        // Escolher Orientador(da lista de docentes)
-                        int i = scanner.nextInt();
-
-                        // Criar lista orientadores
-                        ArrayList<Docente> orientadores = new ArrayList<>();
-
-                        // Associar Orientador a Bolseiro
-                        orientadores.add(docentes.get(i - 1));
-                        System.out.println("Adicionar outro Orientador?(Sim/Não)");
-                        String resp = scanner.nextLine();
-
-                        // Ciclo se quiser adicionar mais do que um orientador
-                        while (resp != "Não" || resp != "n" || resp != "Nao" || resp != "nao") {
-
-                            // Imprimir lista docentes
-                            imprimirDocentes(docentes);
-
-                            // Escolher orientador da lista de docentes
-                            i = scanner.nextInt();
-
-                            // Associar Orientador a Bolseiro
-                            orientadores.add(docentes.get(i - 1));
-
-                            System.out.println("Adicionar outro Orientador?(Sim/Não)");
-                            resp = scanner.nextLine();
-                        }
-                        Licenciado l = new Licenciado(nome, mail, dataInicio, dataFim, orientadores);
+                        Licenciado l = new Licenciado(nome, mail, dataInicio, dataFim);
                         pessoas.add(l);
                         break;
                     case 2:
-                        System.out.println("Adicione Orientador: ");
-                        // Lista de todos os docentes
-                        ArrayList<Docente> docentesm = new ArrayList<>();
-
-                        // Imprimir lista de docentes para o utilizador escolher
-                        imprimirDocentes(docentesm);
-
-                        // Escolher Orientador(da lista de docentes)
-                        int n = scanner.nextInt();
-
-                        // Criar lista orientadores
-                        ArrayList<Docente> orientadoresm = new ArrayList<>();
-
-                        // Associar Orientador a Bolseiro
-                        orientadoresm.add(docentesm.get(n - 1));
-                        System.out.println("Adicionar outro Orientador?(Sim/Não)");
-                        String respm = scanner.nextLine();
-
-                        // Ciclo se quiser adicionar mais do que um orientador
-                        while (respm != "Não" || respm != "n" || respm != "Nao" || respm != "nao") {
-
-                            // Imprimir lista docentes
-                            imprimirDocentes(docentesm);
-
-                            // Escolher orientador da lista de docentes
-                            n = scanner.nextInt();
-
-                            // Associar Orientador a Bolseiro
-                            orientadoresm.add(docentesm.get(n - 1));
-
-                            System.out.println("Adicionar outro Orientador?(Sim/Não)");
-                            respm = scanner.nextLine();
-                        }
-                        Mestre m = new Mestre(nome, mail, dataInicio, dataFim, orientadoresm);
+                        Mestre m = new Mestre(nome, mail, dataInicio, dataFim);
                         pessoas.add(m);
                         break;
                     case 3:
@@ -571,7 +530,7 @@ public class Cisuc {
                     Menu();
                 }
             }
-        }else{
+        } else {
             //A lista das pessoas está vazia
             System.out.println("Insira Pessoas na aplicação.");
             Menu();
@@ -598,7 +557,7 @@ public class Cisuc {
                     Menu();
                 }
             }
-        }else{
+        } else {
             //A lista das pessoas está vazia
             System.out.println("Insira Pessoas na aplicação.");
             Menu();
@@ -614,30 +573,28 @@ public class Cisuc {
          * @param ArrayList of docentes
          */
 
-         if(pessoas.size() != 0) {
-             // Imprimir lista de todos os docentes para o utilizador escolher
-             for (Pessoa p : pessoas) {
-                 // Ver se é Docente ou Bolseiro
-                 if (p.getNumeroMecanografico() > 0) {
-                     int i = 1;
-                     // Imprimir todos os docentes
-                     System.out.println(i + "." + p.getNome());
-                     Docente dc = (Docente) p;
-                     docentes.add(dc);
-                     i++;
-                 }
-                 else{
-                     //Não existem docentes
-                     System.out.println("Insira Docentes na aplicação");
-                     Menu();
-                 }
-             }
-         }
-         else{
-             //A lista das pessoas está vazia
-             System.out.println("Insira Pessoas na aplicação.");
-             Menu();
-         }
+        if (pessoas.size() != 0) {
+            // Imprimir lista de todos os docentes para o utilizador escolher
+            for (Pessoa p : pessoas) {
+                // Ver se é Docente ou Bolseiro
+                if (p.getNumeroMecanografico() > 0) {
+                    int i = 1;
+                    // Imprimir todos os docentes
+                    System.out.println(i + "." + p.getNome());
+                    Docente dc = (Docente) p;
+                    docentes.add(dc);
+                    i++;
+                } else {
+                    //Não existem docentes
+                    System.out.println("Insira Docentes na aplicação");
+                    Menu();
+                }
+            }
+        } else {
+            //A lista das pessoas está vazia
+            System.out.println("Insira Pessoas na aplicação.");
+            Menu();
+        }
     }
 }
 

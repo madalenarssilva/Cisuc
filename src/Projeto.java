@@ -141,12 +141,12 @@ public class Projeto {
     public long duracao(String dataInicio, String dataFim){
 
         long duracao_meses = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
+        System.out.println(duracao_meses);
         return duracao_meses;
     }
 
     public String toString(){
         return "Nome Projeto: " + nome + "\nAcronimo: " + acronimo + "\nData Inicio: " + dataInicio +
-                "\nData Fim: \n" + dataFim + "Duracao: " ;
+                "\nData Fim: " + dataFim + "\nDuracao: " + duracao(dataInicio,dataFim);
     }
-
 }
