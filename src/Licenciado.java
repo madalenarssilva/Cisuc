@@ -57,8 +57,8 @@ public class Licenciado extends Bolseiro{
         return duracao_bolsa*500;
     }
 
-    public Boolean isDoutorado() {
-        return false;
+    public int getCusto() {
+        return 500;
     }
 
     @Override

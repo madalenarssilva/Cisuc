@@ -24,10 +24,6 @@ public class Doutorado extends Bolseiro{
         super(nome, mail, dataInicio, dataFim);
     }
 
-    public Boolean isDoutorado(){
-        return true;
-    }
-
     /**
      * Method that calculates the cost for the project of a Bolseiro.
      * @return total cost for the project
@@ -36,6 +32,10 @@ public class Doutorado extends Bolseiro{
         long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
         System.out.println("Duracao bolsa: " + duracao_bolsa);
         return duracao_bolsa*1000;
+    }
+
+    public int getCusto() {
+        return 1000;
     }
 
     @Override

@@ -835,66 +835,6 @@ public class Cisuc {
         }
     }
 
-    public ArrayList<Docente> getDocente() {
-        /**
-         * Method to get a list of all People who are "Docentes".
-         * @return ArrayList of docentes
-         */
-        ArrayList<Docente> docentes = new ArrayList<Docente>();
-        // Imprimir lista de todos os docentes para o utilizador escolher
-        if (pessoas.size() != 0) {
-            for (Pessoa p : pessoas) {
-                // Ver se é Docente ou Bolseiro
-                if (p.getNumeroMecanografico() > 0) {
-                    Docente dc = (Docente) p;
-                    docentes.add(dc);
-                } else {
-                    continue;
-                }
-            }
-            if(docentes.size() == 0) {
-                //Não existem docentes
-                System.out.println("Insira Docentes na aplicação");
-                Menu();
-            }
-        } else {
-            //A lista das pessoas está vazia
-            System.out.println("Insira Pessoas na aplicação.");
-            Menu();
-        }
-        return docentes;
-    }
-
-    public ArrayList<Bolseiro> getBolseiro() {
-        /**
-         * Method to get a list of all People who are "Bolseiros".
-         * @return ArrayList of bolseiros
-         */
-        ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
-        // Imprimir lista de todos os bolseiros para o utilizador escolher
-        if (pessoas.size() != 0) {
-            for (Pessoa p : pessoas) {
-                // Ver se é Docente ou Bolseiro
-                if (p.getNumeroMecanografico() == 0) {
-                    Bolseiro bs = (Bolseiro) p;
-                    bolseiros.add(bs);
-                } else {
-                    continue;
-                }
-            }
-            if(bolseiros.size() == 0) {
-                //Não existem docentes
-                System.out.println("Insira Bolseiros na aplicação");
-                Menu();
-            }
-        } else {
-            //A lista das pessoas está vazia
-            System.out.println("Insira Pessoas na aplicação.");
-            Menu();
-        }
-        return bolseiros;
-    }
-
     public ArrayList<Docente> getDocentes() {
         /**
          * Method to get a list of all People who are "Docentes".
@@ -1007,55 +947,191 @@ public class Cisuc {
         return false;
     }
 
+    //                                                                   ASSOCIAR PROJETOS A PESSOAS
+
     public void associarPessoasAProjetos(){
 
+        /**
+         * Method that links projects to persons.
+         */
         Scanner scanner= new Scanner(System.in);
+
         // ESCOLHER PROJETO
         printProjetosNomes();
         System.out.println("Escolha um Projeto para associar.");
+        //Verificar se a opção escolhida existe.
         int n = scanner.nextInt();
+        while (n <= 0 || n > projetos.size()) {
+            System.out.println("Opção inválida. Escolha um projeto:");
+            n = scanner.nextInt();
+        }
         Projeto projeto = projetos.get(n-1);
         System.out.println(projeto);
+
         // ESCOLHER PESSOA
         printPessoasNomes();
         System.out.println("Escolha uma Pessoa para associar.");
         int n2 = scanner.nextInt();
+        //verificar se a opção escolhida existe.
+        while (n2 <= 0 || n2 > pessoas.size()) {
+            System.out.println("Opção inválida. Escolha uma pessoa:");
+            n2 = scanner.nextInt();
+        }
         Pessoa pessoa = pessoas.get(n2-1);
         System.out.println(pessoa);
-        // Ver se o projeto tem Investigador principal
-        if(projeto.getIp() == null){
-            // O investigador principal tem q ser um docente
-            ArrayList<Docente> docentes = getDocentes();
-            int i=1;
-            for(Docente d: docentes){
-                System.out.println(i++ + "-" + d.getNome());
+
+        // VERIFICAR SE A PESSOA JÁ ESTÁ NO PROJETO (retorna verdadeiro se já estiver, falso se ainda não estiver)
+        Boolean verifica = verificaRepeticao(projeto, pessoa);
+        if (!verifica){
+            // SE FOR BOLSEIRO SÓ PODE ESTAR NUM PROJETO
+            if(pessoa.getNumeroMecanografico() == 0){
+                // Devolve true se já estiver num projeto e false se ainda não estiver em nenhum
+                Boolean vp = verificarSeAlgumProjeto(pessoa);
+                if(!vp){
+                    // VER SE O PROJETO TEM INVESTIGADOR PRINCIPAL
+                    // se não tiver
+                    if(projeto.getIp() == null){
+                        // O INVESTIGADOR PRINCIPAL TEM QUE SER UM DOCENTE
+                        ArrayList<Docente> docentes = getDocentes();
+                        int i=1;
+                        // imprimir lista de docentes
+                        for(Docente d: docentes){
+                            System.out.println(i++ + "-" + d.getNome());
+                        }
+                        System.out.println("Insira o Investigador Principal");
+                        int nIp = scanner.nextInt();
+                        while (nIp <= 0 || nIp > docentes.size()) {
+                            System.out.println("Opção inválida. Escolha um Docente:");
+                            nIp = scanner.nextInt();
+                        }
+                        projeto.setIp(docentes.get(nIp - 1));
+                    }
+
+                    // SE FOR LICENCIADO/MESTRE VER SE A PESSOA JÁ TEM ORIENTADORES PARA O PROJETO
+                    if(pessoa.getCusto() != 1000){
+
+                        // LICENCIADO
+
+                        if(pessoa.getCusto() == 500 ){
+                            Licenciado l = (Licenciado) pessoa;
+                            // VERIFICAR SE TEM ALGUM ORIENTADOR
+                            if(l.getOrientadores() == null){
+                                // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
+                                ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
+                                int num = scanner.nextInt();
+                                while (num <= 0 || num > docentesProjeto.size()) {
+                                    System.out.println("Opção inválida. Escolha um Orientador:");
+                                    num = scanner.nextInt();
+                                }
+                                // ADICIONAR ORIENTADOR AO LICENCIADO
+                                l.getOrientadores().add(docentesProjeto.get(num-1));
+                            }
+                            // SE JÁ TIVER ORIENTADOR
+                            else{
+                                System.out.println("Deseja adicionar orientador? (Sim/Nao)");
+                                String resp = scanner.nextLine();
+                                while(resp == "Sim"){
+                                    // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
+                                    ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
+                                    int num = scanner.nextInt();
+                                    while (num <= 0 || num > docentesProjeto.size()) {
+                                        System.out.println("Opção inválida. Escolha um Orientador:");
+                                        num = scanner.nextInt();
+                                    }
+                                    // VERIFICAR SE ORIENTADOR JA ESTA NA LISTA DOS ORIENTADORES DO LICENCIADO
+                                    for(int q=0; q<l.getOrientadores().size(); q++){
+                                        if(l.getOrientadores().get(q) == docentesProjeto.get(num-1)){
+                                            System.out.println("Orientador já adicionado anteriormente.");
+                                        }
+                                        else{
+                                            // ADICIONAR ORIENTADOR AO LICENCIADO
+                                            l.getOrientadores().add(docentesProjeto.get(num-1));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // MESTRE
+
+                        else{
+                            Mestre m = (Mestre) pessoa;
+                            // VERIFICAR SE TEM ALGUM ORIENTADOR
+                            if(m.getOrientadores() == null){
+                                // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
+                                ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
+                                int num = scanner.nextInt();
+                                while (num <= 0 || num > docentesProjeto.size()) {
+                                    System.out.println("Opção inválida. Escolha um Orientador:");
+                                    num = scanner.nextInt();
+                                }
+                                // ADICIONAR ORIENTADOR AO MESTRE
+                                m.getOrientadores().add(docentesProjeto.get(num-1));
+                            }
+                            // SE JÁ TIVER ORIENTADOR
+                            else{
+                                System.out.println("Deseja adicionar orientador? (Sim/Nao)");
+                                String resp = scanner.nextLine();
+                                while(resp == "Sim"){
+                                    // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
+                                    ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
+                                    int num = scanner.nextInt();
+                                    while (num <= 0 || num > docentesProjeto.size()) {
+                                        System.out.println("Opção inválida. Escolha um Orientador:");
+                                        num = scanner.nextInt();
+                                    }
+                                    // VERIFICAR SE ORIENTADOR JA ESTA NA LISTA DOS ORIENTADORES DO MESTRE
+                                    for(int q=0; q<m.getOrientadores().size(); q++){
+                                        if(m.getOrientadores().get(q) == docentesProjeto.get(num-1)){
+                                            System.out.println("Orientador já adicionado anteriormente.");
+                                        }
+                                        else{
+                                            // ADICIONAR ORIENTADOR AO LICENCIADO
+                                            m.getOrientadores().add(docentesProjeto.get(num-1));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else{
+
+                        // ADICIONAR DOUTORADO A LISTA DE PESSOAS ENVOLVIDAS NO PROJETO
+                        projeto.getPessoasEnvolvidas().add(pessoa);
+                    }
+                }else{
+                    System.out.println("Bolseiro já está associado a um projeto");
+                }
             }
-            System.out.println("Insira o Investigador Principal");
-            int nIp = scanner.nextInt();
-            projeto.setIp(docentes.get(nIp -1));
+            // SE FOR DOCENTE
+            // VER SE JÁ TEM INVESTIGADOR PRINCIPAL
+            if(projeto.getIp() == null){
+                // O INVESTIGADOR PRINCIPAL TEM QUE SER UM DOCENTE
+                ArrayList<Docente> docentes = getDocentes();
+                int i=1;
+                // imprimir lista de docentes
+                for(Docente d: docentes){
+                    System.out.println(i++ + "-" + d.getNome());
+                }
+                System.out.println("Insira o Investigador Principal");
+                int nIp = scanner.nextInt();
+                while (nIp <= 0 || nIp > docentes.size()) {
+                    System.out.println("Opção inválida. Escolha um Docente:");
+                    nIp = scanner.nextInt();
+                }
+                projeto.setIp(docentes.get(nIp - 1));
+            }
+            // ADICIONAR DOCENTE A LISTA DE PESSOAS ENVOLVIDAS NO PROJETO
+            projeto.getPessoasEnvolvidas().add(pessoa);
+        }else{
+            System.out.println("Pessoa já está associada ao projeto.");
         }
-        // Se é Bolseiro
-        /*if(pessoa.getNumeroMecanografico() == 0){
-            // Se for Licenciado ou Mestre
-            if(!pessoa.isDoutorado()){
-                // se a lista de orientadores estiver vazia
-                //if( pessoa.getOrientadores().size() == 0){
-                    //System.out.println(getDocentes);
-                    //System.out.println("Adicione um orientador");
-                    //int no = scanner.nextInt();
-                    //Docente docente = pessoas.get(no-1);
-
-
-               // }
-            }else{
-
-            }
-
-        }*/
-        projeto.getPessoasEnvolvidas().add(pessoa);
     }
 
     public void printProjetosNomes(){
+        /**
+         * Method that prints all project names with an indice before the name.
+         */
         int i=1;
         for(Projeto p: projetos){
             System.out.println(i++ + "-" + p.getNome());
@@ -1063,10 +1139,76 @@ public class Cisuc {
     }
 
     public void printPessoasNomes(){
+        /**
+         * Method that prints all people names with an indice before the name.
+         */
         int i=1;
         for(Pessoa p: pessoas){
             System.out.println(i++ + "-" +  p.getNome());
         }
+    }
+
+    public boolean verificaRepeticao(Projeto projeto, Pessoa pessoa){
+        /**
+         * Method that verifies if a person is already on a project.
+         * @return true if the person is already on.
+         * @return false if the person isn´t already on the project.
+         */
+        // Verificar se não é o investifador principal
+        if(projeto.getIp()!=pessoa) {
+            for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
+                // Verificar que não está nas lista das pessoas envolvidas no projeto
+                if (projeto.getPessoasEnvolvidas().get(i) != pessoa) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean verificarSeAlgumProjeto(Pessoa pessoa){
+        /**
+         * Method that verifies if Bolseiro has already one project.
+         * @return true if Bolseiro has already one project
+         * @return false if Bolseiro has already one project
+         */
+        // Percorrer todos os projetos
+        for(Projeto p:projetos){
+            // Percorrer a lista das pessoas envolvidas no projeto
+            for(int i=0; i<p.getPessoasEnvolvidas().size(); i++){
+                // Verificar se o Bolseiro já está num projeto
+                if(p.getPessoasEnvolvidas().get(i) == pessoa){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Docente> printOrientadoresProjetoDocentes(Projeto projeto){
+        ArrayList<Docente> docentes;
+        docentes = getDocentes();
+        ArrayList<Docente> docentesProjeto = new ArrayList<>();
+
+        // Orientadores têm que ser Docentes e fazer parte do projeto
+        for( Docente d: docentes){
+            // Percorrer pessoas envolvidas no projeto
+            for(int i=0; i<projeto.getPessoasEnvolvidas().size(); i++){
+                // Se o docente fizer parte das pessoas envolvidas no projeto adicionar
+                if(projeto.getPessoasEnvolvidas().get(i) == d){
+                    docentesProjeto.add(d);
+                }
+            }
+            // Ver se o docente é Investigador principal do projeto
+            if(projeto.getIp() == d){
+                docentesProjeto.add(d);
+            }
+        }
+        int n=1;
+        for(Docente dc: docentesProjeto){
+            System.out.println(n++ + " - " + dc);
+        }
+    return docentesProjeto;
     }
 }
 
