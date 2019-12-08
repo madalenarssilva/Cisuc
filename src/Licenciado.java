@@ -53,7 +53,7 @@ public class Licenciado extends Bolseiro{
      */
     public double calculaCusto(String dataInicial, String dataFinal) {
         long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicial).withDayOfMonth(1),  LocalDate.parse(dataFinal).withDayOfMonth(1));
-        System.out.println("Duracao bolsa: " + duracao_bolsa);
+        System.out.println("Duração da bolsa: " + duracao_bolsa + " meses");
         return duracao_bolsa*500;
     }
 
@@ -63,8 +63,9 @@ public class Licenciado extends Bolseiro{
 
     @Override
     public String toString() {
-        return super.toString() + "\nLicenciado:" +
-                "\norientadores=" + orientadores +
-                "\nCusto Bola Licenciado:" + calculaCusto(super.getDataInicio(), super.getDataFim());
+        return "Licenciado{" + super.toString() +
+                ", orientadores=" + orientadores +
+                ", custo bolsa=" + calculaCusto(getDataInicio(), getDataFim()) +
+                '}';
     }
 }

@@ -37,9 +37,23 @@ class Desenvolvimento extends Tarefa{
      * Method that calculates the execution rate of the task.
      * @return execution rate of the task
      */
-    public long calculaTaxa() {
+    public long calculaTaxaExecucao() {
         long dias_passados = 0;
 
         return (long) (dias_passados*1);
+    }
+
+    /**
+     * Method that returns the effort rate of the task.
+     * @return effort rate of the task
+     */
+    public double getTaxaEsforco() {
+        return 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Desenvolvimento{" + super.toString() +
+                '}';
     }
 }

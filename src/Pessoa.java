@@ -83,8 +83,11 @@ public abstract class Pessoa {
 
     public abstract Boolean isDoutorado();
 
+    @Override
     public String toString() {
-        return "\nNome:" + nome + "\nMail:" + mail;
+        return "nome='" + nome + '\'' +
+                ", mail='" + mail + '\'' +
+                ", numeroMecanografico=" + numeroMecanografico;
     }
 }
 

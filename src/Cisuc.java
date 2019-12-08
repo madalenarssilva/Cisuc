@@ -680,6 +680,7 @@ public class Cisuc {
     }
 
     public void criarTarefas() {
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Criação de Tarefa------");
 
@@ -996,13 +997,16 @@ public class Cisuc {
          * @return true if person would be overloaded and false otherwise
          */
 
-        long carga = 0;
+        double carga = 0.0;
+
+        System.out.println(pessoa.getNome());
 
         for (Tarefa t : tarefas) {
             if (t.getResponsavel() == pessoa)
-                carga += t.calculaTaxa();
+                carga += t.getTaxaEsforco();
         }
-        if (carga + tarefa.calculaTaxa() >= 1)
+        System.out.println(carga);
+        if (carga + tarefa.getTaxaEsforco() > 1)
             return true;
         return false;
     }

@@ -82,7 +82,8 @@ public class Docente extends Pessoa {
     public String toString() {
         return "Docente{" + super.toString() +
                 ", NumeroMecanografico='" + numeroMecanografico + '\'' +
-                ", areaInvestigacao='" + areaInvestigacao + '\'' + ", custo='" + calculaCusto(null, null) + '\'' +
+                ", areaInvestigacao='" + areaInvestigacao + '\'' +
+                ", custo='" + calculaCusto(null, null) + '\'' +
                 '}';
     }
 }

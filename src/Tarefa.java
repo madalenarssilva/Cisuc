@@ -124,12 +124,13 @@ abstract class Tarefa {
         return duracao;
     }
 
-    public abstract long calculaTaxa();
+    public abstract long calculaTaxaExecucao();
+
+    public abstract double getTaxaEsforco();
 
     @Override
     public String toString() {
-        return "Tarefa{" +
-                "dataInicio='" + dataInicio + '\'' +
+        return "dataInicio='" + dataInicio + '\'' +
                 ", percentagemConclusao=" + percentagemConclusao +
                 ", dataFim='" + dataFim + '\'' +
                 ", responsavel=" + responsavel +
