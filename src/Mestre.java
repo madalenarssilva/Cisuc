@@ -59,7 +59,8 @@ public class Mestre extends Bolseiro{
      * @return total cost for the project
      */
     public double calculaCusto(String dataInicio, String dataFim) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataInicio()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
+        System.out.println("Duracao bolsa: " + duracao_bolsa);
         return duracao_bolsa*800;
     }
 
@@ -71,6 +72,6 @@ public class Mestre extends Bolseiro{
     public String toString() {
         return super.toString() + "\nMestre:" +
                 "\norientadores=" + orientadores +
-                "\nCusto Mestre:" + calculaCusto(getDataInicio(), getDataFim());
+                "\nCusto Bolsa Mestre:" + calculaCusto(getDataInicio(), getDataFim());
     }
 }

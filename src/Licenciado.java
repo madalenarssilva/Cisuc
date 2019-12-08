@@ -57,7 +57,8 @@ public class Licenciado extends Bolseiro{
      * @return total cost for the project
      */
     public double calculaCusto(String dataInicial, String dataFinal) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataFim()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicial).withDayOfMonth(1),  LocalDate.parse(dataFinal).withDayOfMonth(1));
+        System.out.println("Duracao bolsa: " + duracao_bolsa);
         return duracao_bolsa*500;
     }
 
@@ -69,6 +70,6 @@ public class Licenciado extends Bolseiro{
     public String toString() {
         return super.toString() + "\nLicenciado:" +
                 "\norientadores=" + orientadores +
-                "\nCusto Licenciado:" + calculaCusto(getDataInicio(), getDataFim());
+                "\nCusto Bola Licenciado:" + calculaCusto(super.getDataInicio(), super.getDataFim());
     }
 }

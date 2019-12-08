@@ -37,13 +37,14 @@ public class Doutorado extends Bolseiro{
      * @return total cost for the project
      */
     public double calculaCusto(String dataInicio, String dataFim) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataInicio()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
+        System.out.println("Duracao bolsa: " + duracao_bolsa);
         return duracao_bolsa*1000;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\nDoutorado" + "\nCusto Doutorado:" + calculaCusto(getDataInicio(), getDataFim());
+        return super.toString() + "\nDoutorado:" + "\nCusto Bolsa Doutorado:" + calculaCusto(getDataInicio(), getDataFim());
     }
 }
 

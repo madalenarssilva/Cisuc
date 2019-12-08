@@ -183,8 +183,13 @@ public class Projeto {
 
     private double calculaCustoProjeto(String dataInicio, String dataFim){
         double custoTotal = 0;
-        for(Pessoa p: pessoasEnvolvidas){
-            custoTotal += p.calculaCusto(dataInicio, dataFim);
+        if(pessoasEnvolvidas == null){
+            custoTotal = 0;
+        }
+        else {
+            for (Pessoa p : pessoasEnvolvidas) {
+                custoTotal += p.calculaCusto(dataInicio, dataFim);
+            }
         }
         return custoTotal;
     }
