@@ -33,11 +33,6 @@ public class Mestre extends Bolseiro{
         this.orientadores = orientadores;
     }
 
-    public Mestre(String nome, String mail, String dataInicio, String dataFim, ArrayList<Docente> orientadores, ArrayList<Projeto> projetos) {
-        super(nome, mail, dataInicio, dataFim, projetos);
-        this.orientadores = orientadores;
-    }
-
     /**
      * Get orientadores
      * @return orientadores

@@ -27,19 +27,6 @@ public abstract class Bolseiro extends Pessoa{
     }
 
     /**
-     * Constructor
-     * @param nome
-     * @param mail
-     * @param dataInicio
-     * @param dataFim
-     */
-    public Bolseiro(String nome, String mail, String dataInicio, String dataFim, ArrayList<Projeto> projetos) {
-        super(nome, mail, projetos);
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-    }
-
-    /**
      * Get dataInicio
      * @return dataInicio
      */

@@ -28,20 +28,6 @@ public class Docente extends Pessoa {
     }
 
     /**
-     * Constructor
-     *
-     * @param nome
-     * @param mail
-     * @param numeroMecanografico
-     * @param areaInvestigacao
-     */
-    public Docente(String nome, String mail, int numeroMecanografico, String areaInvestigacao, ArrayList<Projeto> projetos) {
-        super(nome, mail, projetos);
-        this.numeroMecanografico = numeroMecanografico;
-        this.areaInvestigacao = areaInvestigacao;
-    }
-
-    /**
      * Get numeroMecanografico
      *
      * @return numeroMecanografico

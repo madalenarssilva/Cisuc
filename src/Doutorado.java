@@ -24,10 +24,6 @@ public class Doutorado extends Bolseiro{
         super(nome, mail, dataInicio, dataFim);
     }
 
-    public Doutorado(String nome, String mail, String dataInicio, String dataFim, ArrayList<Projeto> projetos) {
-        super(nome, mail, dataInicio, dataFim, projetos);
-    }
-
     public Boolean isDoutorado(){
         return true;
     }

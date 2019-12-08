@@ -1010,12 +1010,18 @@ public class Cisuc {
     public void associarPessoasAProjetos(){
 
         Scanner scanner= new Scanner(System.in);
-        // PROJETOS
+        // ESCOLHER PROJETO
         printProjetosNomes();
         System.out.println("Escolha um Projeto para associar.");
         int n = scanner.nextInt();
         Projeto projeto = projetos.get(n-1);
         System.out.println(projeto);
+        // ESCOLHER PESSOA
+        printPessoasNomes();
+        System.out.println("Escolha uma Pessoa para associar.");
+        int n2 = scanner.nextInt();
+        Pessoa pessoa = pessoas.get(n2-1);
+        System.out.println(pessoa);
         // Ver se o projeto tem Investigador principal
         if(projeto.getIp() == null){
             // O investigador principal tem q ser um docente
@@ -1028,11 +1034,6 @@ public class Cisuc {
             int nIp = scanner.nextInt();
             projeto.setIp(docentes.get(nIp -1));
         }
-        printPessoasNomes();
-        System.out.println("Escolha uma Pessoa para associar.");
-        int n2 = scanner.nextInt();
-        Pessoa pessoa = pessoas.get(n2-1);
-        System.out.println(pessoa);
         // Se é Bolseiro
         /*if(pessoa.getNumeroMecanografico() == 0){
             // Se for Licenciado ou Mestre
@@ -1052,7 +1053,6 @@ public class Cisuc {
 
         }*/
         projeto.getPessoasEnvolvidas().add(pessoa);
-        pessoa.getProjetos().add(projeto);
     }
 
     public void printProjetosNomes(){
