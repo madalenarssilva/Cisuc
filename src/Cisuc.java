@@ -666,10 +666,13 @@ public class Cisuc {
                     Docente dc = (Docente) p;
                     docentes.add(dc);
                 } else {
-                    //Não existem docentes
-                    System.out.println("Insira Docentes na aplicação");
-                    Menu();
+                    continue;
                 }
+            }
+            if(docentes.size() == 0) {
+                //Não existem docentes
+                System.out.println("Insira Docentes na aplicação");
+                Menu();
             }
         } else {
             //A lista das pessoas está vazia
@@ -693,10 +696,13 @@ public class Cisuc {
                     Bolseiro bs = (Bolseiro) p;
                     bolseiros.add(bs);
                 } else {
-                    //Não existem bolseiros
-                    System.out.println("Insira Bolseiros na aplicação");
-                    Menu();
+                    continue;
                 }
+            }
+            if(bolseiros.size() == 0) {
+                //Não existem docentes
+                System.out.println("Insira Bolseiros na aplicação");
+                Menu();
             }
         } else {
             //A lista das pessoas está vazia
