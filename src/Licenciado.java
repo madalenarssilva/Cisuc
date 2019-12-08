@@ -60,8 +60,9 @@ public class Licenciado extends Bolseiro{
 
     @Override
     public String toString() {
-        return super.toString() + "\nLicenciado:" +
-                "\norientadores=" + orientadores +
-                "\nCusto:" + custo;
+        return "Licenciado{" + super.toString() +
+                ", orientadores=" + orientadores +
+                ", custo=" + custo +
+                '}';
     }
 }

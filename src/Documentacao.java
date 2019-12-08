@@ -23,6 +23,16 @@ class Documentacao extends Tarefa{
     }
 
     /**
+     * Constructor
+     * @param dataInicio
+     * @param percentagemConclusao
+     * @param dataFim
+     */
+    public Documentacao(String dataInicio, int percentagemConclusao, String dataFim) {
+        super(dataInicio, percentagemConclusao, dataFim);
+    }
+
+    /**
      * Method that calculates the execution rate of the task.
      * @return execution rate of the task
      */

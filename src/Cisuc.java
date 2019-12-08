@@ -1,4 +1,5 @@
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import sun.security.krb5.internal.crypto.Des;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -81,7 +82,8 @@ public class Cisuc {
         System.out.println("2. Listar os projetos não concluídos na data estimada.");
         System.out.println("3. Listar os projectos concluídos.");
         System.out.println("4. Editar Projeto");
-        System.out.println("5. Sair");
+        System.out.println("5. Criar Tarefas");
+        System.out.println("6. Sair");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         switch (opcao) {
@@ -100,6 +102,10 @@ public class Cisuc {
                 System.out.println("4");
                 break;
             case 5:
+                criarTarefas();
+                printTarefas();
+                break;
+            case 6:
                 exitMenu = true;
                 System.out.println("Bye");
                 break;
@@ -452,7 +458,7 @@ public class Cisuc {
         }
     }
 
-    //                                           CRIAR PROJETOS E PESSOAS
+    //                                           CRIAR PROJETOS, PESSOAS E TAREFAS
 
     public void criarProjetos() {
         Scanner scanner = new Scanner(System.in);
@@ -678,6 +684,162 @@ public class Cisuc {
         }
     }
 
+    public void criarTarefas() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-----Criação de Tarefa------");
+
+        // PROJETO ESCOLHIDO
+        System.out.println("Escolha o projeto:");
+        for (int i = 0; i < projetos.size(); i++) {
+            System.out.println((i+1) + ": " + projetos.get(i).getNome());
+        }
+
+        //Verificar se a opção escolhida existe.
+        int numProj = scanner.nextInt();
+        while (numProj <= 0 || numProj > projetos.size()) {
+            System.out.println("Opção inválida. Volte a escolher o projeto:");
+            numProj = scanner.nextInt();
+        }
+
+        Projeto projeto = projetos.get(numProj-1);
+
+        scanner.nextLine();   //Skip the Newline Character.
+
+        // DATA INICIO
+        System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+        String dataInicio = scanner.nextLine();
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataInicio.isEmpty() || !validarData1(dataInicio) || !validarData2(projeto.getDataInicio(), dataInicio)) {
+            if (dataInicio.isEmpty())
+                System.out.println("Input vazio");
+            System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+            dataInicio = scanner.nextLine();
+        }
+
+        // DATA FIM
+        System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+        String dataFim = scanner.nextLine();
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataFim.isEmpty() || !validarData1(dataFim) || !validarData2(dataFim, projeto.getDataFim())) {
+            if (dataFim.isEmpty())
+                System.out.println("Input vazio");
+            System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+            dataFim = scanner.nextLine();
+        }
+
+        //Não aceitar datas incoerentes.
+        while(!validarData2(dataInicio, dataFim)) {
+            System.out.println("DataInicio (yyyy-MM-dd): ");
+            dataInicio = scanner.nextLine();
+            System.out.println("DataFim (yyyy-MM-dd): ");
+            dataFim = scanner.nextLine();
+        }
+
+        // PESSOA RESPONSÁVEL
+
+        //Pessoas que não ficarão sobrecarregadas.
+        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
+        Pessoa responsavel;
+
+        System.out.println("Escolha entre as opções:");
+        System.out.println("1.Design");
+        System.out.println("2.Desenvolvimento");
+        System.out.println("3.Documentação");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();   //Skip the Newline Character.
+
+        switch (opcao) {
+            case 1:
+                Design design = new Design(dataInicio, 0, dataFim);
+
+                if (!isSobrecarregada(projeto.getIp(), design))
+                    pessoasDisponiveis.add(projeto.getIp());
+                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
+                    if (!isSobrecarregada(pessoa, design)) {
+                        pessoasDisponiveis.add(pessoa);
+                    }
+                }
+
+                System.out.println("Escolha a pessoa responsável pela tarefa:");
+                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
+                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
+                }
+
+                //Verificar se a opção escolhida existe.
+                int numPessoa = scanner.nextInt();
+                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
+                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
+                    numPessoa = scanner.nextInt();
+                }
+                responsavel = pessoasDisponiveis.get(numPessoa-1);
+
+                design.setResponsavel(responsavel);
+                tarefas.add(design);
+                break;
+            case 2:
+                Desenvolvimento des = new Desenvolvimento(dataInicio, 0, dataFim);
+
+                if (!isSobrecarregada(projeto.getIp(), des))
+                    pessoasDisponiveis.add(projeto.getIp());
+                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
+                    if (!isSobrecarregada(pessoa, des)) {
+                        pessoasDisponiveis.add(pessoa);
+                    }
+                }
+
+                System.out.println("Escolha a pessoa responsável pela tarefa:");
+                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
+                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
+                }
+
+                //Verificar se a opção escolhida existe.
+                numPessoa = scanner.nextInt();
+                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
+                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
+                    numPessoa = scanner.nextInt();
+                }
+                responsavel = pessoasDisponiveis.get(numPessoa-1);
+
+                des.setResponsavel(responsavel);
+                tarefas.add(des);
+                break;
+            case 3:
+                Documentacao doc = new Documentacao(dataInicio, 0, dataFim);
+
+                if (!isSobrecarregada(projeto.getIp(), doc))
+                    pessoasDisponiveis.add(projeto.getIp());
+                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
+                    if (!isSobrecarregada(pessoa, doc)) {
+                        pessoasDisponiveis.add(pessoa);
+                    }
+                }
+
+                System.out.println("Escolha a pessoa responsável pela tarefa:");
+                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
+                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
+                }
+
+                //Verificar se a opção escolhida existe.
+                numPessoa = scanner.nextInt();
+                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
+                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
+                    numPessoa = scanner.nextInt();
+                }
+                responsavel = pessoasDisponiveis.get(numPessoa-1);
+
+                doc.setResponsavel(responsavel);
+                tarefas.add(doc);
+            default:
+                System.out.println("Escolha uma opção existente.");
+        }
+    }
+
+    public void printTarefas() {
+        for (Tarefa t : tarefas) {
+            System.out.println(t);
+        }
+    }
+
     public ArrayList<Docente> getDocente() {
         /**
          * Method to get a list of all People who are "Docentes".
@@ -800,8 +962,6 @@ public class Cisuc {
             return false;
         }
 
-        System.out.println(ano + " " + mes + " " + dia);
-
         if (((int) Math.log10(ano) + 1) == 4 && (((int) Math.log10(mes) + 1) == 2 || ((int) Math.log10(mes) + 1) == 1) && (((int) Math.log10(dia) + 1) == 2 || ((int) Math.log10(dia) + 1) == 1 ) && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
             return true;
         }
@@ -814,7 +974,7 @@ public class Cisuc {
     public Boolean validarData2(String dataIni, String dataFim) {
 
         /**
-         * Method that compares beginning date and end date and checks if end date is after beginning date.
+         * Method that compares beginning date and end date and checks if end date is or is after beginning date.
          * @param dataIni (beginning date)
          * @param dataFim (end date)
          * @return true if dates are right and false otherwise
@@ -823,13 +983,33 @@ public class Cisuc {
         String data1 = dataIni.replaceAll("-", "");
         String data2 = dataFim.replaceAll("-", "");
 
-        if (Integer.parseInt(data1) < Integer.parseInt(data2)) {
+        if (Integer.parseInt(data1) <= Integer.parseInt(data2)) {
             return true;
         }
         else {
             System.out.println("Datas incoerentes.");
             return false;
         }
+    }
+
+    public Boolean isSobrecarregada(Pessoa pessoa, Tarefa tarefa) {
+
+        /**
+         * Method that checks if a new task will make a person overloaded with work.
+         * @param pessoa
+         * @param tarefa (new task to associate to person)
+         * @return true if person would be overloaded and false otherwise
+         */
+
+        long carga = 0;
+
+        for (Tarefa t : tarefas) {
+            if (t.getResponsavel() == pessoa)
+                carga += t.calculaTaxa();
+        }
+        if (carga + tarefa.calculaTaxa() >= 1)
+            return true;
+        return false;
     }
 
     public void imprimirDocentes(ArrayList<Docente> docentes) {

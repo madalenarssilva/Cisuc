@@ -56,11 +56,10 @@ public abstract class Bolseiro extends Pessoa{
         this.dataFim = dataFim;
     }
 
-
     @Override
     public String toString() {
-        return super.toString() + "\nBolseiro:" +
-                "\ndataInicio:" + dataInicio +
-                "\ndataFim:" + dataFim;
+        return super.toString() +
+                ", dataInicio='" + dataInicio + '\'' +
+                ", dataFim='" + dataFim + '\'';
     }
 }

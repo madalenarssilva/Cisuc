@@ -79,8 +79,11 @@ public abstract class Pessoa {
      */
     public abstract double calculaCusto();
 
+    @Override
     public String toString() {
-        return "Nome:" + nome + "\nMail:" + mail;
+        return "nome='" + nome + '\'' +
+                ", mail='" + mail + '\'' +
+                ", numeroMecanografico=" + numeroMecanografico;
     }
 }
 
