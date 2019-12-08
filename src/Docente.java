@@ -74,8 +74,8 @@ public class Docente extends Pessoa {
         return 0;
     }
 
-    public Boolean isDoutorado(){
-        return false;
+    public int getCusto(){
+        return 0;
     }
 
     @Override

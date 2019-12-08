@@ -81,7 +81,7 @@ public abstract class Pessoa {
      */
     public abstract double calculaCusto(String dataInicial, String dataFinal);
 
-    public abstract Boolean isDoutorado();
+    public abstract int getCusto();
 
     @Override
     public String toString() {

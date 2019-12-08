@@ -59,8 +59,8 @@ public class Mestre extends Bolseiro{
         return duracao_bolsa*800;
     }
 
-    public Boolean isDoutorado() {
-        return false;
+    public int getCusto() {
+        return 800;
     }
 
     @Override
