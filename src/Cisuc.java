@@ -620,20 +620,34 @@ public class Cisuc {
             case 2:
                 System.out.println("Data inicio: ");
                 String dataInicio = scanner.next();
-                // Não aceitar input vazio
-                while(dataInicio.isEmpty()){
-                    System.out.println("Input vazio");
-                    System.out.println("Data inicio: ");
-                    dataInicio = scanner.next();
+
+                //Não aceitar inputs vazios nem datas inválidas.
+                while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
+                    if (dataInicio.isEmpty())
+                        System.out.println("Input vazio");
+                    System.out.println("DataInicio (yyyy-MM-dd): ");
+                    dataInicio = scanner.nextLine();
                 }
+
                 System.out.println("Data fim: ");
                 String dataFim = scanner.next();
-                // Não aceitar input vazio
-                while(dataFim.isEmpty()){
-                    System.out.println("Input vazio");
-                    System.out.println("Data fim: ");
-                    dataFim = scanner.next();
+
+                //Não aceitar inputs vazios nem datas inválidas.
+                while(dataFim.isEmpty() || !validarData1(dataFim)) {
+                    if (dataFim.isEmpty())
+                        System.out.println("Input vazio");
+                    System.out.println("DataFim (yyyy-MM-dd): ");
+                    dataFim = scanner.nextLine();
                 }
+
+                //Não aceitar datas incoerentes.
+                while(!validarData2(dataInicio, dataFim)) {
+                    System.out.println("DataInicio (yyyy-MM-dd): ");
+                    dataInicio = scanner.nextLine();
+                    System.out.println("DataFim (yyyy-MM-dd): ");
+                    dataFim = scanner.nextLine();
+                }
+
                 System.out.println("Escolha entre as opções:");
                 System.out.println("1.Licenciatura");
                 System.out.println("2.Mestrado");
