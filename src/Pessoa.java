@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * <h1>Class Pessoa: </h1>
  */
@@ -7,6 +9,7 @@ public abstract class Pessoa {
     private String nome;
     private String mail;
     private int numeroMecanografico;
+    private ArrayList<Projeto> projetos;
 
     /**
      * Constructor inicializing numeroMecanografico.
@@ -14,6 +17,7 @@ public abstract class Pessoa {
 
     Pessoa() {
         numeroMecanografico = 0;
+        projetos = new ArrayList<>();
     }
 
     /**
@@ -24,6 +28,18 @@ public abstract class Pessoa {
     public Pessoa(String nome, String mail) {
         this.nome = nome;
         this.mail = mail;
+    }
+
+    /**
+     * Constructor
+     * @param nome
+     * @param mail
+     * @param projetos
+     */
+    public Pessoa(String nome, String mail, ArrayList<Projeto> projetos) {
+        this.nome = nome;
+        this.mail = mail;
+        this.projetos = projetos;
     }
 
     /**
@@ -75,15 +91,30 @@ public abstract class Pessoa {
     }
 
     /**
+     * Get projetos
+     * @return projetos
+     */
+    public ArrayList<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    /**
+     * Set projetos
+     * @param projetos
+     */
+    public void setProjetos(ArrayList<Projeto> projetos) {
+        this.projetos = projetos;
+    }
+
+    /**
      * Abstract method
      */
-    public abstract double calculaCusto();
+    public abstract double calculaCusto(String dataInicial, String dataFinal);
 
-    @Override
+    public abstract Boolean isDoutorado();
+
     public String toString() {
-        return "nome='" + nome + '\'' +
-                ", mail='" + mail + '\'' +
-                ", numeroMecanografico=" + numeroMecanografico;
+        return "\nNome:" + nome + "\nMail:" + mail;
     }
 }
 

@@ -1,6 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import sun.security.krb5.internal.crypto.Des;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -44,14 +41,6 @@ public class Cisuc {
         lerFicheirosPessoas();
         lerFicheirosProjetos();
         lerFicheirosTarefas();
-        //printProjetos();
-        // Ask for username and password
-        Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.print("Username: ");
-        String nome = scanner.nextLine();
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
 
         //Menu
         while (!exitMenu) {
@@ -78,12 +67,12 @@ public class Cisuc {
         System.out.println("Menu: ");
         System.out.println("1. Criar projetos.");
         System.out.println("2. Adicionar pessoas à app.");
-        System.out.println("1. Associar pessoas a projetos.");
-        System.out.println("2. Listar os projetos não concluídos na data estimada.");
-        System.out.println("3. Listar os projectos concluídos.");
-        System.out.println("4. Editar Projeto");
-        System.out.println("5. Criar Tarefas");
-        System.out.println("6. Sair");
+        System.out.println("3. Associar pessoas a projetos.");
+        System.out.println("4. Listar os projetos não concluídos na data estimada.");
+        System.out.println("5. Listar os projectos concluídos.");
+        System.out.println("6. Editar Projeto");
+        System.out.println("7. Criar Tarefas");
+        System.out.println("8. Sair");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         switch (opcao) {
@@ -96,16 +85,22 @@ public class Cisuc {
                 printPessoas();
                 break;
             case 3:
-                System.out.println("3");
+                associarPessoasAProjetos();
                 break;
             case 4:
                 System.out.println("4");
                 break;
             case 5:
+                System.out.println("5");
+                break;
+            case 6:
+                System.out.println("6");
+                break;
+            case 7:
                 criarTarefas();
                 printTarefas();
                 break;
-            case 6:
+            case 8:
                 exitMenu = true;
                 System.out.println("Bye");
                 break;
@@ -624,25 +619,25 @@ public class Cisuc {
                 pessoas.add(d);
                 break;
             case 2:
-                System.out.println("Data inicio: ");
+                System.out.println("DataInicio Bolsa(yyyy-MM-dd): ");
                 String dataInicio = scanner.next();
 
                 //Não aceitar inputs vazios nem datas inválidas.
                 while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
                     if (dataInicio.isEmpty())
                         System.out.println("Input vazio");
-                    System.out.println("DataInicio (yyyy-MM-dd): ");
+                    System.out.println("DataInicio Bolsa(yyyy-MM-dd): ");
                     dataInicio = scanner.nextLine();
                 }
 
-                System.out.println("Data fim: ");
+                System.out.println("Data Fim Bolsa(yyyy-MM-dd): ");
                 String dataFim = scanner.next();
 
                 //Não aceitar inputs vazios nem datas inválidas.
                 while(dataFim.isEmpty() || !validarData1(dataFim)) {
                     if (dataFim.isEmpty())
                         System.out.println("Input vazio");
-                    System.out.println("DataFim (yyyy-MM-dd): ");
+                    System.out.println("DataFim Bolsa(yyyy-MM-dd): ");
                     dataFim = scanner.nextLine();
                 }
 
@@ -1012,34 +1007,65 @@ public class Cisuc {
         return false;
     }
 
-    public void imprimirDocentes(ArrayList<Docente> docentes) {
+    public void associarPessoasAProjetos(){
 
-        /**
-         * Method to print list of all People who are Docente so user can choose his orientor.
-         * @param ArrayList of docentes
-         */
-
-        if (pessoas.size() != 0) {
-            // Imprimir lista de todos os docentes para o utilizador escolher
-            for (Pessoa p : pessoas) {
-                // Ver se é Docente ou Bolseiro
-                if (p.getNumeroMecanografico() > 0) {
-                    int i = 1;
-                    // Imprimir todos os docentes
-                    System.out.println(i + "." + p.getNome());
-                    Docente dc = (Docente) p;
-                    docentes.add(dc);
-                    i++;
-                } else {
-                    //Não existem docentes
-                    System.out.println("Insira Docentes na aplicação");
-                    Menu();
-                }
+        Scanner scanner= new Scanner(System.in);
+        // PROJETOS
+        printProjetosNomes();
+        System.out.println("Escolha um Projeto para associar.");
+        int n = scanner.nextInt();
+        Projeto projeto = projetos.get(n-1);
+        System.out.println(projeto);
+        // Ver se o projeto tem Investigador principal
+        if(projeto.getIp() == null){
+            // O investigador principal tem q ser um docente
+            ArrayList<Docente> docentes = getDocentes();
+            int i=1;
+            for(Docente d: docentes){
+                System.out.println(i++ + "-" + d.getNome());
             }
-        } else {
-            //A lista das pessoas está vazia
-            System.out.println("Insira Pessoas na aplicação.");
-            Menu();
+            System.out.println("Insira o Investigador Principal");
+            int nIp = scanner.nextInt();
+            projeto.setIp(docentes.get(nIp -1));
+        }
+        printPessoasNomes();
+        System.out.println("Escolha uma Pessoa para associar.");
+        int n2 = scanner.nextInt();
+        Pessoa pessoa = pessoas.get(n2-1);
+        System.out.println(pessoa);
+        // Se é Bolseiro
+        /*if(pessoa.getNumeroMecanografico() == 0){
+            // Se for Licenciado ou Mestre
+            if(!pessoa.isDoutorado()){
+                // se a lista de orientadores estiver vazia
+                //if( pessoa.getOrientadores().size() == 0){
+                    //System.out.println(getDocentes);
+                    //System.out.println("Adicione um orientador");
+                    //int no = scanner.nextInt();
+                    //Docente docente = pessoas.get(no-1);
+
+
+               // }
+            }else{
+
+            }
+
+        }*/
+        projeto.getPessoasEnvolvidas().add(pessoa);
+        pessoa.getProjetos().add(projeto);
+    }
+
+    public void printProjetosNomes(){
+        int i=1;
+        for(Projeto p: projetos){
+            System.out.println(i++ + "-" + p.getNome());
+        }
+    }
+
+    public void printPessoasNomes(){
+        int i=1;
+        for(Pessoa p: pessoas){
+            System.out.println(i++ + "-" +  p.getNome());
         }
     }
 }

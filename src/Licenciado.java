@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 public class Licenciado extends Bolseiro{
     private ArrayList<Docente> orientadores;
-    private int custo = 500;
 
     /**
      * Empty Constructor
@@ -32,37 +31,44 @@ public class Licenciado extends Bolseiro{
         super(nome, mail, dataInicio, dataFim);
     }
 
-    /**
-     * Get Custo
-     * @return Custo
-     */
-    public int getCusto() {
-        return custo;
+    public Licenciado(String nome, String mail, String dataInicio, String dataFim, ArrayList<Docente> orientadores, ArrayList<Projeto> projetos) {
+        super(nome, mail, dataInicio, dataFim, projetos);
+        this.orientadores = orientadores;
     }
 
     /**
-     * Set dataInicio
-     * @param custo
+     * Get orientadores
+     * @return orientadores
      */
-    public void setCusto(int custo) {
-        this.custo = custo;
+    public ArrayList<Docente> getOrientadores() {
+        return orientadores;
+    }
+
+    /**
+     * Set orientadores
+     * @param orientadores
+     */
+    public void setOrientadores(ArrayList<Docente> orientadores) {
+        this.orientadores = orientadores;
     }
 
     /**
      * Method that calculates the cost for the project of a Bolseiro.
      * @return total cost for the project
      */
-    public double calculaCusto() {
+    public double calculaCusto(String dataInicial, String dataFinal) {
         long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(super.getDataFim()).withDayOfMonth(1),  LocalDate.parse(super.getDataFim()).withDayOfMonth(1));
+        return duracao_bolsa*500;
+    }
 
-        return duracao_bolsa*custo;
+    public Boolean isDoutorado() {
+        return false;
     }
 
     @Override
     public String toString() {
-        return "Licenciado{" + super.toString() +
-                ", orientadores=" + orientadores +
-                ", custo=" + custo +
-                '}';
+        return super.toString() + "\nLicenciado:" +
+                "\norientadores=" + orientadores +
+                "\nCusto Licenciado:" + calculaCusto(getDataInicio(), getDataFim());
     }
 }

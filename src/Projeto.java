@@ -181,18 +181,27 @@ public class Projeto {
         this.tarefas = tarefas;
     }
 
-    /**
-     * Method to calculate the duration of the project based on its beginning date and its ending date.
-     * @param dataInicio
-     * @param dataFim
-     * @return duracao
-     */
-    public long duracao(String dataInicio, String dataFim){
-
-        long duracao_meses = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
-        System.out.println(duracao_meses);
-        return duracao_meses;
+    private double calculaCustoProjeto(String dataInicio, String dataFim){
+        double custoTotal = 0;
+        for(Pessoa p: pessoasEnvolvidas){
+            custoTotal += p.calculaCusto(dataInicio, dataFim);
+        }
+        return custoTotal;
     }
+
+
+    /*private double calculaCustoPorTarefa(){
+        double custoTotal = 0;
+        for(Tarefa t: tarefas){
+            dataInicio = t.getDataInicio();
+            dataFim = t.getDataFim();
+            ArrayList<Pessoa> responsáveis = t.getResponsaveis();
+            for (Pessoa p: responsáveis){
+                custoTotal += p.calculaCusto(dataInicio, dataFim);
+            }
+        }
+        return custoTotal;
+    }*/
 
     @Override
     public String toString() {
@@ -203,6 +212,8 @@ public class Projeto {
                 "\nDtaFim='" + dataFim +
                 "\nIp=" + ip +
                 "\nPessoasEnvolvidas=" + pessoasEnvolvidas +
-                "\nTarefas=" + tarefas;
+                "\nTarefas=" + tarefas+
+                "\nCusto Projeto=" + calculaCustoProjeto(getDataInicio(), getDataFim());
     }
 }
+

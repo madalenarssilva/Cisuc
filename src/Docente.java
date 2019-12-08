@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * <h1>Class Docente</h1>
  */
@@ -21,6 +23,20 @@ public class Docente extends Pessoa {
      */
     public Docente(String nome, String mail, int numeroMecanografico, String areaInvestigacao) {
         super(nome, mail);
+        this.numeroMecanografico = numeroMecanografico;
+        this.areaInvestigacao = areaInvestigacao;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param nome
+     * @param mail
+     * @param numeroMecanografico
+     * @param areaInvestigacao
+     */
+    public Docente(String nome, String mail, int numeroMecanografico, String areaInvestigacao, ArrayList<Projeto> projetos) {
+        super(nome, mail, projetos);
         this.numeroMecanografico = numeroMecanografico;
         this.areaInvestigacao = areaInvestigacao;
     }
@@ -70,6 +86,10 @@ public class Docente extends Pessoa {
 
     public double calculaCusto() {
         return 0;
+    }
+
+    public Boolean isDoutorado(){
+        return false;
     }
 
     @Override

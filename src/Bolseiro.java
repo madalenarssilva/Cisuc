@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * <h1>Class Bolseiro</h1>
  */
@@ -20,6 +22,19 @@ public abstract class Bolseiro extends Pessoa{
      */
     public Bolseiro(String nome, String mail, String dataInicio, String dataFim) {
         super(nome, mail);
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
+
+    /**
+     * Constructor
+     * @param nome
+     * @param mail
+     * @param dataInicio
+     * @param dataFim
+     */
+    public Bolseiro(String nome, String mail, String dataInicio, String dataFim, ArrayList<Projeto> projetos) {
+        super(nome, mail, projetos);
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
     }

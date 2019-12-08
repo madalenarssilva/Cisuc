@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * <h1>Class Tarefa: </h1>
  * In this class we can add a responsible to the task and calculate the effort tax of each task.
@@ -9,6 +11,7 @@ abstract class Tarefa {
     private int percentagemConclusao;
     private String dataFim;
     private Pessoa responsavel;
+    private ArrayList<Pessoa> responsaveis;
 
     /**
      * Empty Constructor
@@ -23,11 +26,12 @@ abstract class Tarefa {
      * @param responsavel
      *
      */
-    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, ArrayList<Pessoa> responsaveis) {
         this.dataInicio = dataInicio;
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
         this.responsavel = responsavel;
+        this.responsaveis = responsaveis;
     }
 
     public Tarefa(String dataInicio, int percentagemConclusao, String dataFim) {
@@ -35,6 +39,15 @@ abstract class Tarefa {
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
     }
+
+    /**
+     * Get DataInicio
+     * @return dataInicio
+     */
+    public ArrayList<Pessoa> getResponsaveis() {
+        return responsaveis;
+    }
+
 
     /**
      * Get DataInicio
