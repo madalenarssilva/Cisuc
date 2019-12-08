@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 /**
  * <h1>Class Design</h1>
@@ -18,8 +19,8 @@ class Design extends Tarefa{
      * @param dataFim
      * @param responsavel
      */
-    public Design(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
-        super(dataInicio, percentagemConclusao, dataFim, responsavel);
+    public Design(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, ArrayList<Pessoa> responsaveis) {
+        super(dataInicio, percentagemConclusao, dataFim, responsavel, responsaveis);
     }
 
     /**

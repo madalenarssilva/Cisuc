@@ -352,7 +352,7 @@ public class Cisuc {
                         }
                         switch (s[0]) {
                             case "DESIGN":
-                                Design design = new Design(s[1], 0, s[2], responsavel);
+                                Design design = new Design(s[1], 0, s[2], responsavel, null);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -363,7 +363,7 @@ public class Cisuc {
                                 tarefas.add(design);
                                 break;
                             case "DESENVOLVIMENTO":
-                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel);
+                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel, null);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -374,7 +374,7 @@ public class Cisuc {
                                 tarefas.add(des);
                                 break;
                             case "DOCUMENTACAO":
-                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel);
+                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel, null);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {

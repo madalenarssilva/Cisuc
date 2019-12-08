@@ -84,7 +84,7 @@ public class Docente extends Pessoa {
      */
 
 
-    public double calculaCusto() {
+    public double calculaCusto(String dataInicial, String dataFinal) {
         return 0;
     }
 
