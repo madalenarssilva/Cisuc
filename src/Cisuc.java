@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -505,9 +507,10 @@ public class Cisuc {
         // DATA INICIO
         System.out.println("DataInicio (yyyy-MM-dd): ");
         String dataInicio = scanner.nextLine();
-        // Não aceitar inputs vazios
-        while(dataInicio.isEmpty()){
-            System.out.println("Input vazio");
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
+            if (dataInicio.isEmpty())
+                System.out.println("Input vazio");
             System.out.println("DataInicio (yyyy-MM-dd): ");
             dataInicio = scanner.nextLine();
         }
@@ -515,9 +518,18 @@ public class Cisuc {
         // DATA FIM
         System.out.println("DataFim (yyyy-MM-dd): ");
         String dataFim = scanner.nextLine();
-        // Não aceitar inputs vazios
-        while(dataFim.isEmpty()){
-            System.out.println("Input vazio");
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataFim.isEmpty() || !validarData1(dataFim)) {
+            if (dataFim.isEmpty())
+                System.out.println("Input vazio");
+            System.out.println("DataFim (yyyy-MM-dd): ");
+            dataFim = scanner.nextLine();
+        }
+
+        //Não aceitar datas incoerentes.
+        while(!validarData2(dataInicio, dataFim)) {
+            System.out.println("DataInicio (yyyy-MM-dd): ");
+            dataInicio = scanner.nextLine();
             System.out.println("DataFim (yyyy-MM-dd): ");
             dataFim = scanner.nextLine();
         }
@@ -742,6 +754,68 @@ public class Cisuc {
             }
         }
         return bolseiros;
+    }
+
+    public Boolean validarData1(String data) {
+
+        /**
+         * Method that checks if a date is in correct format.
+         * @param data
+         * return true if date is in correct format and false otherwise
+         */
+
+        String[] dataElems = data.split("-");
+        int ano, mes, dia;
+
+        try {
+            ano = Integer.parseInt(dataElems[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Ano válido.");
+            return false;
+        }
+        try {
+            mes = Integer.parseInt(dataElems[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Mês válido.");
+            return false;
+        }
+        try {
+            dia = Integer.parseInt(dataElems[2]);
+        } catch (NumberFormatException e) {
+            System.out.println("Dia válido.");
+            return false;
+        }
+
+        System.out.println(ano + " " + mes + " " + dia);
+
+        if (((int) Math.log10(ano) + 1) == 4 && (((int) Math.log10(mes) + 1) == 2 || ((int) Math.log10(mes) + 1) == 1) && (((int) Math.log10(dia) + 1) == 2 || ((int) Math.log10(dia) + 1) == 1 ) && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
+            return true;
+        }
+        else {
+            System.out.println("Data Inválida.");
+            return false;
+        }
+    }
+
+    public Boolean validarData2(String dataIni, String dataFim) {
+
+        /**
+         * Method that compares beginning date and end date and checks if end date is after beginning date.
+         * @param dataIni (beginning date)
+         * @param dataFim (end date)
+         * @return true if dates are right and false otherwise
+         */
+
+        String data1 = dataIni.replaceAll("-", "");
+        String data2 = dataFim.replaceAll("-", "");
+
+        if (Integer.parseInt(data1) < Integer.parseInt(data2)) {
+            return true;
+        }
+        else {
+            System.out.println("Datas incoerentes.");
+            return false;
+        }
     }
 
     public void imprimirDocentes(ArrayList<Docente> docentes) {
