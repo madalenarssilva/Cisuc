@@ -1,5 +1,4 @@
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +8,7 @@ import java.util.ArrayList;
  * Finish project
  */
 
-public class Projeto {
+public class Projeto implements Serializable {
 
     private String nome;
     private String acronimo;

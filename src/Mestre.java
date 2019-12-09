@@ -6,13 +6,13 @@ import java.util.ArrayList;
  * <h1>Class Mestre</h1>
  */
 public class Mestre extends Bolseiro{
-    private ArrayList<Docente> orientadores = new ArrayList<>();;
+    private ArrayList<Docente> orientadores = new ArrayList<>();
 
     /**
-     * Empty Constructor
+     * Constructor Inicializing Array orientadores
      */
     Mestre(){
-        ArrayList<Docente> orientadores;
+        orientadores = new ArrayList<>();
     }
 
     /**
@@ -55,7 +55,6 @@ public class Mestre extends Bolseiro{
      */
     public double calculaCusto(String dataInicio, String dataFim) {
         long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
-        System.out.println("Duração da bolsa: " + duracao_bolsa + " meses");
         return duracao_bolsa*800;
     }
 

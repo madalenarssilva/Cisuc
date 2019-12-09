@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * We can also calculate the duration of the task.
  */
 
-abstract class Tarefa {
+abstract class Tarefa implements Serializable {
     private String dataInicio;
     private int percentagemConclusao;
     private String dataFim;

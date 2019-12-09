@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * <h1>Class Docente</h1>
  */
-public class Docente extends Pessoa {
+public class Docente extends Pessoa implements Serializable {
     private int numeroMecanografico;
     private String areaInvestigacao;
 

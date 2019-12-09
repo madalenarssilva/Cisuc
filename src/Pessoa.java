@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * <h1>Class Pessoa: </h1>
  */
 
-public abstract class Pessoa {
+public abstract class Pessoa implements Serializable {
 
     private String nome;
     private String mail;

@@ -1,6 +1,4 @@
 import java.io.*;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -43,6 +41,14 @@ public class Cisuc {
         lerFicheirosPessoas();
         lerFicheirosProjetos();
         lerFicheirosTarefas();
+
+        // Inicializa o GUI
+        try {
+            GUI gui = new GUI(this);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         //Menu
         while (!exitMenu) {
@@ -1327,6 +1333,24 @@ public class Cisuc {
                 docentesProjeto.add(d);
         }
         return docentesProjeto;
+    }
+
+    // Ligação Interface
+
+    /**
+     * Get Projetos
+     * @return projetos
+     */
+    public ArrayList<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    /**
+     * Get Pessoas
+     * @return pessoas
+     */
+    public ArrayList<Pessoa> getPessoas() {
+        return pessoas;
     }
 }
 

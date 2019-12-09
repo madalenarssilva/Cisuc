@@ -30,7 +30,6 @@ public class Doutorado extends Bolseiro{
      */
     public double calculaCusto(String dataInicio, String dataFim) {
         long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
-        System.out.println("Duração da bolsa: " + duracao_bolsa + " meses");
         return duracao_bolsa*1000;
     }
 
