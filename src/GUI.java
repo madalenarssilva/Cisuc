@@ -26,6 +26,7 @@ public class GUI extends JFrame{
     private JButton buttonLicenciado;
     private JButton buttonMestrado;
     private JButton buttonDoutorado;
+    private JButton buttoncriarPsL;
 
     //Labels
     private JLabel label;
@@ -250,6 +251,11 @@ public class GUI extends JFrame{
         buttonDoutorado.setBounds(20, 220, 100, 30);
         buttonDoutorado.setVisible(false);
         panel.add(buttonDoutorado);
+
+        buttoncriarPsL= new JButton("Doutorado");
+        buttoncriarPsL.setBounds(20, 220, 100, 30);
+        buttoncriarPsL.setVisible(false);
+        panel.add(buttoncriarPsL);
 
         panel.add(label);
         panel.add(buttonCP);
@@ -569,7 +575,7 @@ public class GUI extends JFrame{
     // Click no botão Licenciado
     private class buttonLicenciadoListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            buttoncriarPsD.setVisible(true);
+            buttoncriarPsL.setVisible(true);
             buttonDocente.setVisible(false);
             buttonBolseiro.setVisible(false);
             buttonLicenciado.setVisible(false);
