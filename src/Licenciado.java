@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * <h1>Class Licenciado</h1>
  */
 public class Licenciado extends Bolseiro{
-    private ArrayList<Docente> orientadores;
+    private ArrayList<Docente> orientadores = new ArrayList<>();;
 
     /**
      * Empty Constructor

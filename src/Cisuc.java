@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -67,12 +69,10 @@ public class Cisuc {
         System.out.println("Menu: ");
         System.out.println("1. Criar projetos.");
         System.out.println("2. Adicionar pessoas à app.");
-        System.out.println("3. Associar pessoas a projetos.");
-        System.out.println("4. Listar os projetos não concluídos na data estimada.");
-        System.out.println("5. Listar os projectos concluídos.");
-        System.out.println("6. Editar Projeto");
-        System.out.println("7. Criar Tarefas");
-        System.out.println("8. Sair");
+        System.out.println("3. Listar os projetos não concluídos na data estimada.");
+        System.out.println("4. Listar os projectos concluídos.");
+        System.out.println("5. Editar projeto.");
+        System.out.println("6. Sair");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         switch (opcao) {
@@ -85,22 +85,62 @@ public class Cisuc {
                 printPessoas();
                 break;
             case 3:
-                associarPessoasAProjetos();
+                System.out.println("3");
                 break;
             case 4:
                 System.out.println("4");
                 break;
             case 5:
-                System.out.println("5");
+                // ESCOLHER PROJETO
+                System.out.println();
+                System.out.println("-------Editar Projeto---------");
+                printProjetosNomes();
+                System.out.print("Escolha o projeto: ");
+
+                //Verificar se a opção escolhida existe.
+                int n = scanner.nextInt();
+                while (n <= 0 || n > projetos.size()) {
+                    System.out.print("Opção inválida. Volte a escolher o projeto:");
+                    n = scanner.nextInt();
+                }
+                Projeto projeto = projetos.get(n-1);
+
+                System.out.println();
+                System.out.println("Operações: ");
+                System.out.println("1. Criar tarefa.");
+                System.out.println("2. Associar tarefa a pessoa.");
+                System.out.println("3. Associar pessoa ao projeto.");
+                System.out.println("4. Eliminar tarefa.");
+                System.out.println("5. Atualizar taxa de execução de uma tarefa.");
+                System.out.println("6. Sair");
+                System.out.print("Escolha uma opção: ");
+
+                int opcao2 = scanner.nextInt();
+                switch (opcao2) {
+                    case 1:
+                        criarTarefas(projeto);
+                        printTarefas();
+                        break;
+                    case 2:
+                        associarTarefasAPessoas(projeto);
+                        printTarefas();
+                        break;
+                    case 3:
+                        associarPessoasAProjetos(projeto);
+                        printProjetos();
+                        printPessoas();
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        System.out.println("Escolha uma opção existente.");
+                }
                 break;
             case 6:
-                System.out.println("6");
-                break;
-            case 7:
-                criarTarefas();
-                printTarefas();
-                break;
-            case 8:
                 exitMenu = true;
                 System.out.println("Bye");
                 break;
@@ -453,7 +493,8 @@ public class Cisuc {
         }
     }
 
-    //                                           CRIAR PROJETOS, PESSOAS E TAREFAS
+
+    //                                                PROJETOS
 
     public void criarProjetos() {
         Scanner scanner = new Scanner(System.in);
@@ -546,6 +587,200 @@ public class Cisuc {
         }
     }
 
+    public void printProjetosNomes(){
+        /**
+         * Method that prints all project names with an indice before the name.
+         */
+        int i=1;
+        for(Projeto p: projetos){
+            System.out.println(i++ + ". " + p.getNome());
+        }
+    }
+
+    //                                                 TAREFAS
+
+    public void criarTarefas(Projeto projeto) {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-----Criação de Tarefa------");
+
+        // DATA INICIO
+        System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+        String dataInicio = scanner.nextLine();
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataInicio.isEmpty() || !validarData1(dataInicio) || !validarData2(projeto.getDataInicio(), dataInicio)) {
+            if (dataInicio.isEmpty())
+                System.out.println("Input vazio");
+            System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+            dataInicio = scanner.nextLine();
+        }
+
+        // DATA FIM
+        System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+        String dataFim = scanner.nextLine();
+        //Não aceitar inputs vazios nem datas inválidas.
+        while(dataFim.isEmpty() || !validarData1(dataFim) || !validarData2(dataFim, projeto.getDataFim())) {
+            if (dataFim.isEmpty())
+                System.out.println("Input vazio");
+            System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
+            dataFim = scanner.nextLine();
+        }
+
+        //Não aceitar datas incoerentes.
+        while(!validarData2(dataInicio, dataFim)) {
+            System.out.println("DataInicio (yyyy-MM-dd): ");
+            dataInicio = scanner.nextLine();
+            System.out.println("DataFim (yyyy-MM-dd): ");
+            dataFim = scanner.nextLine();
+        }
+
+        System.out.println("1. Design");
+        System.out.println("2. Desenvolvimento");
+        System.out.println("3. Documentação");
+        System.out.print("Escolha entre as opções:");
+        int opcao = scanner.nextInt();
+
+        switch (opcao) {
+            case 1:
+                Design design = new Design(dataInicio, 0, dataFim);
+                tarefas.add(design);
+                projeto.getTarefas().add(design);
+                break;
+            case 2:
+                Desenvolvimento des = new Desenvolvimento(dataInicio, 0, dataFim);
+                tarefas.add(des);
+                projeto.getTarefas().add(des);
+                break;
+            case 3:
+                Documentacao doc = new Documentacao(dataInicio, 0, dataFim);
+                tarefas.add(doc);
+                projeto.getTarefas().add(doc);
+                break;
+            default:
+                System.out.println("Escolha uma opção existente.");
+        }
+    }
+
+    public void associarTarefasAPessoas(Projeto projeto) {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-----Associação de Tarefa------");
+
+        // TAREFA ESCOLHIDA
+        System.out.println("Escolha a tarefa:");
+
+        //Array das tarefas do projeto que ainda não têm um responsável.
+        ArrayList<Tarefa> tarefasDisponiveis = new ArrayList<>();
+        int j = 1;
+        for (int i = 0; i < projeto.getTarefas().size(); i++) {
+            if (projeto.getTarefas().get(i).getResponsavel() == null) {
+                tarefasDisponiveis.add(projeto.getTarefas().get(i));
+                System.out.println((j++) + ": " + projeto.getTarefas().get(i).toString());
+            }
+        }
+        if (tarefasDisponiveis.size() == 0) {
+            System.out.println("Não existem tarefas disponíveis.");
+            return;
+        }
+
+        //Verificar se a opção escolhida existe.
+        int numTarefa = scanner.nextInt();
+        while (numTarefa <= 0 || numTarefa > j) {
+            System.out.println("Opção inválida. Volte a escolher o projeto:");
+            numTarefa = scanner.nextInt();
+        }
+
+        //Obter objeto Tarefa.
+        Tarefa tarefa = tarefasDisponiveis.get(numTarefa-1);
+
+        // PESSOA RESPONSÁVEL
+        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
+        Pessoa responsavel;
+
+        //Encontrar bolseiros cuja duração da bolsa  os permita ter a tarefa.
+        //Encontrar Pessoas que não ficarão sobrecarregadas.
+        for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
+            System.out.println(pessoa);
+            if (pessoa.getNumeroMecanografico() == 0) {
+                if (!isSobrecarregada(pessoa, tarefa)) {
+                    Bolseiro bols = (Bolseiro) pessoa;
+                    if (validarData2(bols.getDataInicio(), tarefa.getDataInicio()) && validarData2(tarefa.getDataFim(), bols.getDataFim()))
+                        pessoasDisponiveis.add(bols);
+                }
+            } else {
+                if (!isSobrecarregada(pessoa, tarefa))
+                    pessoasDisponiveis.add(pessoa);
+            }
+        }
+        //Adicionar o ip se não estiver sobrecarregado.
+        if (!isSobrecarregada(projeto.getIp(), tarefa))
+            pessoasDisponiveis.add(projeto.getIp());
+
+        System.out.println("Escolha a pessoa responsável pela tarefa:");
+        for (int i = 0; i < pessoasDisponiveis.size(); i++) {
+            System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
+        }
+
+        //Verificar se a opção escolhida existe.
+        int numPessoa = scanner.nextInt();
+        while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
+            System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
+            numPessoa = scanner.nextInt();
+        }
+        responsavel = pessoasDisponiveis.get(numPessoa-1);
+        tarefa.setResponsavel(responsavel);
+    }
+
+    public void printTarefas(ArrayList<Tarefa>... args) {
+
+        if (args.length == 0) {
+            for (Tarefa t : tarefas) {
+                System.out.println(t);
+            }
+        }
+        else {
+            for (int i=0; i<args.length; i++) {
+                for (Tarefa t : args[i]) {
+                    System.out.println(t);
+                }
+            }
+        }
+    }
+
+    public void printTarefasNaoIniciadas() {
+        ArrayList<Tarefa> tarefasNaoIniciadas = new ArrayList<>();
+
+        for(Tarefa t: tarefas) {
+            if (t.calculaTaxaExecucao() == 0)
+                tarefasNaoIniciadas.add(t);
+        }
+        printTarefas(tarefasNaoIniciadas);
+    }
+
+    public void printTarefasConcluidas() {
+        ArrayList<Tarefa> tarefasConcluidas = new ArrayList<>();
+
+        for(Tarefa t: tarefas) {
+            if (t.calculaTaxaExecucao() == 1)
+                tarefasConcluidas.add(t);
+        }
+        printTarefas(tarefasConcluidas);
+    }
+
+    public void printTarefasForaPrazo() {
+        ArrayList<Tarefa> tarefasForaPraxo = new ArrayList<>();
+
+        for(Tarefa t: tarefas) {
+            //TO DO logic here
+            tarefasForaPraxo.add(t);
+        }
+        printTarefas(tarefasForaPraxo);
+    }
+
+    public void eliminarTarefas() {}
+
+    //                                                 PESSOAS
+
     public void criarPessoas() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Criação da Pessoa------");
@@ -599,6 +834,7 @@ public class Cisuc {
         System.out.println("1.Docente");
         System.out.println("2.Bolseiro");
         int opcao = scanner.nextInt();
+        scanner.nextLine();   //Skip the newline character.
         switch (opcao) {
             case 1:
                 System.out.println("Numero mecanográfico: ");
@@ -619,25 +855,25 @@ public class Cisuc {
                 pessoas.add(d);
                 break;
             case 2:
-                System.out.println("DataInicio Bolsa(yyyy-MM-dd): ");
-                String dataInicio = scanner.next();
-
+                // DATA INICIO
+                System.out.println("DataInicio (yyyy-MM-dd): ");
+                String dataInicio = scanner.nextLine();
                 //Não aceitar inputs vazios nem datas inválidas.
                 while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
                     if (dataInicio.isEmpty())
                         System.out.println("Input vazio");
-                    System.out.println("DataInicio Bolsa(yyyy-MM-dd): ");
+                    System.out.println("DataInicio (yyyy-MM-dd): ");
                     dataInicio = scanner.nextLine();
                 }
 
-                System.out.println("Data Fim Bolsa(yyyy-MM-dd): ");
-                String dataFim = scanner.next();
-
+                // DATA FIM
+                System.out.println("DataFim (yyyy-MM-dd): ");
+                String dataFim = scanner.nextLine();
                 //Não aceitar inputs vazios nem datas inválidas.
                 while(dataFim.isEmpty() || !validarData1(dataFim)) {
                     if (dataFim.isEmpty())
                         System.out.println("Input vazio");
-                    System.out.println("DataFim Bolsa(yyyy-MM-dd): ");
+                    System.out.println("DataFim (yyyy-MM-dd): ");
                     dataFim = scanner.nextLine();
                 }
 
@@ -673,167 +909,259 @@ public class Cisuc {
         }
     }
 
+    public void associarPessoasAProjetos(Projeto projeto) {
+
+        /**
+         * Method that links persons to projects.
+         */
+        Scanner scanner= new Scanner(System.in);
+
+        // ESCOLHER PESSOA
+        //Array das pessoas disponíveis para serem associadas a um novo projeto:
+        //Todas as pessoas que ainda não estiverem no projeto, excluindo bolseiros que já estejam noutro projeto.
+        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
+        int j = 1;
+        for (Pessoa pessoa : pessoas) {
+            if (!verificaRepeticao(projeto, pessoa)) {
+                if (pessoa.getNumeroMecanografico() == 0) {
+                    if (!verificarSeAlgumProjeto(pessoa)) {
+                        pessoasDisponiveis.add(pessoa);
+                        System.out.println((j++) + ": " + pessoa.getNome());
+                    }
+                }
+                else {
+                    pessoasDisponiveis.add(pessoa);
+                    System.out.println((j++) + ": " + pessoa.getNome());
+                }
+            }
+        }
+        if (pessoasDisponiveis.size() == 0) {
+            System.out.println("Não existem pessoas disponíveis.");
+            return;
+        }
+
+        System.out.println("Escolha uma Pessoa para associar: ");
+        int n2 = scanner.nextInt();
+        //Verificar se a opção escolhida existe.
+        while (n2 <= 0 || n2 > pessoasDisponiveis.size()) {
+            System.out.println("Opção inválida. Escolha uma pessoa: ");
+            n2 = scanner.nextInt();
+        }
+        Pessoa pessoa = pessoasDisponiveis.get(n2-1);
+
+        //Se for a pessoa escolhida for um BOLSEIRO só pode estar num projeto.
+        if (pessoa.getNumeroMecanografico() == 0) {
+            //Se o projeto ainda não tiver investigador principal (um Docente):
+            if (projeto.getIp() == null) {
+                ArrayList<Docente> docentes = getDocentes();
+                int i=1;
+                //Imprimir lista de docentes.
+                for(Docente d: docentes) {
+                    System.out.println(i++ + ". " + d.getNome());
+                }
+                System.out.print("Escolha o Investigador Principal: ");
+                int nIp = scanner.nextInt();
+                while (nIp <= 0 || nIp > docentes.size()) {
+                    System.out.println("Opção inválida. Escolha o Investigador Principal: ");
+                    nIp = scanner.nextInt();
+                }
+                projeto.setIp(docentes.get(nIp - 1));
+            }
+
+            //Se for a pessoa escolhida for um LICENCIADO/MESTRE ver se já tem orientadores para o projeto.
+            if (pessoa.getCusto() != 1000) {
+
+                //Obter todos os docentes do projeto.
+                ArrayList<Docente> docentesProjeto = getDocentesProjeto(projeto);
+                ArrayList<Docente> orientadoresPossiveis = new ArrayList<>();
+
+                // LICENCIADO
+                if (pessoa.getCusto() == 500) {
+                    Licenciado l = (Licenciado) pessoa;
+
+                    String mais;
+                    int num;
+                    do {
+                        //Obter todos os orientadores possíveis para a pessoa.
+                        for (Docente d : docentesProjeto) {
+                            if (!l.getOrientadores().contains(d))
+                                orientadoresPossiveis.add(d);
+                        }
+
+                        //Imprimir todos os orientadores possíveis.
+                        int k=1;
+                        for (int i=0; i<orientadoresPossiveis.size(); i++)
+                            System.out.println(k++ + ". " + orientadoresPossiveis.get(i).getNome());
+
+                        System.out.print("Escolha um orientador: ");
+                        num = scanner.nextInt();
+                        while (num <= 0 || num > orientadoresPossiveis.size()) {
+                            System.out.println("Opção inválida. Tente novamente:");
+                            num = scanner.nextInt();
+                        }
+                        //Adicionar orientador ao licenciado.
+                        l.getOrientadores().add(orientadoresPossiveis.get(num-1));
+
+                        System.out.print("Deseja adicionar outro orientador? (s/n): ");
+                        scanner.nextLine();
+                        mais = scanner.nextLine();
+                        while (!mais.equals("s") && !mais.equals("n")) {
+                            System.out.println("Opção inválida. Tente novamente:");
+                            mais = scanner.nextLine();
+                        }
+                        orientadoresPossiveis = new ArrayList<>();
+                    } while(mais.equals("s"));
+
+                    //Adicionar novo licenciado à lista de pessoas envolvidas no projeto.
+                    projeto.getPessoasEnvolvidas().add(l);
+                }
+
+                // MESTRE
+                else {
+                    Mestre m = (Mestre) pessoa;
+
+                    String mais;
+                    int num;
+                    do {
+                        //Obter todos os orientadores possíveis para a pessoa.
+                        for (Docente d : docentesProjeto) {
+                            if (!m.getOrientadores().contains(d))
+                                orientadoresPossiveis.add(d);
+                        }
+
+                        //Imprimir todos os orientadores possíveis.
+                        int k=1;
+                        for (int i=0; i<orientadoresPossiveis.size(); i++)
+                            System.out.println(k++ + ". " + orientadoresPossiveis.get(i).getNome());
+
+                        System.out.print("Escolha um orientador: ");
+                        num = scanner.nextInt();
+                        while (num <= 0 || num > orientadoresPossiveis.size()) {
+                            System.out.println("Opção inválida. Tente novamente:");
+                            num = scanner.nextInt();
+                        }
+                        //Adicionar orientador ao mestre.
+                        m.getOrientadores().add(orientadoresPossiveis.get(num-1));
+
+                        System.out.print("Deseja adicionar outro orientador? (s/n): ");
+                        scanner.nextLine();
+                        mais = scanner.nextLine();
+                        while (!mais.equals("s") && !mais.equals("n")) {
+                            System.out.println("Opção inválida. Tente novamente:");
+                            mais = scanner.nextLine();
+                        }
+                        orientadoresPossiveis = new ArrayList<>();
+                    } while(mais.equals("s"));
+
+                    //Adicionar novo mestre à lista de pessoas envolvidas no projeto.
+                    projeto.getPessoasEnvolvidas().add(m);
+                }
+            }
+
+            // DOUTORADO
+            else {
+                //Adicionar doutorado à lista de pessoas envolvidas no projeto.
+                projeto.getPessoasEnvolvidas().add(pessoa);
+            }
+        }
+        //Se for a pessoa escolhida for um DOCENTE:
+
+        //Se o projeto ainda não tiver investigador principal (um Docente):
+        if (projeto.getIp() == null) {
+            ArrayList<Docente> docentes = getDocentes();
+            int i=1;
+            //Imprimir lista de todos os docentes da aplicação.
+            for(Docente d: docentes){
+                System.out.println(i++ + "-" + d.getNome());
+            }
+            System.out.println("Escolha o Investigador Principal: ");
+            int nIp = scanner.nextInt();
+            while (nIp <= 0 || nIp > docentes.size()) {
+                System.out.println("Opção inválida. Escolha o Investigador Principal: ");
+                nIp = scanner.nextInt();
+            }
+            projeto.setIp(docentes.get(nIp - 1));
+        }
+        //Adicionar docente à lista de pessoas envolvidas no projeto.
+        projeto.getPessoasEnvolvidas().add(pessoa);
+    }
+
     public void printPessoas() {
         for (Pessoa p : pessoas) {
             System.out.println(p);
         }
     }
 
-    public void criarTarefas() {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("-----Criação de Tarefa------");
-
-        // PROJETO ESCOLHIDO
-        System.out.println("Escolha o projeto:");
-        for (int i = 0; i < projetos.size(); i++) {
-            System.out.println((i+1) + ": " + projetos.get(i).getNome());
-        }
-
-        //Verificar se a opção escolhida existe.
-        int numProj = scanner.nextInt();
-        while (numProj <= 0 || numProj > projetos.size()) {
-            System.out.println("Opção inválida. Volte a escolher o projeto:");
-            numProj = scanner.nextInt();
-        }
-
-        Projeto projeto = projetos.get(numProj-1);
-
-        scanner.nextLine();   //Skip the Newline Character.
-
-        // DATA INICIO
-        System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
-        String dataInicio = scanner.nextLine();
-        //Não aceitar inputs vazios nem datas inválidas.
-        while(dataInicio.isEmpty() || !validarData1(dataInicio) || !validarData2(projeto.getDataInicio(), dataInicio)) {
-            if (dataInicio.isEmpty())
-                System.out.println("Input vazio");
-            System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
-            dataInicio = scanner.nextLine();
-        }
-
-        // DATA FIM
-        System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
-        String dataFim = scanner.nextLine();
-        //Não aceitar inputs vazios nem datas inválidas.
-        while(dataFim.isEmpty() || !validarData1(dataFim) || !validarData2(dataFim, projeto.getDataFim())) {
-            if (dataFim.isEmpty())
-                System.out.println("Input vazio");
-            System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
-            dataFim = scanner.nextLine();
-        }
-
-        //Não aceitar datas incoerentes.
-        while(!validarData2(dataInicio, dataFim)) {
-            System.out.println("DataInicio (yyyy-MM-dd): ");
-            dataInicio = scanner.nextLine();
-            System.out.println("DataFim (yyyy-MM-dd): ");
-            dataFim = scanner.nextLine();
-        }
-
-        // PESSOA RESPONSÁVEL
-
-        //Pessoas que não ficarão sobrecarregadas.
-        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
-        Pessoa responsavel;
-
-        System.out.println("Escolha entre as opções:");
-        System.out.println("1.Design");
-        System.out.println("2.Desenvolvimento");
-        System.out.println("3.Documentação");
-        int opcao = scanner.nextInt();
-        scanner.nextLine();   //Skip the Newline Character.
-
-        switch (opcao) {
-            case 1:
-                Design design = new Design(dataInicio, 0, dataFim);
-
-                if (!isSobrecarregada(projeto.getIp(), design))
-                    pessoasDisponiveis.add(projeto.getIp());
-                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
-                    if (!isSobrecarregada(pessoa, design)) {
-                        pessoasDisponiveis.add(pessoa);
-                    }
-                }
-
-                System.out.println("Escolha a pessoa responsável pela tarefa:");
-                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
-                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
-                }
-
-                //Verificar se a opção escolhida existe.
-                int numPessoa = scanner.nextInt();
-                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
-                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
-                    numPessoa = scanner.nextInt();
-                }
-                responsavel = pessoasDisponiveis.get(numPessoa-1);
-
-                design.setResponsavel(responsavel);
-                tarefas.add(design);
-                break;
-            case 2:
-                Desenvolvimento des = new Desenvolvimento(dataInicio, 0, dataFim);
-
-                if (!isSobrecarregada(projeto.getIp(), des))
-                    pessoasDisponiveis.add(projeto.getIp());
-                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
-                    if (!isSobrecarregada(pessoa, des)) {
-                        pessoasDisponiveis.add(pessoa);
-                    }
-                }
-
-                System.out.println("Escolha a pessoa responsável pela tarefa:");
-                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
-                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
-                }
-
-                //Verificar se a opção escolhida existe.
-                numPessoa = scanner.nextInt();
-                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
-                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
-                    numPessoa = scanner.nextInt();
-                }
-                responsavel = pessoasDisponiveis.get(numPessoa-1);
-
-                des.setResponsavel(responsavel);
-                tarefas.add(des);
-                break;
-            case 3:
-                Documentacao doc = new Documentacao(dataInicio, 0, dataFim);
-
-                if (!isSobrecarregada(projeto.getIp(), doc))
-                    pessoasDisponiveis.add(projeto.getIp());
-                for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
-                    if (!isSobrecarregada(pessoa, doc)) {
-                        pessoasDisponiveis.add(pessoa);
-                    }
-                }
-
-                System.out.println("Escolha a pessoa responsável pela tarefa:");
-                for (int i = 0; i < pessoasDisponiveis.size(); i++) {
-                    System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
-                }
-
-                //Verificar se a opção escolhida existe.
-                numPessoa = scanner.nextInt();
-                while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
-                    System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
-                    numPessoa = scanner.nextInt();
-                }
-                responsavel = pessoasDisponiveis.get(numPessoa-1);
-
-                doc.setResponsavel(responsavel);
-                tarefas.add(doc);
-            default:
-                System.out.println("Escolha uma opção existente.");
+    public void printPessoasNomes(){
+        /**
+         * Method that prints all people names with an indice before the name.
+         */
+        int i=1;
+        for(Pessoa p: pessoas){
+            System.out.println(i++ + ". " +  p.getNome());
         }
     }
 
-    public void printTarefas() {
-        for (Tarefa t : tarefas) {
-            System.out.println(t);
+    //                                                AUXILIARES
+
+    public ArrayList<Docente> getDocente() {
+        /**
+         * Method to get a list of all People who are "Docentes".
+         * @return ArrayList of docentes
+         */
+        ArrayList<Docente> docentes = new ArrayList<Docente>();
+        // Imprimir lista de todos os docentes para o utilizador escolher
+        if (pessoas.size() != 0) {
+            for (Pessoa p : pessoas) {
+                // Ver se é Docente ou Bolseiro
+                if (p.getNumeroMecanografico() > 0) {
+                    Docente dc = (Docente) p;
+                    docentes.add(dc);
+                } else {
+                    continue;
+                }
+            }
+            if(docentes.size() == 0) {
+                //Não existem docentes
+                System.out.println("Insira Docentes na aplicação");
+                Menu();
+            }
+        } else {
+            //A lista das pessoas está vazia
+            System.out.println("Insira Pessoas na aplicação.");
+            Menu();
         }
+        return docentes;
+    }
+
+    public ArrayList<Bolseiro> getBolseiro() {
+        /**
+         * Method to get a list of all People who are "Bolseiros".
+         * @return ArrayList of bolseiros
+         */
+        ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
+        // Imprimir lista de todos os bolseiros para o utilizador escolher
+        if (pessoas.size() != 0) {
+            for (Pessoa p : pessoas) {
+                // Ver se é Docente ou Bolseiro
+                if (p.getNumeroMecanografico() == 0) {
+                    Bolseiro bs = (Bolseiro) p;
+                    bolseiros.add(bs);
+                } else {
+                    continue;
+                }
+            }
+            if(bolseiros.size() == 0) {
+                //Não existem docentes
+                System.out.println("Insira Bolseiros na aplicação");
+                Menu();
+            }
+        } else {
+            //A lista das pessoas está vazia
+            System.out.println("Insira Pessoas na aplicação.");
+            Menu();
+        }
+        return bolseiros;
     }
 
     public ArrayList<Docente> getDocentes() {
@@ -898,7 +1226,7 @@ public class Cisuc {
             return false;
         }
 
-        if (((int) Math.log10(ano) + 1) == 4 && (((int) Math.log10(mes) + 1) == 2 || ((int) Math.log10(mes) + 1) == 1) && (((int) Math.log10(dia) + 1) == 2 || ((int) Math.log10(dia) + 1) == 1 ) && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
+        if (dataElems[0].length() == 4 && dataElems[1].length() == 2 && dataElems[2].length() == 2 && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
             return true;
         }
         else {
@@ -938,249 +1266,43 @@ public class Cisuc {
          */
 
         double carga = 0.0;
-
-        System.out.println(pessoa.getNome());
-
         for (Tarefa t : tarefas) {
             if (t.getResponsavel() == pessoa)
                 carga += t.getTaxaEsforco();
         }
-        System.out.println(carga);
         if (carga + tarefa.getTaxaEsforco() > 1)
             return true;
         return false;
     }
 
-    //                                                                   ASSOCIAR PROJETOS A PESSOAS
-
-    public void associarPessoasAProjetos(){
-
+    public boolean verificaRepeticao(Projeto projeto, Pessoa pessoa) {
         /**
-         * Method that links projects to persons.
+         * Method that verifies if a person is already associated to a project.
+         * @param projeto
+         * @param pessoa
+         * @return true if the person is already associated to the project.
+         * @return false if the person isn't already associated to the project.
          */
-        Scanner scanner= new Scanner(System.in);
 
-        // ESCOLHER PROJETO
-        printProjetosNomes();
-        System.out.println("Escolha um Projeto para associar.");
-        //Verificar se a opção escolhida existe.
-        int n = scanner.nextInt();
-        while (n <= 0 || n > projetos.size()) {
-            System.out.println("Opção inválida. Escolha um projeto:");
-            n = scanner.nextInt();
+        if(projeto.getIp() == pessoa)
+            return true;
+
+        for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
+            if (projeto.getPessoasEnvolvidas().get(i) == pessoa)
+                return true;
         }
-        Projeto projeto = projetos.get(n-1);
-        System.out.println(projeto);
-
-        // ESCOLHER PESSOA
-        printPessoasNomes();
-        System.out.println("Escolha uma Pessoa para associar.");
-        int n2 = scanner.nextInt();
-        //verificar se a opção escolhida existe.
-        while (n2 <= 0 || n2 > pessoas.size()) {
-            System.out.println("Opção inválida. Escolha uma pessoa:");
-            n2 = scanner.nextInt();
-        }
-        Pessoa pessoa = pessoas.get(n2-1);
-        System.out.println(pessoa);
-
-        // VERIFICAR SE A PESSOA JÁ ESTÁ NO PROJETO (retorna verdadeiro se já estiver, falso se ainda não estiver)
-        Boolean verifica = verificaRepeticao(projeto, pessoa);
-        if (!verifica){
-            // SE FOR BOLSEIRO SÓ PODE ESTAR NUM PROJETO
-            if(pessoa.getNumeroMecanografico() == 0){
-                // Devolve true se já estiver num projeto e false se ainda não estiver em nenhum
-                Boolean vp = verificarSeAlgumProjeto(pessoa);
-                if(!vp){
-                    // VER SE O PROJETO TEM INVESTIGADOR PRINCIPAL
-                    // se não tiver
-                    if(projeto.getIp() == null){
-                        // O INVESTIGADOR PRINCIPAL TEM QUE SER UM DOCENTE
-                        ArrayList<Docente> docentes = getDocentes();
-                        int i=1;
-                        // imprimir lista de docentes
-                        for(Docente d: docentes){
-                            System.out.println(i++ + "-" + d.getNome());
-                        }
-                        System.out.println("Insira o Investigador Principal");
-                        int nIp = scanner.nextInt();
-                        while (nIp <= 0 || nIp > docentes.size()) {
-                            System.out.println("Opção inválida. Escolha um Docente:");
-                            nIp = scanner.nextInt();
-                        }
-                        projeto.setIp(docentes.get(nIp - 1));
-                    }
-
-                    // SE FOR LICENCIADO/MESTRE VER SE A PESSOA JÁ TEM ORIENTADORES PARA O PROJETO
-                    if(pessoa.getCusto() != 1000){
-
-                        // LICENCIADO
-
-                        if(pessoa.getCusto() == 500 ){
-                            Licenciado l = (Licenciado) pessoa;
-                            // VERIFICAR SE TEM ALGUM ORIENTADOR
-                            if(l.getOrientadores() == null){
-                                // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
-                                ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
-                                int num = scanner.nextInt();
-                                while (num <= 0 || num > docentesProjeto.size()) {
-                                    System.out.println("Opção inválida. Escolha um Orientador:");
-                                    num = scanner.nextInt();
-                                }
-                                // ADICIONAR ORIENTADOR AO LICENCIADO
-                                l.getOrientadores().add(docentesProjeto.get(num-1));
-                            }
-                            // SE JÁ TIVER ORIENTADOR
-                            else{
-                                System.out.println("Deseja adicionar orientador? (Sim/Nao)");
-                                String resp = scanner.nextLine();
-                                while(resp == "Sim"){
-                                    // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
-                                    ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
-                                    int num = scanner.nextInt();
-                                    while (num <= 0 || num > docentesProjeto.size()) {
-                                        System.out.println("Opção inválida. Escolha um Orientador:");
-                                        num = scanner.nextInt();
-                                    }
-                                    // VERIFICAR SE ORIENTADOR JA ESTA NA LISTA DOS ORIENTADORES DO LICENCIADO
-                                    for(int q=0; q<l.getOrientadores().size(); q++){
-                                        if(l.getOrientadores().get(q) == docentesProjeto.get(num-1)){
-                                            System.out.println("Orientador já adicionado anteriormente.");
-                                        }
-                                        else{
-                                            // ADICIONAR ORIENTADOR AO LICENCIADO
-                                            l.getOrientadores().add(docentesProjeto.get(num-1));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // MESTRE
-
-                        else{
-                            Mestre m = (Mestre) pessoa;
-                            // VERIFICAR SE TEM ALGUM ORIENTADOR
-                            if(m.getOrientadores() == null){
-                                // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
-                                ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
-                                int num = scanner.nextInt();
-                                while (num <= 0 || num > docentesProjeto.size()) {
-                                    System.out.println("Opção inválida. Escolha um Orientador:");
-                                    num = scanner.nextInt();
-                                }
-                                // ADICIONAR ORIENTADOR AO MESTRE
-                                m.getOrientadores().add(docentesProjeto.get(num-1));
-                            }
-                            // SE JÁ TIVER ORIENTADOR
-                            else{
-                                System.out.println("Deseja adicionar orientador? (Sim/Nao)");
-                                String resp = scanner.nextLine();
-                                while(resp == "Sim"){
-                                    // IMPRIMIR LISTA DE ORIENTADORES QUE SÃO DOCENTES E ESTÃO NO PROJETO
-                                    ArrayList<Docente> docentesProjeto = printOrientadoresProjetoDocentes(projeto);
-                                    int num = scanner.nextInt();
-                                    while (num <= 0 || num > docentesProjeto.size()) {
-                                        System.out.println("Opção inválida. Escolha um Orientador:");
-                                        num = scanner.nextInt();
-                                    }
-                                    // VERIFICAR SE ORIENTADOR JA ESTA NA LISTA DOS ORIENTADORES DO MESTRE
-                                    for(int q=0; q<m.getOrientadores().size(); q++){
-                                        if(m.getOrientadores().get(q) == docentesProjeto.get(num-1)){
-                                            System.out.println("Orientador já adicionado anteriormente.");
-                                        }
-                                        else{
-                                            // ADICIONAR ORIENTADOR AO LICENCIADO
-                                            m.getOrientadores().add(docentesProjeto.get(num-1));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else{
-
-                        // ADICIONAR DOUTORADO A LISTA DE PESSOAS ENVOLVIDAS NO PROJETO
-                        projeto.getPessoasEnvolvidas().add(pessoa);
-                    }
-                }else{
-                    System.out.println("Bolseiro já está associado a um projeto");
-                }
-            }
-            // SE FOR DOCENTE
-            // VER SE JÁ TEM INVESTIGADOR PRINCIPAL
-            if(projeto.getIp() == null){
-                // O INVESTIGADOR PRINCIPAL TEM QUE SER UM DOCENTE
-                ArrayList<Docente> docentes = getDocentes();
-                int i=1;
-                // imprimir lista de docentes
-                for(Docente d: docentes){
-                    System.out.println(i++ + "-" + d.getNome());
-                }
-                System.out.println("Insira o Investigador Principal");
-                int nIp = scanner.nextInt();
-                while (nIp <= 0 || nIp > docentes.size()) {
-                    System.out.println("Opção inválida. Escolha um Docente:");
-                    nIp = scanner.nextInt();
-                }
-                projeto.setIp(docentes.get(nIp - 1));
-            }
-            // ADICIONAR DOCENTE A LISTA DE PESSOAS ENVOLVIDAS NO PROJETO
-            projeto.getPessoasEnvolvidas().add(pessoa);
-        }else{
-            System.out.println("Pessoa já está associada ao projeto.");
-        }
-    }
-
-    public void printProjetosNomes(){
-        /**
-         * Method that prints all project names with an indice before the name.
-         */
-        int i=1;
-        for(Projeto p: projetos){
-            System.out.println(i++ + "-" + p.getNome());
-        }
-    }
-
-    public void printPessoasNomes(){
-        /**
-         * Method that prints all people names with an indice before the name.
-         */
-        int i=1;
-        for(Pessoa p: pessoas){
-            System.out.println(i++ + "-" +  p.getNome());
-        }
-    }
-
-    public boolean verificaRepeticao(Projeto projeto, Pessoa pessoa){
-        /**
-         * Method that verifies if a person is already on a project.
-         * @return true if the person is already on.
-         * @return false if the person isn´t already on the project.
-         */
-        // Verificar se não é o investifador principal
-        if(projeto.getIp()!=pessoa) {
-            for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
-                // Verificar que não está nas lista das pessoas envolvidas no projeto
-                if (projeto.getPessoasEnvolvidas().get(i) != pessoa) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return false;
     }
 
     public boolean verificarSeAlgumProjeto(Pessoa pessoa){
         /**
-         * Method that verifies if Bolseiro has already one project.
-         * @return true if Bolseiro has already one project
-         * @return false if Bolseiro has already one project
+         * Method that verifies if Bolseiro is already in a project.
+         * @return true if Bolseiro has already a project
+         * @return false if Bolseiro hasn't got a project
          */
-        // Percorrer todos os projetos
+
         for(Projeto p:projetos){
-            // Percorrer a lista das pessoas envolvidas no projeto
             for(int i=0; i<p.getPessoasEnvolvidas().size(); i++){
-                // Verificar se o Bolseiro já está num projeto
                 if(p.getPessoasEnvolvidas().get(i) == pessoa){
                     return true;
                 }
@@ -1189,30 +1311,22 @@ public class Cisuc {
         return false;
     }
 
-    public ArrayList<Docente> printOrientadoresProjetoDocentes(Projeto projeto){
-        ArrayList<Docente> docentes;
-        docentes = getDocentes();
+    public ArrayList<Docente> getDocentesProjeto(Projeto projeto){
         ArrayList<Docente> docentesProjeto = new ArrayList<>();
 
-        // Orientadores têm que ser Docentes e fazer parte do projeto
-        for( Docente d: docentes){
-            // Percorrer pessoas envolvidas no projeto
-            for(int i=0; i<projeto.getPessoasEnvolvidas().size(); i++){
-                // Se o docente fizer parte das pessoas envolvidas no projeto adicionar
-                if(projeto.getPessoasEnvolvidas().get(i) == d){
+        //Orientadores têm que ser Docentes e fazer parte do projeto.
+        for (Docente d : getDocentes()) {
+            //Percorrer pessoas envolvidas no projeto.
+            for (int i=0; i<projeto.getPessoasEnvolvidas().size(); i++) {
+                if (projeto.getPessoasEnvolvidas().get(i) == d) {
                     docentesProjeto.add(d);
                 }
             }
-            // Ver se o docente é Investigador principal do projeto
-            if(projeto.getIp() == d){
+            //Ver se o docente é investigador principal do projeto.
+            if (projeto.getIp() == d)
                 docentesProjeto.add(d);
-            }
         }
-        int n=1;
-        for(Docente dc: docentesProjeto){
-            System.out.println(n++ + " - " + dc);
-        }
-    return docentesProjeto;
+        return docentesProjeto;
     }
 }
 

@@ -116,10 +116,10 @@ abstract class Tarefa {
     /**
      * method to calculate the duration of the task based on it's initial date and the ending date
      * @param dataInicio
-     * @param DataFim
+     * @param dataFim
      * @return duracao
      */
-    public int duracao(String dataInicio, String DataFim){
+    public int duracao(String dataInicio, String dataFim){
         int duracao = 0;
         return duracao;
     }

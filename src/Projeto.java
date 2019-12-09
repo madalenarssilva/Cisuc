@@ -16,7 +16,7 @@ public class Projeto {
     private String dataInicio;
     private String dataFim;
     private Docente ip;
-    private ArrayList<Pessoa> pessoasEnvolvidas;
+    private ArrayList<Pessoa> pessoasEnvolvidas = new ArrayList<>();
     private ArrayList<Tarefa> tarefas = new ArrayList<>();
 
     /**
@@ -24,9 +24,7 @@ public class Projeto {
      * Initiate List of People Involved in the project
      */
 
-    Projeto() {
-        pessoasEnvolvidas = new ArrayList<>();
-    }
+    Projeto() {}
 
     /**
      * Constructor
