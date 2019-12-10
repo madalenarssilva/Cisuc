@@ -157,43 +157,6 @@ public class Cisuc {
         }
     }
 
-    /**
-     * Get Nome
-     *
-     * @return nome
-     */
-    public String getNome() {
-        return nome;
-    }
-
-    /**
-     * Set Nome
-     *
-     * @param nome
-     */
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    /**
-     * Get Password
-     *
-     * @return password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Set Password
-     *
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     //                                           FICHEIROS
 
     public void lerFicheirosPessoas() {
@@ -785,7 +748,9 @@ public class Cisuc {
         printTarefas(tarefasForaPraxo);
     }
 
-    public void eliminarTarefas() {}
+    public void eliminarTarefas() {
+
+    }
 
     //                                                 PESSOAS
 
