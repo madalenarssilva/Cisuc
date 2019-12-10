@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class Licenciado extends Bolseiro{
     private ArrayList<Docente> orientadores = new ArrayList<>();
+    private long duracao_bolsa;
 
     /**
      * Empty Constructor
@@ -37,6 +38,14 @@ public class Licenciado extends Bolseiro{
         return orientadores;
     }
 
+    public ArrayList<String> getOrientadoresNome() {
+        ArrayList<String> doc= new ArrayList<>();
+        for(Docente o: orientadores){
+            doc.add(o.getNome());
+        }
+        return doc;
+    }
+
     /**
      * Set orientadores
      * @param orientadores
@@ -49,8 +58,8 @@ public class Licenciado extends Bolseiro{
      * Method that calculates the cost for the project of a Bolseiro.
      * @return total cost for the project
      */
-    public double calculaCusto(String dataInicial, String dataFinal) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicial).withDayOfMonth(1),  LocalDate.parse(dataFinal).withDayOfMonth(1));
+    public long calculaCusto(String dataInicial, String dataFinal) {
+        duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicial).withDayOfMonth(1),  LocalDate.parse(dataFinal).withDayOfMonth(1));
         return duracao_bolsa*500;
     }
 
@@ -58,11 +67,16 @@ public class Licenciado extends Bolseiro{
         return 500;
     }
 
+    public long getDuracao_bolsa() {
+        return duracao_bolsa;
+    }
+
     @Override
     public String toString() {
         return "Licenciado{" + super.toString() +
                 ", orientadores=" + orientadores +
                 ", custo bolsa=" + calculaCusto(getDataInicio(), getDataFim()) +
+                ", duração bolsa=" + duracao_bolsa +
                 '}';
     }
 }

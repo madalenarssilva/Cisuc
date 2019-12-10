@@ -17,6 +17,7 @@ public class Projeto implements Serializable {
     private Docente ip;
     private ArrayList<Pessoa> pessoasEnvolvidas = new ArrayList<>();
     private ArrayList<Tarefa> tarefas = new ArrayList<>();
+    private long custoTotal;
 
     /**
      * Constructor
@@ -153,6 +154,17 @@ public class Projeto implements Serializable {
     public ArrayList<Pessoa> getPessoasEnvolvidas() {
         return pessoasEnvolvidas;
     }
+    /**
+     * Get Nome Pessoas Envolvidas
+     * @return nomes
+     */
+    public ArrayList<String> getPessoasEnvolvidasNome(){
+        ArrayList<String> nomes = new ArrayList<>();
+        for(Pessoa p: pessoasEnvolvidas){
+            nomes.add(p.getNome());
+        }
+        return nomes;
+    }
 
     /**
      * Set Pessoas Envolvidas
@@ -191,19 +203,16 @@ public class Projeto implements Serializable {
         return custoTotal;
     }
 
-
-    /*private double calculaCustoPorTarefa(){
-        double custoTotal = 0;
+    public long calculaCustoPorTarefa(){
         for(Tarefa t: tarefas){
             dataInicio = t.getDataInicio();
             dataFim = t.getDataFim();
-            ArrayList<Pessoa> responsáveis = t.getResponsaveis();
-            for (Pessoa p: responsáveis){
-                custoTotal += p.calculaCusto(dataInicio, dataFim);
-            }
+            custoTotal += t.getResponsavel().calculaCusto(dataInicio, dataFim);
         }
         return custoTotal;
-    }*/
+    }
+
+
 
     @Override
     public String toString() {
@@ -215,7 +224,7 @@ public class Projeto implements Serializable {
                 "\nIp=" + ip +
                 "\nPessoasEnvolvidas=" + pessoasEnvolvidas +
                 "\nTarefas=" + tarefas+
-                "\nCusto Projeto=" + calculaCustoProjeto(getDataInicio(), getDataFim());
+                "\nCusto Projeto=" + calculaCustoPorTarefa();
     }
 }
 

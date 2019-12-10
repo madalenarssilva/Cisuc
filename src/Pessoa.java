@@ -80,7 +80,7 @@ public abstract class Pessoa implements Serializable {
     /**
      * Abstract method
      */
-    public abstract double calculaCusto(String dataInicial, String dataFinal);
+    public abstract long calculaCusto(String dataInicial, String dataFinal);
 
     public abstract int getCusto();
 

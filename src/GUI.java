@@ -71,11 +71,12 @@ public class GUI extends JFrame{
     DefaultListModel<String> Nomeproj = new DefaultListModel<>();
     DefaultListModel<String> Nomepessoa = new DefaultListModel<>();
 
+
     public GUI(Cisuc cisuc) {
         this.cisuc = cisuc;
 
         setTitle("Gestão Projetos Cisuc");
-        setSize(1000, 500);
+        setSize(1500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
 
@@ -85,21 +86,21 @@ public class GUI extends JFrame{
 
         // Label
         label = new JLabel("Escolha uma das opcoes:", SwingConstants.CENTER);
-        label.setBounds(300, 50, 350, 30);
+        label.setBounds(500, 50, 350, 30);
 
         // Menu
         buttonCP = new JButton("Criar Projeto");
-        buttonCP.setBounds(300, 100, 350, 30);
+        buttonCP.setBounds(500, 100, 350, 30);
         buttonAP = new JButton("Adicionar Pessoas à app");
-        buttonAP.setBounds(300, 140, 350, 30);
+        buttonAP.setBounds(500, 140, 350, 30);
         buttonLPNC = new JButton("Listar projetos não concluidos na data estimada");
-        buttonLPNC.setBounds(300, 180, 350, 30);
+        buttonLPNC.setBounds(500, 180, 350, 30);
         buttonPC = new JButton("Listar projetos concluidos");
-        buttonPC.setBounds(300, 220, 350, 30);
+        buttonPC.setBounds(500, 220, 350, 30);
         buttonE = new JButton("Editar Projeto");
-        buttonE.setBounds(300, 260, 350, 30);
+        buttonE.setBounds(500, 260, 350, 30);
         buttonS = new JButton("Sair");
-        buttonS.setBounds(300, 300, 350, 30);
+        buttonS.setBounds(500, 300, 350, 30);
 
         // CRIAR PROJETO
         NomeP = new JLabel("Nome");
@@ -157,11 +158,11 @@ public class GUI extends JFrame{
         panel.add(buttonVoltarM);
 
         for(Projeto p: cisuc.getProjetos()) {
-            Nomeproj.addElement(p.getNome());
+            Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Investigador Principal: " + p.getIp().getNome() + " | Pessoas Envolvidas: " + p.getPessoasEnvolvidasNome());
         }
         projetos = new JList<>(Nomeproj);
         projetos.setBackground(new Color(178,178,178));
-        projetos.setBounds(300, 40, 600, 300);
+        projetos.setBounds(300, 40, 1100, 300);
         projetos.setVisible(false);
         panel.add(projetos);
 
@@ -196,22 +197,26 @@ public class GUI extends JFrame{
 
         for(Pessoa p: cisuc.getPessoas()) {
             if(p.getNumeroMecanografico()>0){
-                Nomepessoa.addElement(p.getNome() + "[Docente]");
+                Docente dc = (Docente) p;
+                Nomepessoa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " );
             }else {
                 if (p.getCusto() == 1000) {
-                    Nomepessoa.addElement(p.getNome() + "[Doutorado]");
+                    Doutorado d = (Doutorado) p;
+                    Nomepessoa.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
                 }
                 else if (p.getCusto() == 800) {
-                    Nomepessoa.addElement(p.getNome() + "[Mestre]");
+                    Mestre m = (Mestre) p;
+                    Nomepessoa.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
                 } else if (p.getCusto() == 500){
-                    Nomepessoa.addElement(p.getNome() + "[Licenciado]");
+                    Licenciado l = (Licenciado) p;
+                    Nomepessoa.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
                 }
             }
         }
 
         pessoas = new JList<>(Nomepessoa);
         pessoas.setBackground(new Color(178,178,178));
-        pessoas.setBounds(300, 40, 600, 300);
+        pessoas.setBounds(300, 40, 900, 300);
         pessoas.setVisible(false);
         panel.add(pessoas);
 
@@ -309,22 +314,22 @@ public class GUI extends JFrame{
         panel.add(next);
 
         label2 = new JLabel("Escolha um projeto:", SwingConstants.CENTER);
-        label2.setBounds(300, 20, 350, 30);
+        label2.setBounds(500, 20, 350, 30);
 
         criarTarefa= new JButton("Criar Tarefa");
-        criarTarefa.setBounds(300, 100, 350, 30);
+        criarTarefa.setBounds(500, 100, 350, 30);
         criarTarefa.setVisible(false);
         associarTarefaPessoa = new JButton("Associar pessoa a tarefa.");
-        associarTarefaPessoa.setBounds(300, 140, 350, 30);
+        associarTarefaPessoa.setBounds(500, 140, 350, 30);
         associarTarefaPessoa.setVisible(false);
         associarPessoaProjeto = new JButton("Associar pessoa a projeto.");
-        associarPessoaProjeto.setBounds(300, 180, 350, 30);
+        associarPessoaProjeto.setBounds(500, 180, 350, 30);
         associarPessoaProjeto.setVisible(false);
         eliminarTarefa = new JButton("Eliminar tarefa.");
-        eliminarTarefa.setBounds(300, 220, 350, 30);
+        eliminarTarefa.setBounds(500, 220, 350, 30);
         eliminarTarefa.setVisible(false);
         atualizatTaxaExecução= new JButton("Atualizar taxa execução");
-        atualizatTaxaExecução.setBounds(300, 260, 350, 30);
+        atualizatTaxaExecução.setBounds(500, 260, 350, 30);
         atualizatTaxaExecução.setVisible(false);
 
 
@@ -377,7 +382,7 @@ public class GUI extends JFrame{
             Boolean d = validarData1(tfDataFimP.getText());
 
             if(!a && !b && c && d) {
-                Boolean f = validarData2();
+                Boolean f = validarData2(tfDataInicioP.getText(), tfDataFimP.getText());
                 if(f){
                     addProjeto();
                 }
@@ -406,7 +411,10 @@ public class GUI extends JFrame{
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
-                addPessoaL();
+                Boolean f = validarData2(tfdataInicioB.getText(), tfdataFimB.getText());
+                if(f) {
+                    addPessoaL();
+                }
             }
         }
     }
@@ -421,7 +429,7 @@ public class GUI extends JFrame{
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
-                Boolean f = validarData2();
+                Boolean f = validarData2(tfdataInicioB.getText(), tfdataFimB.getText());
                 if(f) {
                     addPessoaM();
                 }
@@ -439,7 +447,7 @@ public class GUI extends JFrame{
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
-                Boolean f = validarData2();
+                Boolean f = validarData2(tfdataInicioB.getText(), tfdataFimB.getText());
                 if(f) {
                     addPessoaDr();
                 }
@@ -450,7 +458,7 @@ public class GUI extends JFrame{
     private void addProjeto() {
         Projeto p = new Projeto(tfNameP.getText(), tfAcronimoP.getText(), tfDataInicioP.getText(), tfDataFimP.getText());
         cisuc.getProjetos().add(p);
-        Nomeproj.addElement(p.getNome());
+        Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() );
         tfNameP.setText(null);
         tfAcronimoP.setText(null);
         tfDataInicioP.setText(null);
@@ -463,7 +471,7 @@ public class GUI extends JFrame{
             int num = Integer.parseInt(nM);
             Docente d = new Docente(tfNamePs.getText(), tfMail.getText(), num, tfAreaInv.getText());
             cisuc.getPessoas().add(d);
-            Nomepessoa.addElement(d.getNome() + "[Docente]");
+            Nomepessoa.addElement(d.getNome() + "[Docente]" +  " | mail: " + d.getMail()  +" | número Mecanográfico: " + d.getNumeroMecanografico() + " | Área Investigação: " + d.getAreaInvestigacao());
             tfNamePs.setText(null);
             tfMail.setText(null);
             tfNumMecanografico.setText(null);
@@ -476,7 +484,7 @@ public class GUI extends JFrame{
     private void addPessoaL() {
         Licenciado l = new Licenciado(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(l);
-        Nomepessoa.addElement(l.getNome() + "[Licenciatura]");
+        Nomepessoa.addElement(l.getNome() + "[Licenciatura] "  + " | mail: " + l.getMail() +  " | Custo Bolsa: " + l.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + l.getDuracao_bolsa());
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -486,7 +494,7 @@ public class GUI extends JFrame{
     private void addPessoaM() {
         Mestre m = new Mestre(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(m);
-        Nomepessoa.addElement(m.getNome() + "[Mestrado]");
+        Nomepessoa.addElement(m.getNome() + "[Mestrado] "  + " | mail: " + m.getMail() +  " | Custo Bolsa: " + m.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + m.getDuracao_bolsa());
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -496,7 +504,7 @@ public class GUI extends JFrame{
     private void addPessoaDr() {
         Doutorado dr = new Doutorado(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(dr);
-        Nomepessoa.addElement(dr.getNome() + "[Doutorado]");
+        Nomepessoa.addElement(dr.getNome() + "[Doutorado] "  + " | mail: " + dr.getMail() +  " | Custo Bolsa: " + dr.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + dr.getDuracao_bolsa());
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -628,7 +636,7 @@ public class GUI extends JFrame{
         }
     }
 
-    public Boolean validarData2() {
+    public Boolean validarData2(String dataIni, String dataFim) {
 
         /**
          * Method that compares beginning date and end date and checks if end date is or is after beginning date.
@@ -636,10 +644,6 @@ public class GUI extends JFrame{
          * @param dataFim (end date)
          * @return true if dates are right and false otherwise
          */
-
-        String dataIni=tfDataInicioP.getText();
-        String dataFim=tfDataFimP.getText();
-
 
         String data1 = dataIni.replaceAll("-", "");
         String data2 = dataFim.replaceAll("-", "");

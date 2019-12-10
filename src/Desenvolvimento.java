@@ -19,8 +19,8 @@ class Desenvolvimento extends Tarefa{
      * @param dataFim
      * @param responsavel
      */
-    public Desenvolvimento(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, ArrayList<Pessoa> responsaveis) {
-        super(dataInicio, percentagemConclusao, dataFim, responsavel, responsaveis);
+    public Desenvolvimento(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
+        super(dataInicio, percentagemConclusao, dataFim, responsavel);
     }
 
     /**

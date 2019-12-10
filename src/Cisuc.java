@@ -17,8 +17,6 @@ public class Cisuc {
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Projeto> projetos;
     private ArrayList<Tarefa> tarefas;
-    private String nome;
-    private String password;
     private boolean exitMenu = false;
 
     public static void main(String[] args) {
@@ -363,7 +361,7 @@ public class Cisuc {
                         }
                         switch (s[0]) {
                             case "DESIGN":
-                                Design design = new Design(s[1], 0, s[2], responsavel, null);
+                                Design design = new Design(s[1], 0, s[2], responsavel);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -374,7 +372,7 @@ public class Cisuc {
                                 tarefas.add(design);
                                 break;
                             case "DESENVOLVIMENTO":
-                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel, null);
+                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -385,7 +383,7 @@ public class Cisuc {
                                 tarefas.add(des);
                                 break;
                             case "DOCUMENTACAO":
-                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel, null);
+                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {

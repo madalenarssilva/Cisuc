@@ -71,7 +71,7 @@ public class Docente extends Pessoa implements Serializable {
      */
 
 
-    public double calculaCusto(String dataInicial, String dataFinal) {
+    public long calculaCusto(String dataInicial, String dataFinal) {
         return 0;
     }
 

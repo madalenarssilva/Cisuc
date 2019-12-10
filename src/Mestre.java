@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class Mestre extends Bolseiro{
     private ArrayList<Docente> orientadores = new ArrayList<>();
+    long duracao_bolsa;
 
     /**
      * Constructor Inicializing Array orientadores
@@ -51,8 +52,8 @@ public class Mestre extends Bolseiro{
      * Method that calculates the cost for the project of a Bolseiro.
      * @return total cost for the project
      */
-    public double calculaCusto(String dataInicio, String dataFim) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
+    public long calculaCusto(String dataInicio, String dataFim) {
+        duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
         return duracao_bolsa*800;
     }
 
@@ -60,11 +61,25 @@ public class Mestre extends Bolseiro{
         return 800;
     }
 
+    public long getDuracao_bolsa() {
+        return duracao_bolsa;
+    }
+
+    public ArrayList<String> getOrientadoresNome() {
+        ArrayList<String> doc= new ArrayList<>();
+        for(Docente o: orientadores){
+            doc.add(o.getNome());
+        }
+        return doc;
+    }
+
+
     @Override
     public String toString() {
         return "Mestre{" + super.toString() +
                 ", orientadores=" + orientadores +
                 ", custo bolsa=" + calculaCusto(getDataInicio(), getDataFim()) +
+                ", duração bolsa=" + duracao_bolsa +
                 '}';
     }
 }

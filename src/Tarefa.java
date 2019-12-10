@@ -12,7 +12,6 @@ abstract class Tarefa implements Serializable {
     private int percentagemConclusao;
     private String dataFim;
     private Pessoa responsavel;
-    private ArrayList<Pessoa> responsaveis;
 
     /**
      * Empty Constructor
@@ -27,12 +26,11 @@ abstract class Tarefa implements Serializable {
      * @param responsavel
      *
      */
-    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, ArrayList<Pessoa> responsaveis) {
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
         this.dataInicio = dataInicio;
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
         this.responsavel = responsavel;
-        this.responsaveis = responsaveis;
     }
 
     public Tarefa(String dataInicio, int percentagemConclusao, String dataFim) {
@@ -40,15 +38,6 @@ abstract class Tarefa implements Serializable {
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
     }
-
-    /**
-     * Get DataInicio
-     * @return dataInicio
-     */
-    public ArrayList<Pessoa> getResponsaveis() {
-        return responsaveis;
-    }
-
 
     /**
      * Get DataInicio

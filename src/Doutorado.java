@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 public class Doutorado extends Bolseiro{
 
+    private long duracao_bolsa;
+
     /**
      * Empty Constructor
      */
@@ -28,8 +30,8 @@ public class Doutorado extends Bolseiro{
      * Method that calculates the cost for the project of a Bolseiro.
      * @return total cost for the project
      */
-    public double calculaCusto(String dataInicio, String dataFim) {
-        long duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
+    public long calculaCusto(String dataInicio, String dataFim) {
+        duracao_bolsa = ChronoUnit.MONTHS.between(LocalDate.parse(dataInicio).withDayOfMonth(1),  LocalDate.parse(dataFim).withDayOfMonth(1));
         return duracao_bolsa*1000;
     }
 
@@ -37,10 +39,15 @@ public class Doutorado extends Bolseiro{
         return 1000;
     }
 
+    public long getDuracao_bolsa() {
+        return duracao_bolsa;
+    }
+
     @Override
     public String toString() {
         return "Doutorado{" + super.toString() +
                 ", custo bolsa=" + calculaCusto(getDataInicio(), getDataFim()) +
+                ", duração bolsa=" + duracao_bolsa +
                 '}';
     }
 }
