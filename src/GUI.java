@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class GUI extends JFrame{
@@ -13,7 +12,6 @@ public class GUI extends JFrame{
     //Botoes
     private JButton buttonCP;
     private JButton buttonAP;
-    private JButton buttonAPP;
     private JButton buttonLPNC;
     private JButton buttonPC;
     private JButton buttonE;
@@ -29,9 +27,17 @@ public class GUI extends JFrame{
     private JButton buttoncriarPsL;
     private JButton buttoncriarPsM;
     private JButton buttoncriarPsDr;
+    private JButton criarTarefa;
+    private JButton associarTarefaPessoa;
+    private JButton associarPessoaProjeto;
+    private JButton eliminarTarefa;
+    private JButton atualizatTaxaExecução;
+    private JButton next;
+
 
     //Labels
     private JLabel label;
+    private  JLabel label2;
 
     //Inputs
     private JTextField tfNameP;
@@ -86,16 +92,14 @@ public class GUI extends JFrame{
         buttonCP.setBounds(300, 100, 350, 30);
         buttonAP = new JButton("Adicionar Pessoas à app");
         buttonAP.setBounds(300, 140, 350, 30);
-        buttonAPP = new JButton("Associar Pessoas ao projeto");
-        buttonAPP.setBounds(300, 180, 350, 30);
         buttonLPNC = new JButton("Listar projetos não concluidos na data estimada");
-        buttonLPNC.setBounds(300, 220, 350, 30);
+        buttonLPNC.setBounds(300, 180, 350, 30);
         buttonPC = new JButton("Listar projetos concluidos");
-        buttonPC.setBounds(300, 260, 350, 30);
+        buttonPC.setBounds(300, 220, 350, 30);
         buttonE = new JButton("Editar Projeto");
-        buttonE.setBounds(300, 300, 350, 30);
+        buttonE.setBounds(300, 260, 350, 30);
         buttonS = new JButton("Sair");
-        buttonS.setBounds(300, 340, 350, 30);
+        buttonS.setBounds(300, 300, 350, 30);
 
         // CRIAR PROJETO
         NomeP = new JLabel("Nome");
@@ -298,14 +302,45 @@ public class GUI extends JFrame{
         buttoncriarPsDr.setVisible(false);
         panel.add(buttoncriarPsDr);
 
+        // Editar Projetos - next
+        next = new JButton("Continuar");
+        next.setBounds(20, 380, 200, 30);
+        next.setVisible(false);
+        panel.add(next);
+
+        label2 = new JLabel("Escolha um projeto:", SwingConstants.CENTER);
+        label2.setBounds(300, 20, 350, 30);
+
+        criarTarefa= new JButton("Criar Tarefa");
+        criarTarefa.setBounds(300, 100, 350, 30);
+        criarTarefa.setVisible(false);
+        associarTarefaPessoa = new JButton("Associar pessoa a tarefa.");
+        associarTarefaPessoa.setBounds(300, 140, 350, 30);
+        associarTarefaPessoa.setVisible(false);
+        associarPessoaProjeto = new JButton("Associar pessoa a projeto.");
+        associarPessoaProjeto.setBounds(300, 180, 350, 30);
+        associarPessoaProjeto.setVisible(false);
+        eliminarTarefa = new JButton("Eliminar tarefa.");
+        eliminarTarefa.setBounds(300, 220, 350, 30);
+        eliminarTarefa.setVisible(false);
+        atualizatTaxaExecução= new JButton("Atualizar taxa execução");
+        atualizatTaxaExecução.setBounds(300, 260, 350, 30);
+        atualizatTaxaExecução.setVisible(false);
+
+
+
         panel.add(label);
         panel.add(buttonCP);
         panel.add(buttonAP);
-        panel.add(buttonAPP);
         panel.add(buttonLPNC);
         panel.add(buttonPC);
         panel.add(buttonE);
         panel.add(buttonS);
+        panel.add(criarTarefa);
+        panel.add(associarTarefaPessoa);
+        panel.add(associarPessoaProjeto);
+        panel.add(eliminarTarefa);
+        panel.add(atualizatTaxaExecução);
 
         // Listeners
         buttonCP.addActionListener(new buttonCPListener());
@@ -316,6 +351,8 @@ public class GUI extends JFrame{
         buttonLicenciado.addActionListener(new buttonLicenciadoListener());
         buttonMestrado.addActionListener(new buttonMestradoListener());
         buttonDoutorado.addActionListener(new buttonDoutoradoListener());
+        buttonE.addActionListener(new buttonEditarProjetoListener());
+        next.addActionListener(new buttonNextListener());
         // Criar Projeto
         buttoncriarP.addActionListener(new ActionProjeto());
         // Associar Docente à app
@@ -638,7 +675,6 @@ public class GUI extends JFrame{
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
-            buttonAPP.setVisible(false);
             buttonCP.setVisible(false);
             buttonAP.setVisible(false);
             NomePs.setVisible(false);
@@ -683,7 +719,6 @@ public class GUI extends JFrame{
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
-            buttonAPP.setVisible(false);
             buttonCP.setVisible(false);
             buttonAP.setVisible(false);
             NomeP.setVisible(false);
@@ -751,6 +786,12 @@ public class GUI extends JFrame{
             buttoncriarPsL.setVisible(false);
             buttoncriarPsM.setVisible(false);
             buttoncriarPsDr.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(false);
 
             // Menu visivel
             label.setVisible(true);
@@ -758,7 +799,6 @@ public class GUI extends JFrame{
             buttonPC.setVisible(true);
             buttonLPNC.setVisible(true);
             buttonE.setVisible(true);
-            buttonAPP.setVisible(true);
             buttonCP.setVisible(true);
             buttonAP.setVisible(true);
 
@@ -860,6 +900,59 @@ public class GUI extends JFrame{
             dataFimB.setVisible(true);
             tfdataInicioB.setVisible(true);
             tfdataFimB.setVisible(true);
+        }
+    }
+
+    // Click no botão Next em editar Projeto
+    private class buttonNextListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            buttonDocente.setVisible(false);
+            buttonBolseiro.setVisible(false);
+            buttonLicenciado.setVisible(false);
+            buttonMestrado.setVisible(false);
+            buttonDoutorado.setVisible(false);
+            label.setVisible(false);
+            buttonS.setVisible(false);
+            buttonPC.setVisible(false);
+            buttonLPNC.setVisible(false);
+            buttonE.setVisible(false);
+            buttonCP.setVisible(false);
+            buttonAP.setVisible(false);
+            projetos.setVisible(false);
+            next.setVisible(false);
+            buttonE.setVisible(false);
+
+            label.setVisible(true);
+            criarTarefa.setVisible(true);
+            associarTarefaPessoa.setVisible(true);
+            associarPessoaProjeto.setVisible(true);
+            eliminarTarefa.setVisible(true);
+            atualizatTaxaExecução.setVisible(true);
+            buttonVoltarM.setVisible(true);
+        }
+    }
+
+    // Click no botão Editar Projeto
+    private class buttonEditarProjetoListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            label2.setVisible(true);
+            projetos.setVisible(true);
+            next.setVisible(true);
+            buttonE.setVisible(false);
+
+            MouseListener mouseListener = new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        int index = projetos.locationToIndex(e.getPoint());
+                        Object item = projetos.getModel().getElementAt(index);
+                        JOptionPane.showMessageDialog(null, "Projeto escolhido: " + item.toString());
+                    }
+                }
+            };
+            projetos.addMouseListener(mouseListener);
+
         }
     }
 

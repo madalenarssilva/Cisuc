@@ -746,7 +746,9 @@ public class Cisuc {
         printTarefas(tarefasForaPraxo);
     }
 
-    public void eliminarTarefas() {}
+    public void eliminarTarefas() {
+
+    }
 
     //                                                 PESSOAS
 
