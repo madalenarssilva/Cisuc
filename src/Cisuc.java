@@ -135,6 +135,8 @@ public class Cisuc {
                         associarPessoasAProjetos(projeto);
                         printProjetos();
                         printPessoas();
+                        System.out.println("PESSOAS ENVOLVIDAS: ");
+                        System.out.println(projeto.getPessoasEnvolvidas());
                         break;
                     case 4:
                         break;
@@ -703,7 +705,7 @@ public class Cisuc {
         ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
         Pessoa responsavel;
 
-        //Encontrar bolseiros cuja duração da bolsa  os permita ter a tarefa.
+        //Encontrar bolseiros cuja duração da bolsa as permita ter a tarefa.
         //Encontrar Pessoas que não ficarão sobrecarregadas.
         for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
             System.out.println(pessoa);
@@ -1070,26 +1072,28 @@ public class Cisuc {
                 projeto.getPessoasEnvolvidas().add(pessoa);
             }
         }
-        //Se for a pessoa escolhida for um DOCENTE:
+        else {
+            //Se for a pessoa escolhida for um DOCENTE:
 
-        //Se o projeto ainda não tiver investigador principal (um Docente):
-        if (projeto.getIp() == null) {
-            ArrayList<Docente> docentes = getDocentes();
-            int i=1;
-            //Imprimir lista de todos os docentes da aplicação.
-            for(Docente d: docentes){
-                System.out.println(i++ + "-" + d.getNome());
+            //Se o projeto ainda não tiver investigador principal (um Docente):
+            if (projeto.getIp() == null) {
+                ArrayList<Docente> docentes = getDocentes();
+                int i = 1;
+                //Imprimir lista de todos os docentes da aplicação.
+                for (Docente d : docentes) {
+                    System.out.println(i++ + "-" + d.getNome());
+                }
+                System.out.println("Escolha o Investigador Principal: ");
+                int nIp = scanner.nextInt();
+                while (nIp <= 0 || nIp > docentes.size()) {
+                    System.out.println("Opção inválida. Escolha o Investigador Principal: ");
+                    nIp = scanner.nextInt();
+                }
+                projeto.setIp(docentes.get(nIp - 1));
             }
-            System.out.println("Escolha o Investigador Principal: ");
-            int nIp = scanner.nextInt();
-            while (nIp <= 0 || nIp > docentes.size()) {
-                System.out.println("Opção inválida. Escolha o Investigador Principal: ");
-                nIp = scanner.nextInt();
-            }
-            projeto.setIp(docentes.get(nIp - 1));
+            //Adicionar docente à lista de pessoas envolvidas no projeto.
+            projeto.getPessoasEnvolvidas().add(pessoa);
         }
-        //Adicionar docente à lista de pessoas envolvidas no projeto.
-        projeto.getPessoasEnvolvidas().add(pessoa);
     }
 
     public void printPessoas() {
@@ -1098,77 +1102,7 @@ public class Cisuc {
         }
     }
 
-    public void printPessoasNomes(){
-        /**
-         * Method that prints all people names with an indice before the name.
-         */
-        int i=1;
-        for(Pessoa p: pessoas){
-            System.out.println(i++ + ". " +  p.getNome());
-        }
-    }
-
     //                                                AUXILIARES
-
-    public ArrayList<Docente> getDocente() {
-        /**
-         * Method to get a list of all People who are "Docentes".
-         * @return ArrayList of docentes
-         */
-        ArrayList<Docente> docentes = new ArrayList<Docente>();
-        // Imprimir lista de todos os docentes para o utilizador escolher
-        if (pessoas.size() != 0) {
-            for (Pessoa p : pessoas) {
-                // Ver se é Docente ou Bolseiro
-                if (p.getNumeroMecanografico() > 0) {
-                    Docente dc = (Docente) p;
-                    docentes.add(dc);
-                } else {
-                    continue;
-                }
-            }
-            if(docentes.size() == 0) {
-                //Não existem docentes
-                System.out.println("Insira Docentes na aplicação");
-                Menu();
-            }
-        } else {
-            //A lista das pessoas está vazia
-            System.out.println("Insira Pessoas na aplicação.");
-            Menu();
-        }
-        return docentes;
-    }
-
-    public ArrayList<Bolseiro> getBolseiro() {
-        /**
-         * Method to get a list of all People who are "Bolseiros".
-         * @return ArrayList of bolseiros
-         */
-        ArrayList<Bolseiro> bolseiros = new ArrayList<Bolseiro>();
-        // Imprimir lista de todos os bolseiros para o utilizador escolher
-        if (pessoas.size() != 0) {
-            for (Pessoa p : pessoas) {
-                // Ver se é Docente ou Bolseiro
-                if (p.getNumeroMecanografico() == 0) {
-                    Bolseiro bs = (Bolseiro) p;
-                    bolseiros.add(bs);
-                } else {
-                    continue;
-                }
-            }
-            if(bolseiros.size() == 0) {
-                //Não existem docentes
-                System.out.println("Insira Bolseiros na aplicação");
-                Menu();
-            }
-        } else {
-            //A lista das pessoas está vazia
-            System.out.println("Insira Pessoas na aplicação.");
-            Menu();
-        }
-        return bolseiros;
-    }
 
     public ArrayList<Docente> getDocentes() {
         /**

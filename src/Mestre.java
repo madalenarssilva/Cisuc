@@ -11,9 +11,7 @@ public class Mestre extends Bolseiro{
     /**
      * Constructor Inicializing Array orientadores
      */
-    Mestre(){
-        orientadores = new ArrayList<>();
-    }
+    Mestre(){}
 
     /**
      * Constructor
