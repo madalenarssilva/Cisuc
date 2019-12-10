@@ -8,6 +8,7 @@ public class GUI extends JFrame{
     private JList projetos;
     private JList tarefas;
     private JList docentes;
+    private Projeto projetoEscolhido;
 
     //Botoes
     private JButton buttonCP;
@@ -952,6 +953,8 @@ public class GUI extends JFrame{
                         int index = projetos.locationToIndex(e.getPoint());
                         Object item = projetos.getModel().getElementAt(index);
                         JOptionPane.showMessageDialog(null, "Projeto escolhido: " + item.toString());
+                        projetoEscolhido = cisuc.getProjetos().get(index);
+                        JOptionPane.showMessageDialog(null, projetoEscolhido);
                     }
                 }
             };
