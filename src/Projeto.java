@@ -205,14 +205,14 @@ public class Projeto implements Serializable {
 
     public long calculaCustoPorTarefa(){
         for(Tarefa t: tarefas){
-            dataInicio = t.getDataInicio();
-            dataFim = t.getDataFim();
-            custoTotal += t.getResponsavel().calculaCusto(dataInicio, dataFim);
+            if (t.getResponsavel() != null) {
+                dataInicio = t.getDataInicio();
+                dataFim = t.getDataFim();
+                custoTotal += t.getResponsavel().calculaCusto(dataInicio, dataFim);
+            }
         }
         return custoTotal;
     }
-
-
 
     @Override
     public String toString() {

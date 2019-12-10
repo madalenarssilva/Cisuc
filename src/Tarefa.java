@@ -11,6 +11,7 @@ abstract class Tarefa implements Serializable {
     private String dataInicio;
     private int percentagemConclusao;
     private String dataFim;
+    private long duracaoEstimada;
     private Pessoa responsavel;
 
     /**
@@ -24,19 +25,28 @@ abstract class Tarefa implements Serializable {
      * @param percentagemConclusao
      * @param dataFim
      * @param responsavel
+     * @param duracaoEstimada
      *
      */
-    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, long duracaoEstimada) {
         this.dataInicio = dataInicio;
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
         this.responsavel = responsavel;
+        this.duracaoEstimada = duracaoEstimada;
     }
 
-    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim) {
+    /**
+     * @param dataInicio
+     * @param percentagemConclusao
+     * @param dataFim
+     * @param duracaoEstimada
+     */
+    public Tarefa(String dataInicio, int percentagemConclusao, String dataFim, long duracaoEstimada) {
         this.dataInicio = dataInicio;
         this.percentagemConclusao = percentagemConclusao;
         this.dataFim = dataFim;
+        this.duracaoEstimada = duracaoEstimada;
     }
 
     /**
@@ -88,15 +98,15 @@ abstract class Tarefa implements Serializable {
     }
 
     /**
-     * Get Responsable
-     * @return responsable
+     * Get Person Responsible For Task
+     * @return responsavel
      */
     public Pessoa getResponsavel() {
         return responsavel;
     }
 
     /**
-     * Set Responsable
+     * Set Person Responsible For Task
      * @param responsavel
      */
     public void setResponsavel(Pessoa responsavel) {
@@ -104,17 +114,20 @@ abstract class Tarefa implements Serializable {
     }
 
     /**
-     * method to calculate the duration of the task based on it's initial date and the ending date
-     * @param dataInicio
-     * @param dataFim
-     * @return duracao
+     * Get DuracaoEstimada
+     * @return duracaoEstimada
      */
-    public int duracao(String dataInicio, String dataFim){
-        int duracao = 0;
-        return duracao;
+    public long getDuracaoEstimada() {
+        return duracaoEstimada;
     }
 
-    public abstract long calculaTaxaExecucao();
+    /**
+     * Set duracaoEstimada
+     * @param duracaoEstimada
+     */
+    public void setDuracaoEstimada(long duracaoEstimada) {
+        this.duracaoEstimada = duracaoEstimada;
+    }
 
     public abstract double getTaxaEsforco();
 
@@ -123,7 +136,8 @@ abstract class Tarefa implements Serializable {
         return "dataInicio='" + dataInicio + '\'' +
                 ", percentagemConclusao=" + percentagemConclusao +
                 ", dataFim='" + dataFim + '\'' +
-                ", responsavel=" + responsavel +
+                ", responsavel=" + responsavel + '\'' +
+                ", duracaoEstimada=" + duracaoEstimada + '\'' +
                 '}';
     }
 }

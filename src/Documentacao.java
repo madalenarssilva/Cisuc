@@ -18,9 +18,10 @@ class Documentacao extends Tarefa{
      * @param percentagemConclusao
      * @param dataFim
      * @param responsavel
+     * @param duracaoEstimada
      */
-    public Documentacao(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel) {
-        super(dataInicio, percentagemConclusao, dataFim, responsavel);
+    public Documentacao(String dataInicio, int percentagemConclusao, String dataFim, Pessoa responsavel, long duracaoEstimada) {
+        super(dataInicio, percentagemConclusao, dataFim, responsavel, duracaoEstimada);
     }
 
     /**
@@ -28,19 +29,10 @@ class Documentacao extends Tarefa{
      * @param dataInicio
      * @param percentagemConclusao
      * @param dataFim
+     * @param duracaoEstimada
      */
-    public Documentacao(String dataInicio, int percentagemConclusao, String dataFim) {
-        super(dataInicio, percentagemConclusao, dataFim);
-    }
-
-    /**
-     * Method that calculates the execution rate of the task.
-     * @return execution rate of the task
-     */
-    public long calculaTaxaExecucao() {
-        long dias_passados = 0;
-
-        return (long) (dias_passados*0.25);
+    public Documentacao(String dataInicio, int percentagemConclusao, String dataFim, long duracaoEstimada) {
+        super(dataInicio, percentagemConclusao, dataFim, duracaoEstimada);
     }
 
     /**

@@ -1,5 +1,9 @@
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -104,7 +108,7 @@ public class Cisuc {
                 //Verificar se a opção escolhida existe.
                 int n = scanner.nextInt();
                 while (n <= 0 || n > projetos.size()) {
-                    System.out.print("Opção inválida. Volte a escolher o projeto:");
+                    System.out.print("Opção inválida. Volte a escolher o projeto: ");
                     n = scanner.nextInt();
                 }
                 Projeto projeto = projetos.get(n-1);
@@ -116,7 +120,8 @@ public class Cisuc {
                 System.out.println("3. Associar pessoa ao projeto.");
                 System.out.println("4. Eliminar tarefa.");
                 System.out.println("5. Atualizar taxa de execução de uma tarefa.");
-                System.out.println("6. Sair");
+                System.out.println("6. Listar tarefas não concluídas na data estimada.");
+                System.out.println("7. Sair");
                 System.out.print("Escolha uma opção: ");
 
                 int opcao2 = scanner.nextInt();
@@ -139,8 +144,15 @@ public class Cisuc {
                     case 4:
                         break;
                     case 5:
+                        atualizarTaxaExecucao(projeto);
+                        printTarefas();
                         break;
                     case 6:
+                        ArrayList<Tarefa> tarefasForaPrazo = new ArrayList<>();
+                        tarefasForaPrazo = getTarefasForaPrazo(projeto);
+                        printTarefas(tarefasForaPrazo);
+                        break;
+                    case 7:
                         break;
                     default:
                         System.out.println("Escolha uma opção existente.");
@@ -359,9 +371,13 @@ public class Cisuc {
                                 responsavel = pessoa;
                             }
                         }
+
+                        //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+                        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(s[1]),  LocalDate.parse(s[2]));
+
                         switch (s[0]) {
                             case "DESIGN":
-                                Design design = new Design(s[1], 0, s[2], responsavel);
+                                Design design = new Design(s[1], 0, s[2], responsavel, duracaoEstimada);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -372,7 +388,7 @@ public class Cisuc {
                                 tarefas.add(design);
                                 break;
                             case "DESENVOLVIMENTO":
-                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel);
+                                Desenvolvimento des = new Desenvolvimento(s[1], 0, s[2], responsavel, duracaoEstimada);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -383,7 +399,7 @@ public class Cisuc {
                                 tarefas.add(des);
                                 break;
                             case "DOCUMENTACAO":
-                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel);
+                                Documentacao doc = new Documentacao(s[1], 0, s[2], responsavel, duracaoEstimada);
 
                                 //Adicionar à lista de tarefas do projeto a que a tarefa está associada a tarefa em questão.
                                 for (Projeto proj : projetos) {
@@ -603,6 +619,10 @@ public class Cisuc {
             dataFim = scanner.nextLine();
         }
 
+        //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(dataInicio),  LocalDate.parse(dataFim));
+
+
         System.out.println("1. Design");
         System.out.println("2. Desenvolvimento");
         System.out.println("3. Documentação");
@@ -611,17 +631,17 @@ public class Cisuc {
 
         switch (opcao) {
             case 1:
-                Design design = new Design(dataInicio, 0, dataFim);
+                Design design = new Design(dataInicio, 0, dataFim, duracaoEstimada);
                 tarefas.add(design);
                 projeto.getTarefas().add(design);
                 break;
             case 2:
-                Desenvolvimento des = new Desenvolvimento(dataInicio, 0, dataFim);
+                Desenvolvimento des = new Desenvolvimento(dataInicio, 0, dataFim, duracaoEstimada);
                 tarefas.add(des);
                 projeto.getTarefas().add(des);
                 break;
             case 3:
-                Documentacao doc = new Documentacao(dataInicio, 0, dataFim);
+                Documentacao doc = new Documentacao(dataInicio, 0, dataFim, duracaoEstimada);
                 tarefas.add(doc);
                 projeto.getTarefas().add(doc);
                 break;
@@ -636,7 +656,7 @@ public class Cisuc {
         System.out.println("-----Associação de Tarefa------");
 
         // TAREFA ESCOLHIDA
-        System.out.println("Escolha a tarefa:");
+        System.out.println("Escolha a tarefa: ");
 
         //Array das tarefas do projeto que ainda não têm um responsável.
         ArrayList<Tarefa> tarefasDisponiveis = new ArrayList<>();
@@ -655,7 +675,7 @@ public class Cisuc {
         //Verificar se a opção escolhida existe.
         int numTarefa = scanner.nextInt();
         while (numTarefa <= 0 || numTarefa > j) {
-            System.out.println("Opção inválida. Volte a escolher o projeto:");
+            System.out.println("Opção inválida. Volte a escolher o tarefa: ");
             numTarefa = scanner.nextInt();
         }
 
@@ -681,19 +701,24 @@ public class Cisuc {
                     pessoasDisponiveis.add(pessoa);
             }
         }
-        //Adicionar o ip se não estiver sobrecarregado.
-        if (!isSobrecarregada(projeto.getIp(), tarefa))
+        //Adicionar o ip se existir e se não estiver sobrecarregado.
+        if (!isSobrecarregada(projeto.getIp(), tarefa) && projeto.getIp() != null)
             pessoasDisponiveis.add(projeto.getIp());
 
-        System.out.println("Escolha a pessoa responsável pela tarefa:");
         for (int i = 0; i < pessoasDisponiveis.size(); i++) {
             System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
         }
 
+        if (pessoasDisponiveis.size() == 0) {
+            System.out.println("Não existem pessoas disponíveis.");
+            return;
+        }
+        System.out.println("Escolha a pessoa responsável pela tarefa: ");
+
         //Verificar se a opção escolhida existe.
         int numPessoa = scanner.nextInt();
         while (numPessoa <= 0 || numPessoa > pessoasDisponiveis.size()) {
-            System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa:");
+            System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa: ");
             numPessoa = scanner.nextInt();
         }
         responsavel = pessoasDisponiveis.get(numPessoa-1);
@@ -716,11 +741,70 @@ public class Cisuc {
         }
     }
 
+    public void atualizarTaxaExecucao(Projeto projeto) {
+
+        /**
+         * Method that allows user to change the execution percentage of a task.
+         * We only allow the user to change the execution percentage of tasks that have not been registered as finished and that have a person associated to them.
+         * @param projeto that contains the task we want to update.
+         */
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-----Atualização da Taxa de Execução de uma Tarefa------");
+
+        //Array das tarefas do projeto que ainda não têm a taxa de execução a 100%.
+        ArrayList<Tarefa> tarefasDisponiveis = new ArrayList<>();
+        int j = 1;
+        for (int i = 0; i < projeto.getTarefas().size(); i++) {
+            if (projeto.getTarefas().get(i).getPercentagemConclusao() != 100 && projeto.getTarefas().get(i).getResponsavel() != null) {
+                tarefasDisponiveis.add(projeto.getTarefas().get(i));
+                System.out.println((j++) + ": " + projeto.getTarefas().get(i).toString());
+            }
+        }
+        if (tarefasDisponiveis.size() == 0) {
+            System.out.println("Não pode atualizar a taxa de nenhuma tarefa.");
+            return;
+        }
+
+        // TAREFA ESCOLHIDA
+        System.out.print("Escolha a tarefa: ");
+
+        //Verificar se a opção escolhida existe.
+        int numTarefa = scanner.nextInt();
+        while (numTarefa <= 0 || numTarefa > j) {
+            System.out.println("Opção inválida. Volte a escolher o tarefa: ");
+            numTarefa = scanner.nextInt();
+        }
+
+        //Obter objeto Tarefa.
+        Tarefa tarefa = tarefasDisponiveis.get(numTarefa-1);
+
+        //Pedir a nova taxa de execução ao user.
+        System.out.print("Insira a taxa de execução da tarefa: ");
+        int novaTaxa = scanner.nextInt();
+
+        //Verificar se a taxa introduzida é uma percentagem entre 0 e 100 e se é maior do que a anterior.
+        while (novaTaxa <= 0 || novaTaxa > 100 || novaTaxa <= tarefa.getPercentagemConclusao()) {
+            System.out.println("Taxa inválida. Volte a inserir a taxa: ");
+            novaTaxa = scanner.nextInt();
+        }
+        //Atualizar taxa da tarefa.
+        tarefa.setPercentagemConclusao(novaTaxa);
+
+        //Se a nova taxa de execução for igual 100%, atualizar a data de fim da tarefa.
+        if (novaTaxa == 100) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date dataAtual = new Date();
+            String dataAtualString = format.format(dataAtual);
+            tarefa.setDataFim(dataAtualString);
+        }
+    }
+
     public void printTarefasNaoIniciadas() {
         ArrayList<Tarefa> tarefasNaoIniciadas = new ArrayList<>();
 
         for(Tarefa t: tarefas) {
-            if (t.calculaTaxaExecucao() == 0)
+            if (t.getPercentagemConclusao() == 0)
                 tarefasNaoIniciadas.add(t);
         }
         printTarefas(tarefasNaoIniciadas);
@@ -730,20 +814,39 @@ public class Cisuc {
         ArrayList<Tarefa> tarefasConcluidas = new ArrayList<>();
 
         for(Tarefa t: tarefas) {
-            if (t.calculaTaxaExecucao() == 1)
+            if (t.getPercentagemConclusao() == 100)
                 tarefasConcluidas.add(t);
         }
         printTarefas(tarefasConcluidas);
     }
 
-    public void printTarefasForaPrazo() {
-        ArrayList<Tarefa> tarefasForaPraxo = new ArrayList<>();
+    public ArrayList<Tarefa> getTarefasForaPrazo(Projeto projeto) {
 
-        for(Tarefa t: tarefas) {
-            //TO DO logic here
-            tarefasForaPraxo.add(t);
+        /** Method that returns all the tasks that have not been concluded in the estimated time.
+         * We assume that a person cannot start a task before the start date given for task.
+         * @return ArrayList of all the tasks in the condition mentioned above.
+         */
+
+        ArrayList<Tarefa> tarefasForaPrazo = new ArrayList<>();
+
+        //Obter data atual em formato yyyy-MM-dd.
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date dataAtual = new Date();
+        String dataAtualString = format.format(dataAtual);
+
+        //Variável que guarda a diferença de dias entre a datas de início registada na class da Tarefa e a data atual.
+        //(Tendo em conta que a data de fim é atualizada assim que a taxa de execução for 100%).
+        long diferencaDias;
+
+        for(Tarefa t: projeto.getTarefas()) {
+            diferencaDias = ChronoUnit.DAYS.between(LocalDate.parse(t.getDataInicio()),  LocalDate.parse(dataAtualString));
+
+            //Se a diferença de dias registada for igual à duração estimada para a tarefa e a tarefa não estiver concluída (a 100%), adicionar ao array das tarefas fora de prazo.
+            //Se a diferença de dias registada for superior à duração estimada para a tarefa, adicionar ao array das tarefas fora de prazo.
+            if ((diferencaDias == t.getDuracaoEstimada() && t.getPercentagemConclusao() != 100) || diferencaDias > t.getDuracaoEstimada())
+                tarefasForaPrazo.add(t);
         }
-        printTarefas(tarefasForaPraxo);
+        return tarefasForaPrazo;
     }
 
     public void eliminarTarefas() {
@@ -922,22 +1025,6 @@ public class Cisuc {
 
         //Se for a pessoa escolhida for um BOLSEIRO só pode estar num projeto.
         if (pessoa.getNumeroMecanografico() == 0) {
-            //Se o projeto ainda não tiver investigador principal (um Docente):
-            if (projeto.getIp() == null) {
-                ArrayList<Docente> docentes = getDocentes();
-                int i=1;
-                //Imprimir lista de docentes.
-                for(Docente d: docentes) {
-                    System.out.println(i++ + ". " + d.getNome());
-                }
-                System.out.print("Escolha o Investigador Principal: ");
-                int nIp = scanner.nextInt();
-                while (nIp <= 0 || nIp > docentes.size()) {
-                    System.out.println("Opção inválida. Escolha o Investigador Principal: ");
-                    nIp = scanner.nextInt();
-                }
-                projeto.setIp(docentes.get(nIp - 1));
-            }
 
             //Se for a pessoa escolhida for um LICENCIADO/MESTRE ver se já tem orientadores para o projeto.
             if (pessoa.getCusto() != 1000) {
@@ -964,10 +1051,15 @@ public class Cisuc {
                         for (int i=0; i<orientadoresPossiveis.size(); i++)
                             System.out.println(k++ + ". " + orientadoresPossiveis.get(i).getNome());
 
+                        if (orientadoresPossiveis.size() == 0) {
+                            System.out.println("Não existem orientadores possíveis.");
+                            return;
+                        }
+
                         System.out.print("Escolha um orientador: ");
                         num = scanner.nextInt();
                         while (num <= 0 || num > orientadoresPossiveis.size()) {
-                            System.out.println("Opção inválida. Tente novamente:");
+                            System.out.println("Opção inválida. Tente novamente: ");
                             num = scanner.nextInt();
                         }
                         //Adicionar orientador ao licenciado.
@@ -977,7 +1069,7 @@ public class Cisuc {
                         scanner.nextLine();
                         mais = scanner.nextLine();
                         while (!mais.equals("s") && !mais.equals("n")) {
-                            System.out.println("Opção inválida. Tente novamente:");
+                            System.out.println("Opção inválida. Tente novamente: ");
                             mais = scanner.nextLine();
                         }
                         orientadoresPossiveis = new ArrayList<>();
@@ -1008,7 +1100,7 @@ public class Cisuc {
                         System.out.print("Escolha um orientador: ");
                         num = scanner.nextInt();
                         while (num <= 0 || num > orientadoresPossiveis.size()) {
-                            System.out.println("Opção inválida. Tente novamente:");
+                            System.out.println("Opção inválida. Tente novamente: ");
                             num = scanner.nextInt();
                         }
                         //Adicionar orientador ao mestre.
@@ -1018,7 +1110,7 @@ public class Cisuc {
                         scanner.nextLine();
                         mais = scanner.nextLine();
                         while (!mais.equals("s") && !mais.equals("n")) {
-                            System.out.println("Opção inválida. Tente novamente:");
+                            System.out.println("Opção inválida. Tente novamente: ");
                             mais = scanner.nextLine();
                         }
                         orientadoresPossiveis = new ArrayList<>();
@@ -1035,27 +1127,31 @@ public class Cisuc {
                 projeto.getPessoasEnvolvidas().add(pessoa);
             }
         }
+        //DOCENTE
         else {
-            //Se for a pessoa escolhida for um DOCENTE:
-
-            //Se o projeto ainda não tiver investigador principal (um Docente):
-            if (projeto.getIp() == null) {
-                ArrayList<Docente> docentes = getDocentes();
-                int i = 1;
-                //Imprimir lista de todos os docentes da aplicação.
-                for (Docente d : docentes) {
-                    System.out.println(i++ + "-" + d.getNome());
-                }
-                System.out.println("Escolha o Investigador Principal: ");
-                int nIp = scanner.nextInt();
-                while (nIp <= 0 || nIp > docentes.size()) {
-                    System.out.println("Opção inválida. Escolha o Investigador Principal: ");
-                    nIp = scanner.nextInt();
-                }
-                projeto.setIp(docentes.get(nIp - 1));
-            }
             //Adicionar docente à lista de pessoas envolvidas no projeto.
             projeto.getPessoasEnvolvidas().add(pessoa);
+        }
+
+        //Se o projeto ainda não tiver investigador principal (um Docente):
+        if (projeto.getIp() == null) {
+            ArrayList<Docente> docentes = getDocentes();
+            ArrayList<Docente> ipsPossiveis = new ArrayList<>();
+            int i=1;
+            //Imprimir lista de docentes.
+            for(Docente d: docentes) {
+                if (!projeto.getPessoasEnvolvidas().contains(d)) {
+                    ipsPossiveis.add(d);
+                    System.out.println(i++ + ". " + d.getNome());
+                }
+            }
+            System.out.print("Escolha o Investigador Principal: ");
+            int nIp = scanner.nextInt();
+            while (nIp <= 0 || nIp > ipsPossiveis.size()) {
+                System.out.println("Opção inválida. Escolha o Investigador Principal: ");
+                nIp = scanner.nextInt();
+            }
+            projeto.setIp(ipsPossiveis.get(nIp - 1));
         }
     }
 
@@ -1170,7 +1266,7 @@ public class Cisuc {
 
         double carga = 0.0;
         for (Tarefa t : tarefas) {
-            if (t.getResponsavel() == pessoa)
+            if (t.getResponsavel() == pessoa && t.getPercentagemConclusao() != 100)
                 carga += t.getTaxaEsforco();
         }
         if (carga + tarefa.getTaxaEsforco() > 1)
