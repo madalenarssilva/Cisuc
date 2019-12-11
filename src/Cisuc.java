@@ -1409,6 +1409,26 @@ public class Cisuc {
     public ArrayList<Pessoa> getPessoas() {
         return pessoas;
     }
+
+    /**
+     * Get Tarefas
+     * @return tarefas
+     */
+    public ArrayList<Tarefa> getTarefas() {
+        return tarefas;
+    }
+
+    /**
+     * Get Tarefas de um Projeto
+     * @return tarefasProjeto
+     */
+    public ArrayList<Tarefa> getTarefasProjeto(Projeto projeto){
+        ArrayList<Tarefa> tarefaProjeto = new ArrayList<>();
+        for(Tarefa t: projeto.getTarefas()){
+            tarefaProjeto.add(t);
+        }
+        return tarefaProjeto;
+    }
 }
 
 

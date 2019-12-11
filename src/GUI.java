@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import javax.swing.*;
 
 public class GUI extends JFrame{
@@ -7,8 +9,14 @@ public class GUI extends JFrame{
     private JList pessoas;
     private JList projetos;
     private JList tarefas;
+    private JList tarefasForaPrazo;
+    private JList tarefasConcluidas;
+    private JList tarefasInacab;
     private JList docentes;
     private Projeto projetoEscolhido;
+    private Tarefa tarefaEscolhida;
+
+    private int indexT;
 
     //Botoes
     private JButton buttonCP;
@@ -34,7 +42,16 @@ public class GUI extends JFrame{
     private JButton eliminarTarefa;
     private JButton atualizatTaxaExecução;
     private JButton next;
-
+    private JButton design;
+    private JButton desenvolvimento;
+    private JButton documentacao;
+    private JButton criarTarefaDesign;
+    private JButton criarTarefaDocumentacao;
+    private JButton criarTarefaDesenvolvimento;
+    private JButton listarTarefasInacabadas;
+    private JButton listarTarefasConcluidas;
+    private JButton listarTarefasNaoIniciadas;
+    private JButton delete;
 
     //Labels
     private JLabel label;
@@ -51,6 +68,8 @@ public class GUI extends JFrame{
     private JTextField tfAreaInv;
     private JTextField tfdataInicioB;
     private JTextField tfdataFimB;
+    private JTextField tfdataFimT;
+    private JTextField tfdataInicioT;
 
     //Labels
     private JLabel NomeP;
@@ -63,6 +82,10 @@ public class GUI extends JFrame{
     private JLabel AreaInv;
     private JLabel dataInicioB;
     private JLabel dataFimB;
+    private JLabel dataInicioT;
+    private JLabel dataFimT;
+
+    private JPanel panel;
 
     /**
      * vai permitir o acesso a variaveis da main, e vai permitir a escrita
@@ -71,7 +94,10 @@ public class GUI extends JFrame{
     public Cisuc cisuc;
     DefaultListModel<String> Nomeproj = new DefaultListModel<>();
     DefaultListModel<String> Nomepessoa = new DefaultListModel<>();
-
+    DefaultListModel<String> Nometarefa = new DefaultListModel<>();
+    DefaultListModel<String> TarefaForaPrazo = new DefaultListModel<>();
+    DefaultListModel<String> TarefasConcluidas = new DefaultListModel<>();
+    DefaultListModel<String> TarefasNaoIniciadas = new DefaultListModel<>();
 
     public GUI(Cisuc cisuc) {
         this.cisuc = cisuc;
@@ -81,7 +107,7 @@ public class GUI extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
 
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         // Absolute
         panel.setLayout(null);
 
@@ -154,10 +180,12 @@ public class GUI extends JFrame{
         panel.add(buttoncriarP);
 
         buttonVoltarM = new JButton("Voltar Menu");
-        buttonVoltarM.setBounds(340, 380, 200, 30);
+        buttonVoltarM.setBounds(500, 380, 350, 30);
         buttonVoltarM.setVisible(false);
         panel.add(buttonVoltarM);
 
+        Nomeproj.clear();
+        // JList de projetos
         for(Projeto p: cisuc.getProjetos()) {
             Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Investigador Principal: " + p.getIp().getNome() + " | Pessoas Envolvidas: " + p.getPessoasEnvolvidasNome());
         }
@@ -196,6 +224,7 @@ public class GUI extends JFrame{
         buttoncriarPsD.setVisible(false);
         panel.add(buttoncriarPsD);
 
+        // JList pessoas
         for(Pessoa p: cisuc.getPessoas()) {
             if(p.getNumeroMecanografico()>0){
                 Docente dc = (Docente) p;
@@ -314,26 +343,55 @@ public class GUI extends JFrame{
         next.setVisible(false);
         panel.add(next);
 
-        label2 = new JLabel("Escolha um projeto:", SwingConstants.CENTER);
-        label2.setBounds(500, 20, 350, 30);
+        label2 = new JLabel("Escolha um projeto:");
+        label2.setBounds(0, 20, 350, 30);
 
         criarTarefa= new JButton("Criar Tarefa");
-        criarTarefa.setBounds(500, 100, 350, 30);
+        criarTarefa.setBounds(500, 60, 350, 30);
         criarTarefa.setVisible(false);
         associarTarefaPessoa = new JButton("Associar pessoa a tarefa.");
-        associarTarefaPessoa.setBounds(500, 140, 350, 30);
+        associarTarefaPessoa.setBounds(500, 100, 350, 30);
         associarTarefaPessoa.setVisible(false);
         associarPessoaProjeto = new JButton("Associar pessoa a projeto.");
-        associarPessoaProjeto.setBounds(500, 180, 350, 30);
+        associarPessoaProjeto.setBounds(500, 140, 350, 30);
         associarPessoaProjeto.setVisible(false);
-        eliminarTarefa = new JButton("Eliminar tarefa.");
-        eliminarTarefa.setBounds(500, 220, 350, 30);
-        eliminarTarefa.setVisible(false);
         atualizatTaxaExecução= new JButton("Atualizar taxa execução");
-        atualizatTaxaExecução.setBounds(500, 260, 350, 30);
+        atualizatTaxaExecução.setBounds(500, 180, 350, 30);
         atualizatTaxaExecução.setVisible(false);
+        listarTarefasInacabadas = new JButton("Tarefas não concluídas na data estimada.");
+        listarTarefasInacabadas.setBounds(500, 220, 350, 30);
+        listarTarefasInacabadas.setVisible(false);
+        listarTarefasConcluidas = new JButton("Tarefas concluídas.");
+        listarTarefasConcluidas.setBounds(500, 260, 350, 30);
+        listarTarefasConcluidas.setVisible(false);
+        listarTarefasNaoIniciadas = new JButton("Tarefas não iniciadas.");
+        listarTarefasNaoIniciadas.setBounds(500, 300, 350, 30);
+        listarTarefasNaoIniciadas.setVisible(false);
+        eliminarTarefa = new JButton("Eliminar tarefa.");
+        eliminarTarefa.setBounds(500, 340, 350, 30);
+        eliminarTarefa.setVisible(false);
 
 
+        criarTarefaDesign= new JButton("Criar Tarefa");
+        criarTarefaDesign.setBounds(20, 380, 200, 30);
+        criarTarefaDesign.setVisible(false);
+        panel.add(criarTarefaDesign);
+
+        criarTarefaDesenvolvimento= new JButton("Criar Tarefa");
+        criarTarefaDesenvolvimento.setBounds(20, 380, 200, 30);
+        criarTarefaDesenvolvimento.setVisible(false);
+        panel.add(criarTarefaDesenvolvimento);
+
+        criarTarefaDocumentacao= new JButton("Criar Tarefa");
+        criarTarefaDocumentacao.setBounds(20, 380, 200, 30);
+        criarTarefaDocumentacao.setVisible(false);
+        panel.add(criarTarefaDocumentacao);
+
+        // Delete
+        delete = new JButton("Apagar");
+        delete.setBounds(20, 380, 200, 30);
+        delete.setVisible(false);
+        panel.add(delete);
 
         panel.add(label);
         panel.add(buttonCP);
@@ -347,6 +405,9 @@ public class GUI extends JFrame{
         panel.add(associarPessoaProjeto);
         panel.add(eliminarTarefa);
         panel.add(atualizatTaxaExecução);
+        panel.add(listarTarefasConcluidas);
+        panel.add(listarTarefasInacabadas);
+        panel.add(listarTarefasNaoIniciadas);
 
         // Listeners
         buttonCP.addActionListener(new buttonCPListener());
@@ -359,6 +420,12 @@ public class GUI extends JFrame{
         buttonDoutorado.addActionListener(new buttonDoutoradoListener());
         buttonE.addActionListener(new buttonEditarProjetoListener());
         next.addActionListener(new buttonNextListener());
+        listarTarefasInacabadas.addActionListener(new tarefasInacabadas());
+        listarTarefasConcluidas.addActionListener(new tarefasConcluidas());
+        listarTarefasNaoIniciadas.addActionListener(new tarefasNaoIniciadas());
+        delete.addActionListener(new buttonDeleteListener());
+        eliminarTarefa.addActionListener(new eliminarTarefaListener());
+
         // Criar Projeto
         buttoncriarP.addActionListener(new ActionProjeto());
         // Associar Docente à app
@@ -369,6 +436,14 @@ public class GUI extends JFrame{
         buttoncriarPsM.addActionListener(new ActionPessoaM());
         // Associar Doutorado à app
         buttoncriarPsDr.addActionListener(new ActionPessoaDr());
+        // Criar tarefa
+        criarTarefa.addActionListener(new ActionCriarTarefa());
+        // Criar Tarefa Design
+        criarTarefaDesign.addActionListener(new ActionCriarTarefaDesign());
+        // Criar Tarefa Desenvolvimento
+        criarTarefaDesenvolvimento.addActionListener(new ActionCriarTarefaDesenvolvimento());
+        // Criar Tarefa Documentação
+        criarTarefaDocumentacao.addActionListener(new ActionCriarTarefaDocumentacao());
 
         add(panel);
         setVisible(true);
@@ -459,7 +534,7 @@ public class GUI extends JFrame{
     private void addProjeto() {
         Projeto p = new Projeto(tfNameP.getText(), tfAcronimoP.getText(), tfDataInicioP.getText(), tfDataFimP.getText());
         cisuc.getProjetos().add(p);
-        Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() );
+        Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Investigador Principal: " + (p.getIp() != null? p.getIp().getNome(): "Não Atribuído") + " | Pessoas Envolvidas: " + (p.getPessoasEnvolvidasNome() != null? p.getPessoasEnvolvidasNome(): "Não Atribuído"));
         tfNameP.setText(null);
         tfAcronimoP.setText(null);
         tfDataInicioP.setText(null);
@@ -485,7 +560,7 @@ public class GUI extends JFrame{
     private void addPessoaL() {
         Licenciado l = new Licenciado(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(l);
-        Nomepessoa.addElement(l.getNome() + "[Licenciatura] "  + " | mail: " + l.getMail() +  " | Custo Bolsa: " + l.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + l.getDuracao_bolsa());
+        Nomepessoa.addElement(l.getNome() + "[Licenciatura] "  + " | mail: " + l.getMail() +  " | Custo Bolsa: " + l.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + (l.getOrientadoresNome()!=null?l.getOrientadoresNome(): "Não Atribuído"));
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -495,7 +570,7 @@ public class GUI extends JFrame{
     private void addPessoaM() {
         Mestre m = new Mestre(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(m);
-        Nomepessoa.addElement(m.getNome() + "[Mestrado] "  + " | mail: " + m.getMail() +  " | Custo Bolsa: " + m.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + m.getDuracao_bolsa());
+        Nomepessoa.addElement(m.getNome() + "[Mestrado] "  + " | mail: " + m.getMail() +  " | Custo Bolsa: " + m.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + (m.getOrientadoresNome()!=null?m.getOrientadoresNome(): "Não Atribuído"));
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -505,7 +580,7 @@ public class GUI extends JFrame{
     private void addPessoaDr() {
         Doutorado dr = new Doutorado(tfNamePs.getText(), tfMail.getText(), tfdataInicioB.getText(), tfdataFimB.getText());
         cisuc.getPessoas().add(dr);
-        Nomepessoa.addElement(dr.getNome() + "[Doutorado] "  + " | mail: " + dr.getMail() +  " | Custo Bolsa: " + dr.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + dr.getDuracao_bolsa());
+        Nomepessoa.addElement(dr.getNome() + "[Doutorado] "  + " | mail: " + dr.getMail() +  " | Custo Bolsa: " + dr.calculaCusto(tfdataInicioB.getText(), tfdataFimB.getText()) + " | Duração Bolsa: " + dr.getDuracao_bolsa() );
         tfNamePs.setText(null);
         tfMail.setText(null);
         tfdataInicioB.setText(null);
@@ -628,7 +703,8 @@ public class GUI extends JFrame{
             return false;
         }
 
-        if (((int) Math.log10(ano) + 1) == 4 && (((int) Math.log10(mes) + 1) == 2 || ((int) Math.log10(mes) + 1) == 1) && (((int) Math.log10(dia) + 1) == 2 || ((int) Math.log10(dia) + 1) == 1 ) && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
+
+        if (dataElems[0].length() == 4 && dataElems[1].length() == 2 && dataElems[2].length() == 2 && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
             return true;
         }
         else {
@@ -795,8 +871,12 @@ public class GUI extends JFrame{
             associarTarefaPessoa.setVisible(false);
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
             atualizatTaxaExecução.setVisible(false);
             buttonVoltarM.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            delete.setVisible(false);
 
             // Menu visivel
             label.setVisible(true);
@@ -928,13 +1008,16 @@ public class GUI extends JFrame{
             next.setVisible(false);
             buttonE.setVisible(false);
 
-            label.setVisible(true);
+            label.setVisible(false);
             criarTarefa.setVisible(true);
             associarTarefaPessoa.setVisible(true);
             associarPessoaProjeto.setVisible(true);
             eliminarTarefa.setVisible(true);
+            listarTarefasNaoIniciadas.setVisible(true);
             atualizatTaxaExecução.setVisible(true);
             buttonVoltarM.setVisible(true);
+            listarTarefasConcluidas.setVisible(true);
+            listarTarefasInacabadas.setVisible(true);
         }
     }
 
@@ -942,23 +1025,452 @@ public class GUI extends JFrame{
     private class buttonEditarProjetoListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
+            buttonCP.setVisible(false);
+            buttonAP.setVisible(false);
+            label.setVisible(false);
+            buttonS.setVisible(false);
+            buttonPC.setVisible(false);
+            buttonLPNC.setVisible(false);
+            buttonE.setVisible(false);
+            buttonS.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(false);
+
+
             label2.setVisible(true);
             projetos.setVisible(true);
-            next.setVisible(true);
-            buttonE.setVisible(false);
 
             MouseListener mouseListener = new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2) {
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getClickCount() == 1) {
                         int index = projetos.locationToIndex(e.getPoint());
                         Object item = projetos.getModel().getElementAt(index);
-                        JOptionPane.showMessageDialog(null, "Projeto escolhido: " + item.toString());
                         projetoEscolhido = cisuc.getProjetos().get(index);
-                        JOptionPane.showMessageDialog(null, projetoEscolhido);
+                        //JOptionPane.showMessageDialog(null, projetoEscolhido);
+                        //JOptionPane.showMessageDialog(panel, item.toString());
+                        next.setVisible(true);
                     }
                 }
             };
             projetos.addMouseListener(mouseListener);
+        }
+    }
+
+    // Click no botão Criar Tarefa
+    private class ActionCriarTarefa implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(true);
+            pessoas.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+
+            Nometarefa.clear();
+
+            // JList Tarefa
+            for (Tarefa t : cisuc.getTarefasProjeto(projetoEscolhido)) {
+
+                // Design
+                if (t.getTaxaEsforco() == 0.5) {
+                    System.out.println("JLIST: " + Nometarefa);
+                    Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+
+            }
+            tarefas = new JList<>(Nometarefa);
+            tarefas.setBounds(350, 40, 1100, 300);
+            tarefas.setBackground(new Color(178, 178, 178));
+            tarefas.setVisible(true);
+            panel.add(tarefas);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            // CRIAR Tarefa
+            dataInicioT = new JLabel("Data Inicio (yyyy-MM-dd) entre " + projetoEscolhido.getDataInicio() + " e " +  projetoEscolhido.getDataFim());
+            dataInicioT.setBounds(20,30,350,30);
+            dataInicioT.setVisible(true);
+            panel.add(dataInicioT);
+
+            tfdataInicioT = new JTextField();
+            tfdataInicioT.setBounds(20,70,200,30);
+            tfdataInicioT.setEditable(true);
+            tfdataInicioT.setVisible(true);
+            panel.add(tfdataInicioT);
+
+            dataFimT = new JLabel("Data Fim (yyyy-MM-dd) entre " + projetoEscolhido.getDataInicio() + " e " +  projetoEscolhido.getDataFim());
+            dataFimT.setBounds(20,110,350,30);
+            dataFimT.setVisible(true);
+            panel.add(dataFimT);
+
+            tfdataFimT = new JTextField();
+            tfdataFimT.setBounds(20,150,200,30);
+            tfdataFimT.setEditable(true);
+            tfdataFimT.setVisible(true);
+            panel.add(tfdataFimT);
+
+            design = new JButton("Design");
+            design.setBounds(20, 210, 200, 30);
+            design.setVisible(true);
+            panel.add(design);
+
+            desenvolvimento= new JButton("Desenvolvimento");
+            desenvolvimento.setBounds(20, 260, 200, 30);
+            desenvolvimento.setVisible(true);
+            panel.add(desenvolvimento);
+
+            documentacao= new JButton("Documentação");
+            documentacao.setBounds(20, 310, 200, 30);
+            documentacao.setVisible(true);
+            panel.add(documentacao);
+
+            buttonVoltarM.addActionListener(new buttonVoltarMTarefaListener());
+            design.addActionListener(new buttonDesignListener());
+            desenvolvimento.addActionListener(new buttonDesenvolvimentoListener());
+            documentacao.addActionListener(new buttonDocumentacaoListener());
+        }
+    }
+
+    private class buttonVoltarMTarefaListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            tarefas.setVisible(false);
+            dataFimT.setVisible(false);
+            dataInicioT.setVisible(false);
+            tfdataFimT.setVisible(false);
+            tfdataInicioT.setVisible(false);
+            design.setVisible(false);
+            desenvolvimento.setVisible(false);
+            documentacao.setVisible(false);
+            criarTarefaDesign.setVisible(false);
+            criarTarefaDesenvolvimento.setVisible(false);
+            criarTarefaDocumentacao.setVisible(false);
+        }
+    }
+
+    // Click Design
+    private class buttonDesignListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            desenvolvimento.setVisible(false);
+            documentacao.setVisible(false);
+            criarTarefaDesign.setVisible(true);
+        }
+    }
+
+    // Click Desenvolvimento
+    private class buttonDesenvolvimentoListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            design.setVisible(false);
+            documentacao.setVisible(false);
+            criarTarefaDesenvolvimento.setVisible(true);
+        }
+    }
+
+    // Click Documentacao
+    private class buttonDocumentacaoListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            design.setVisible(false);
+            desenvolvimento.setVisible(false);
+            criarTarefaDocumentacao.setVisible(true);
+        }
+    }
+
+    // Criar Design
+    private class ActionCriarTarefaDesign implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+            Design design = new Design(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+            cisuc.getTarefas().add(design);
+            cisuc.getTarefasProjeto(projetoEscolhido).add(design);
+            for(Projeto p: cisuc.getProjetos()){
+                if(p == projetoEscolhido){
+                    p.getTarefas().add(design);
+                }
+            }
+            Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (design.getResponsavel() != null? design.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + design.getDataInicio() + " | Data Fim: " + design.getDataFim() + " | Percentagem Conclusão: " + design.getPercentagemConclusao() + " | Duracao Estimada: "+ design.getDuracaoEstimada());
+            tfdataInicioT.setText(null);
+            tfdataFimT.setText(null);
+        }
+    }
+
+    // Criar Desenvolvimento
+    private class ActionCriarTarefaDesenvolvimento implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+            Desenvolvimento desenvolvimento = new Desenvolvimento(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+            cisuc.getTarefas().add(desenvolvimento);
+            for (Projeto p : cisuc.getProjetos()){
+                if(projetoEscolhido == p) {
+                    p.getTarefas().add(desenvolvimento);
+                }
+            }
+            Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (desenvolvimento.getResponsavel() != null? desenvolvimento.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + desenvolvimento.getDataInicio() + " | Data Fim: " + desenvolvimento.getDataFim() + " | Percentagem Conclusão: " + desenvolvimento.getPercentagemConclusao() + " | Duracao Estimada: "+ desenvolvimento.getDuracaoEstimada());
+            tfdataInicioT.setText(null);
+            tfdataFimT.setText(null);
+        }
+    }
+
+    // Criar Documentacao
+    private class ActionCriarTarefaDocumentacao implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+            Documentacao documentacao = new Documentacao(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+            cisuc.getTarefas().add(documentacao);
+            cisuc.getTarefasProjeto(projetoEscolhido).add(documentacao);
+            for (Projeto p : cisuc.getProjetos()){
+                if(projetoEscolhido == p) {
+                    p.getTarefas().add(documentacao);
+                }
+            }
+            Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (documentacao.getResponsavel() != null? documentacao.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + documentacao.getDataInicio() + " | Data Fim: " + documentacao.getDataFim() + " | Percentagem Conclusão: " + documentacao.getPercentagemConclusao() + " | Duracao Estimada: "+ documentacao.getDuracaoEstimada());
+            tfdataInicioT.setText(null);
+            tfdataFimT.setText(null);
+        }
+    }
+
+    // Listar tarefas inacabadas
+    private class tarefasInacabadas implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            TarefaForaPrazo.clear();
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+
+            for(Tarefa t:cisuc.getTarefasForaPrazo(projetoEscolhido)){
+                if (t.getTaxaEsforco() == 0.5) {
+                    TarefaForaPrazo.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    TarefaForaPrazo.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    TarefaForaPrazo.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+            }
+            tarefasForaPrazo = new JList<>(TarefaForaPrazo);
+            tarefasForaPrazo.setBackground(new Color(178,178,178));
+            tarefasForaPrazo.setBounds(300, 40, 900, 300);
+            tarefasForaPrazo.setVisible(true);
+            panel.add(tarefasForaPrazo);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            buttonVoltarM.addActionListener(new buttonVoltarMTarefaForaPrazoListener());
+        }
+    }
+
+    private class buttonVoltarMTarefaForaPrazoListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+           tarefasForaPrazo.setVisible(false);
+        }
+    }
+
+    private class tarefasConcluidas implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+
+            for(Tarefa t:cisuc.getTarefasConcluidas(projetoEscolhido)){
+                if (t.getTaxaEsforco() == 0.5) {
+                    TarefasConcluidas.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    TarefasConcluidas.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    TarefasConcluidas.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+            }
+            tarefasConcluidas = new JList<>(TarefasConcluidas);
+            tarefasConcluidas.setBackground(new Color(178,178,178));
+            tarefasConcluidas.setBounds(300, 40, 900, 300);
+            tarefasConcluidas.setVisible(true);
+            panel.add(tarefasConcluidas);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            buttonVoltarM.addActionListener(new buttonVoltarMTarefaConcluidasListener());
+        }
+    }
+
+    private class buttonVoltarMTarefaConcluidasListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            tarefasConcluidas.setVisible(false);
+        }
+    }
+
+    private class tarefasNaoIniciadas implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+
+            for(Tarefa t:cisuc.getTarefasNaoIniciadas(projetoEscolhido)){
+                if (t.getTaxaEsforco() == 0.5) {
+                    TarefasNaoIniciadas.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    TarefasNaoIniciadas.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    TarefasNaoIniciadas.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+            }
+            tarefasInacab = new JList<>(TarefasNaoIniciadas);
+            tarefasInacab.setBackground(new Color(178,178,178));
+            tarefasInacab.setBounds(300, 40, 900, 300);
+            tarefasInacab.setVisible(true);
+            panel.add(tarefasInacab);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            buttonVoltarM.addActionListener(new buttonVoltarMTarefaInacabadasListener());
+        }
+    }
+
+    private class buttonVoltarMTarefaInacabadasListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            tarefasInacab.setVisible(false);
+        }
+    }
+
+    // Click no botão Eliminar tarefa
+    private class eliminarTarefaListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            buttonCP.setVisible(false);
+            buttonAP.setVisible(false);
+            label.setVisible(false);
+            buttonS.setVisible(false);
+            buttonPC.setVisible(false);
+            buttonLPNC.setVisible(false);
+            buttonE.setVisible(false);
+            buttonS.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(false);
+
+            Nometarefa.clear();
+
+            // JList Tarefa
+            for (Tarefa t : cisuc.getTarefasProjeto(projetoEscolhido)) {
+
+                // Design
+                if (t.getTaxaEsforco() == 0.5) {
+                    System.out.println("JLIST: " + Nometarefa);
+                    Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+
+            }
+            tarefas = new JList<>(Nometarefa);
+            tarefas.setBounds(350, 40, 1100, 300);
+            tarefas.setBackground(new Color(178, 178, 178));
+            tarefas.setVisible(true);
+            panel.add(tarefas);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            MouseListener mouseListener = new MouseAdapter() {
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getClickCount() == 1) {
+                        indexT = tarefas.locationToIndex(e.getPoint());
+                        tarefaEscolhida = cisuc.getTarefas().get(indexT);
+                        JOptionPane.showMessageDialog(null, indexT);
+                        //JOptionPane.showMessageDialog(panel, item.toString());
+                        delete.setVisible(true);
+                    }
+                }
+            };
+            tarefas.addMouseListener(mouseListener);
+
+            buttonVoltarM.addActionListener(new buttonVoltarMDeleteistener());
+        }
+    }
+
+    private class buttonDeleteListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            //Eliminar tarefa do array das tarefas do projeto.
+            for (Projeto p : cisuc.getProjetos()){
+                if(projetoEscolhido == p) {
+                    p.getTarefas().remove(tarefaEscolhida);
+                }
+            }
+            //Eliminar tarefa do array que guarda todas as tarefas.
+            cisuc.getTarefas().remove(tarefaEscolhida);
+            tarefas.remove(indexT);
+
+            buttonVoltarM.setVisible(true);
+
+        }
+    }
+
+    private class buttonVoltarMDeleteistener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+           tarefas.setVisible(false);
 
         }
     }
