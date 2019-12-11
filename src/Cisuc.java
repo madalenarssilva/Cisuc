@@ -121,7 +121,9 @@ public class Cisuc {
                 System.out.println("4. Eliminar tarefa.");
                 System.out.println("5. Atualizar taxa de execução de uma tarefa.");
                 System.out.println("6. Listar tarefas não concluídas na data estimada.");
-                System.out.println("7. Sair");
+                System.out.println("7. Listar tarefas não iniciadas.");
+                System.out.println("8. Listar tarefas concluídas.");
+                System.out.println("9. Sair");
                 System.out.print("Escolha uma opção: ");
 
                 int opcao2 = scanner.nextInt();
@@ -142,6 +144,9 @@ public class Cisuc {
                         System.out.println(projeto.getPessoasEnvolvidas());
                         break;
                     case 4:
+                        eliminarTarefas(projeto);
+                        printTarefas();
+                        printProjetos();
                         break;
                     case 5:
                         atualizarTaxaExecucao(projeto);
@@ -153,6 +158,16 @@ public class Cisuc {
                         printTarefas(tarefasForaPrazo);
                         break;
                     case 7:
+                        ArrayList<Tarefa> tarefasNaoIniciadas = new ArrayList<>();
+                        tarefasNaoIniciadas = getTarefasNaoIniciadas(projeto);
+                        printTarefas(tarefasNaoIniciadas);
+                        break;
+                    case 8:
+                        ArrayList<Tarefa> tarefasConcluidas = new ArrayList<>();
+                        tarefasConcluidas = getTarefasConcluidas(projeto);
+                        printTarefas(tarefasConcluidas);
+                        break;
+                    case 9:
                         break;
                     default:
                         System.out.println("Escolha uma opção existente.");
@@ -800,30 +815,45 @@ public class Cisuc {
         }
     }
 
-    public void printTarefasNaoIniciadas() {
+    public ArrayList<Tarefa> getTarefasNaoIniciadas(Projeto projeto) {
+
+        /**
+         * Method that returns all the non initiated tasks.
+         * @param projeto to which the task belongs.
+         * @return Arraylist of non initiated tasks.
+         */
+
         ArrayList<Tarefa> tarefasNaoIniciadas = new ArrayList<>();
 
-        for(Tarefa t: tarefas) {
+        for(Tarefa t: projeto.getTarefas()) {
             if (t.getPercentagemConclusao() == 0)
                 tarefasNaoIniciadas.add(t);
         }
-        printTarefas(tarefasNaoIniciadas);
+        return tarefasNaoIniciadas;
     }
 
-    public void printTarefasConcluidas() {
+    public ArrayList<Tarefa> getTarefasConcluidas(Projeto projeto) {
+
+        /**
+         * Method that returns all the finished tasks, whether they were finished on time or not.
+         * @param projeto to which the task belongs.
+         * @return Arraylist of non initiated tasks.
+         */
+
         ArrayList<Tarefa> tarefasConcluidas = new ArrayList<>();
 
-        for(Tarefa t: tarefas) {
+        for(Tarefa t: projeto.getTarefas()) {
             if (t.getPercentagemConclusao() == 100)
                 tarefasConcluidas.add(t);
         }
-        printTarefas(tarefasConcluidas);
+        return tarefasConcluidas;
     }
 
     public ArrayList<Tarefa> getTarefasForaPrazo(Projeto projeto) {
 
         /** Method that returns all the tasks that have not been concluded in the estimated time.
          * We assume that a person cannot start a task before the start date given for task.
+         * @param projeto to which task belongs.
          * @return ArrayList of all the tasks in the condition mentioned above.
          */
 
@@ -849,8 +879,42 @@ public class Cisuc {
         return tarefasForaPrazo;
     }
 
-    public void eliminarTarefas() {
+    public void eliminarTarefas(Projeto projeto) {
 
+        /**
+         * Method that eliminates a task.
+         * @param projeto to which the task belongs.
+         */
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-----Eliminar uma Tarefa------");
+
+        int j=1;
+        for (int i = 0; i < projeto.getTarefas().size(); i++) {
+            System.out.println((j++) + ": " + projeto.getTarefas().get(i).toString());
+        }
+        if (projeto.getTarefas().size() == 0) {
+            System.out.println("Não há tarefas para eliminar.");
+            return;
+        }
+
+        // TAREFA ESCOLHIDA
+        System.out.print("Escolha a tarefa a eliminar: ");
+
+        //Verificar se a opção escolhida existe.
+        int numTarefa = scanner.nextInt();
+        while (numTarefa <= 0 || numTarefa > projeto.getTarefas().size()) {
+            System.out.println("Opção inválida. Volte a escolher o tarefa: ");
+            numTarefa = scanner.nextInt();
+        }
+
+        //Obter objeto Tarefa.
+        Tarefa tarefa = projeto.getTarefas().get(numTarefa-1);
+
+        //Eliminar tarefa do array das tarefas do projeto.
+        projeto.getTarefas().remove(tarefa);
+        //Eliminar tarefa do array que guarda todas as tarefas.
+        tarefas.remove(tarefa);
     }
 
     //                                                 PESSOAS
