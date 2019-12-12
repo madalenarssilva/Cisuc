@@ -2,19 +2,28 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class GUI extends JFrame{
     // Listas
     private JList pessoas;
+    private JList pessoasDisponiveisTarefa = new JList<>();
+    private JList pessoasDisponiveisProjeto = new JList<>();
+    private JList orientadores = new JList<>();
+    private JList pessoasProjeto = new JList<>();
+    private JList ips = new JList<>();
     private JList projetos;
-    private JList tarefas;
-    private JList tarefasForaPrazo;
-    private JList tarefasConcluidas;
-    private JList tarefasInacab;
-    private JList docentes;
+    private JList tarefas = new JList<>();
+    private JList tarefasForaPrazo = new JList<>();
+    private JList tarefasConcluidas = new JList<>();
+    private JList tarefasInacab = new JList<>();
+    private JList docentes = new JList<>();
     private Projeto projetoEscolhido;
     private Tarefa tarefaEscolhida;
+    private Pessoa pessoaEscolhida;
+    private Docente ipEscolhido;
+    private ArrayList<Docente> orientadoresEscolhidos = new ArrayList<>();
 
     private int indexT;
 
@@ -42,6 +51,12 @@ public class GUI extends JFrame{
     private JButton eliminarTarefa;
     private JButton atualizatTaxaExecução;
     private JButton next;
+    private JButton next2;
+    private JButton nextTarefas;
+    private JButton nextPessoas;
+    private JButton nextPessoas2;
+    private JButton addOrientadores;
+    private JButton addIp;
     private JButton design;
     private JButton desenvolvimento;
     private JButton documentacao;
@@ -55,7 +70,15 @@ public class GUI extends JFrame{
 
     //Labels
     private JLabel label;
-    private  JLabel label2;
+    private JLabel label2;
+    private JLabel label3;
+    private JLabel label4;
+    private JLabel label5;
+    private JLabel label6;
+    private JLabel label7;
+    private JLabel label8;
+    private JLabel label9;
+    private JLabel label10;
 
     //Inputs
     private JTextField tfNameP;
@@ -95,6 +118,11 @@ public class GUI extends JFrame{
     DefaultListModel<String> Nomeproj = new DefaultListModel<>();
     DefaultListModel<String> Nomepessoa = new DefaultListModel<>();
     DefaultListModel<String> Nometarefa = new DefaultListModel<>();
+    DefaultListModel<String> NomePessoasDisponiveisTarefa = new DefaultListModel<>();
+    DefaultListModel<String> NomePessoasDisponiveisProjeto = new DefaultListModel<>();
+    DefaultListModel<String> NomePessoasProjeto = new DefaultListModel<>();
+    DefaultListModel<String> NomeOrientadores = new DefaultListModel<>();
+    DefaultListModel<String> NomeIpsPossiveis = new DefaultListModel<>();
     DefaultListModel<String> TarefaForaPrazo = new DefaultListModel<>();
     DefaultListModel<String> TarefasConcluidas = new DefaultListModel<>();
     DefaultListModel<String> TarefasNaoIniciadas = new DefaultListModel<>();
@@ -114,6 +142,30 @@ public class GUI extends JFrame{
         // Label
         label = new JLabel("Escolha uma das opcoes:", SwingConstants.CENTER);
         label.setBounds(500, 50, 350, 30);
+
+        label3 = new JLabel("Escolha o projeto que pretende editar:", SwingConstants.CENTER);
+        label3.setBounds(232, 40, 350, 30);
+
+        label4 = new JLabel("Escolha a tarefa:", SwingConstants.CENTER);
+        label4.setBounds(232, 40, 350, 30);
+
+        label5 = new JLabel("Escolha o responsável pela tarefa:", SwingConstants.CENTER);
+        label5.setBounds(232, 40, 350, 30);
+
+        label6 = new JLabel("Tarefas do Projeto:", SwingConstants.CENTER);
+        label6.setBounds(232, 40, 350, 30);
+
+        label7 = new JLabel("Escolha a pessoa que prentende adicionar:", SwingConstants.CENTER);
+        label7.setBounds(232, 40, 350, 30);
+
+        label8 = new JLabel("Escolha o(s) orientador(es) com CTRL+C:", SwingConstants.CENTER);
+        label8.setBounds(232, 40, 350, 30);
+
+        label9 = new JLabel("Pessoas do Projeto:", SwingConstants.CENTER);
+        label9.setBounds(232, 40, 350, 30);
+
+        label10 = new JLabel("Escolha o IP do projeto:", SwingConstants.CENTER);
+        label10.setBounds(232, 40, 350, 30);
 
         // Menu
         buttonCP = new JButton("Criar Projeto");
@@ -191,7 +243,7 @@ public class GUI extends JFrame{
         }
         projetos = new JList<>(Nomeproj);
         projetos.setBackground(new Color(178,178,178));
-        projetos.setBounds(300, 40, 1100, 300);
+        projetos.setBounds(300, 70, 1100, 300);
         projetos.setVisible(false);
         panel.add(projetos);
 
@@ -219,7 +271,7 @@ public class GUI extends JFrame{
         tfMail.setVisible(false);
         panel.add(tfMail);
 
-        buttoncriarPsD = new JButton("Associar Pessoa");
+        buttoncriarPsD = new JButton("Criar Pessoa");
         buttoncriarPsD.setBounds(20, 380, 200, 30);
         buttoncriarPsD.setVisible(false);
         panel.add(buttoncriarPsD);
@@ -228,7 +280,7 @@ public class GUI extends JFrame{
         for(Pessoa p: cisuc.getPessoas()) {
             if(p.getNumeroMecanografico()>0){
                 Docente dc = (Docente) p;
-                Nomepessoa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " );
+                Nomepessoa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
             }else {
                 if (p.getCusto() == 1000) {
                     Doutorado d = (Doutorado) p;
@@ -298,7 +350,7 @@ public class GUI extends JFrame{
         panel.add(buttonDoutorado);
 
         // Associar Licenciados
-        buttoncriarPsL = new JButton("Associar Pessoa");
+        buttoncriarPsL = new JButton("Criar Pessoa");
         buttoncriarPsL.setBounds(20, 380, 200, 30);
         buttoncriarPsL.setVisible(false);
         panel.add(buttoncriarPsL);
@@ -326,13 +378,13 @@ public class GUI extends JFrame{
         panel.add(tfdataFimB);
 
         // Associar Mestres
-        buttoncriarPsM = new JButton("Associar Pessoa");
+        buttoncriarPsM = new JButton("Criar Pessoa");
         buttoncriarPsM.setBounds(20, 380, 200, 30);
         buttoncriarPsM.setVisible(false);
         panel.add(buttoncriarPsM);
 
         // Associar Doutorados
-        buttoncriarPsDr = new JButton("Associar Pessoa");
+        buttoncriarPsDr = new JButton("Criar Pessoa");
         buttoncriarPsDr.setBounds(20, 380, 200, 30);
         buttoncriarPsDr.setVisible(false);
         panel.add(buttoncriarPsDr);
@@ -342,6 +394,42 @@ public class GUI extends JFrame{
         next.setBounds(20, 380, 200, 30);
         next.setVisible(false);
         panel.add(next);
+
+        // Associar Tarefas a Pessoas - next
+        nextTarefas = new JButton("Continuar");
+        nextTarefas.setBounds(20, 380, 200, 30);
+        nextTarefas.setVisible(false);
+        panel.add(nextTarefas);
+
+        // Associar Tarefas a Pessoas - next2
+        nextPessoas = new JButton("Continuar");
+        nextPessoas.setBounds(20, 380, 200, 30);
+        nextPessoas.setVisible(false);
+        panel.add(nextPessoas);
+
+        // Associar Pessoa a Projeto - next
+        nextPessoas2 = new JButton("Continuar");
+        nextPessoas2.setBounds(20, 380, 200, 30);
+        nextPessoas2.setVisible(false);
+        panel.add(nextPessoas2);
+
+        // Adicionar Orientadores
+        addOrientadores = new JButton("Adicionar");
+        addOrientadores.setBounds(20, 380, 200, 30);
+        addOrientadores.setVisible(false);
+        panel.add(addOrientadores);
+
+        // Adicionar Ips
+        addIp = new JButton("Adicionar Ip");
+        addIp.setBounds(20, 380, 200, 30);
+        addIp.setVisible(false);
+        panel.add(addIp);
+
+        // Associar Pessoa a Projeto - next2
+        next2 = new JButton("Continuar");
+        next2.setBounds(20, 380, 200, 30);
+        next2.setVisible(false);
+        panel.add(next2);
 
         label2 = new JLabel("Escolha um projeto:");
         label2.setBounds(0, 20, 350, 30);
@@ -420,6 +508,10 @@ public class GUI extends JFrame{
         buttonDoutorado.addActionListener(new buttonDoutoradoListener());
         buttonE.addActionListener(new buttonEditarProjetoListener());
         next.addActionListener(new buttonNextListener());
+        next2.addActionListener(new buttonNextListener());
+        nextTarefas.addActionListener(new buttonNextListener());
+        nextPessoas.addActionListener(new buttonNextListener());
+        nextPessoas2.addActionListener(new buttonNextListener());
         listarTarefasInacabadas.addActionListener(new tarefasInacabadas());
         listarTarefasConcluidas.addActionListener(new tarefasConcluidas());
         listarTarefasNaoIniciadas.addActionListener(new tarefasNaoIniciadas());
@@ -439,11 +531,19 @@ public class GUI extends JFrame{
         // Criar tarefa
         criarTarefa.addActionListener(new ActionCriarTarefa());
         // Criar Tarefa Design
-        criarTarefaDesign.addActionListener(new ActionCriarTarefaDesign());
+        criarTarefaDesign.addActionListener(new ActionCriarTarefa2());
         // Criar Tarefa Desenvolvimento
-        criarTarefaDesenvolvimento.addActionListener(new ActionCriarTarefaDesenvolvimento());
+        criarTarefaDesenvolvimento.addActionListener(new ActionCriarTarefa2());
         // Criar Tarefa Documentação
-        criarTarefaDocumentacao.addActionListener(new ActionCriarTarefaDocumentacao());
+        criarTarefaDocumentacao.addActionListener(new ActionCriarTarefa2());
+        // Associar Pessoa a Tarefa
+        associarTarefaPessoa.addActionListener(new ActionPessoaATarefa());
+        // Associar Pessoa a Projeto
+        associarPessoaProjeto.addActionListener(new ActionPessoaAProjeto());
+        // Adicionar Ip
+        addIp.addActionListener(new ActionAddIp());
+        // Adicionar Orientadores
+        addOrientadores.addActionListener(new ActionAddOrientadores());
 
         add(panel);
         setVisible(true);
@@ -531,6 +631,97 @@ public class GUI extends JFrame{
         }
     }
 
+    // Criar Tarefa
+    private class ActionCriarTarefa2 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Boolean a = verificaInputsVaziosTarefas();
+            Boolean b = validarData1(tfdataInicioT.getText());
+            Boolean c = validarData1(tfdataFimT.getText());
+            Boolean d = validarData2(tfdataFimT.getText(), projetoEscolhido.getDataFim());
+            Boolean f = validarData2(projetoEscolhido.getDataInicio(), tfdataInicioT.getText());
+
+            if(!a && b && c && d && f) {
+                Boolean g = validarData2(tfdataInicioT.getText(), tfdataFimT.getText());
+                if (g) {
+                    design.setVisible(true);
+                    desenvolvimento.setVisible(true);
+                    documentacao.setVisible(true);
+
+                    if (e.getSource() == criarTarefaDesign) {
+                        addTarefaDesign();
+                        criarTarefaDesign.setVisible(false);
+                    }
+                    else if (e.getSource() == criarTarefaDesenvolvimento) {
+                        addTarefaDesenvolvimento();
+                        criarTarefaDesenvolvimento.setVisible(false);
+                    }
+                    else if (e.getSource() == criarTarefaDocumentacao) {
+                        addTarefaDocumentacao();
+                        criarTarefaDocumentacao.setVisible(false);
+                    }
+                }
+            }
+        }
+    }
+
+    //Adicionar IP
+    private class ActionAddIp implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            adicionarIp();
+            label10.setVisible(false);
+            addIp.setVisible(false);
+            next2.setVisible(true);
+        }
+    }
+
+    //Adicionar Orientador(es)
+    private class ActionAddOrientadores implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            adicionarOrientadores();
+            addOrientadores.setVisible(false);
+            label8.setVisible(false);
+
+            if (projetoEscolhido.getIp() == null) {
+                System.out.println(projetoEscolhido.getIp());
+                orientadores.setVisible(false);
+                label9.setVisible(false);
+                label10.setVisible(true);
+                panel.add(label10);
+
+                NomeIpsPossiveis.clear();
+                for(Pessoa p: cisuc.getIpsPossiveis(projetoEscolhido)) {
+                    Docente dc = (Docente) p;
+                    NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                }
+                ips = new JList<>(NomeIpsPossiveis);
+                ips.setBounds(350, 70, 900, 300);
+                ips.setBackground(new Color(178, 178, 178));
+                ips.setVisible(true);
+                panel.add(ips);
+                panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+                MouseListener mouseListener = new MouseAdapter() {
+                    public void mouseReleased(MouseEvent e) {
+                        if (e.getClickCount() == 1) {
+                            int index = ips.locationToIndex(e.getPoint());
+                            ipEscolhido = cisuc.getIpsPossiveis(projetoEscolhido).get(index);
+                            addIp.setVisible(true);
+                        }
+                    }
+                };
+                ips.addMouseListener(mouseListener);
+            }
+            else {
+                next2.setVisible(true);
+                label9.setVisible(true);
+            }
+        }
+    }
+
     private void addProjeto() {
         Projeto p = new Projeto(tfNameP.getText(), tfAcronimoP.getText(), tfDataInicioP.getText(), tfDataFimP.getText());
         cisuc.getProjetos().add(p);
@@ -585,6 +776,130 @@ public class GUI extends JFrame{
         tfMail.setText(null);
         tfdataInicioB.setText(null);
         tfdataFimB.setText(null);
+    }
+
+    private void addTarefaDesign() {
+
+        //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+        Design design = new Design(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+        cisuc.getTarefas().add(design);
+        cisuc.getTarefasProjeto(projetoEscolhido).add(design);
+        for(Projeto p: cisuc.getProjetos()){
+            if(p == projetoEscolhido){
+                p.getTarefas().add(design);
+            }
+        }
+        Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (design.getResponsavel() != null? design.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + design.getDataInicio() + " | Data Fim: " + design.getDataFim() + " | Percentagem Conclusão: " + design.getPercentagemConclusao() + " | Duracao Estimada: "+ design.getDuracaoEstimada());
+        tfdataInicioT.setText(null);
+        tfdataFimT.setText(null);
+    }
+
+    private void addTarefaDesenvolvimento() {
+
+        //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+        Desenvolvimento desenvolvimento = new Desenvolvimento(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+        cisuc.getTarefas().add(desenvolvimento);
+        for (Projeto p : cisuc.getProjetos()){
+            if(projetoEscolhido == p) {
+                p.getTarefas().add(desenvolvimento);
+            }
+        }
+        Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (desenvolvimento.getResponsavel() != null? desenvolvimento.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + desenvolvimento.getDataInicio() + " | Data Fim: " + desenvolvimento.getDataFim() + " | Percentagem Conclusão: " + desenvolvimento.getPercentagemConclusao() + " | Duracao Estimada: "+ desenvolvimento.getDuracaoEstimada());
+        tfdataInicioT.setText(null);
+        tfdataFimT.setText(null);
+    }
+
+    private void addTarefaDocumentacao() {
+
+        //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
+        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
+
+        Documentacao documentacao = new Documentacao(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
+        cisuc.getTarefas().add(documentacao);
+        cisuc.getTarefasProjeto(projetoEscolhido).add(documentacao);
+        for (Projeto p : cisuc.getProjetos()){
+            if(projetoEscolhido == p) {
+                p.getTarefas().add(documentacao);
+            }
+        }
+        Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (documentacao.getResponsavel() != null? documentacao.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + documentacao.getDataInicio() + " | Data Fim: " + documentacao.getDataFim() + " | Percentagem Conclusão: " + documentacao.getPercentagemConclusao() + " | Duracao Estimada: "+ documentacao.getDuracaoEstimada());
+        tfdataInicioT.setText(null);
+        tfdataFimT.setText(null);
+    }
+
+    private void associarPessoaATarefa() {
+
+        for (Tarefa t : cisuc.getTarefas()){
+            if(tarefaEscolhida == t) {
+                t.setResponsavel(pessoaEscolhida);
+            }
+        }
+        for (Tarefa t : cisuc.getTarefasProjeto(projetoEscolhido)){
+            if(tarefaEscolhida == t) {
+                t.setResponsavel(pessoaEscolhida);
+            }
+        }
+    }
+
+    private void associarPessoaAProjeto() {
+
+        for (Projeto p : cisuc.getProjetos()){
+            if(p == projetoEscolhido) {
+                p.getPessoasEnvolvidas().add(pessoaEscolhida);
+            }
+        }
+    }
+
+    private void adicionarIp() {
+        for (Projeto p : cisuc.getProjetos()){
+            if(projetoEscolhido == p) {
+                p.setIp(ipEscolhido);
+            }
+        }
+    }
+
+    private void adicionarOrientadores() {
+        next2.setVisible(true);
+
+        for (int i=0; i<cisuc.getPessoas().size(); i++) {
+            Pessoa p = cisuc.getPessoas().get(i);
+            if (pessoaEscolhida == p && pessoaEscolhida.getCusto() == 500) {
+                Licenciado l = (Licenciado) p;
+                for (Docente orientador : orientadoresEscolhidos)
+                    l.getOrientadores().add(orientador);
+                cisuc.getPessoas().set(i, l);
+            }
+            if (p == pessoaEscolhida && pessoaEscolhida.getCusto() == 800) {
+                Mestre m = (Mestre) p;
+                for (Docente orientador : orientadoresEscolhidos)
+                    m.getOrientadores().add(orientador);
+                cisuc.getPessoas().set(i, m);
+            }
+        }
+        for (int i=0; i<cisuc.getProjetos().size(); i++) {
+            Projeto proj = cisuc.getProjetos().get(i);
+
+            if (projetoEscolhido == proj) {
+                for (Pessoa p : projetoEscolhido.getPessoasEnvolvidas()) {
+                    if (p == pessoaEscolhida && pessoaEscolhida.getCusto() == 500) {
+                        Licenciado l = (Licenciado) p;
+                        for (Docente orientador : orientadoresEscolhidos)
+                            l.getOrientadores().add(orientador);
+                        cisuc.getPessoas().set(i, l);
+                    }
+                    if (p == pessoaEscolhida && pessoaEscolhida.getCusto() == 800) {
+                        Mestre m = (Mestre) p;
+                        for (Docente orientador : orientadoresEscolhidos)
+                            m.getOrientadores().add(orientador);
+                        cisuc.getPessoas().set(i, m);
+                    }
+                }
+            }
+        }
     }
 
     private Boolean verificaInputsVazios(){
@@ -642,6 +957,18 @@ public class GUI extends JFrame{
         }
         if(tfdataFimB.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Escreva o a Data Final do Projeto");
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean verificaInputsVaziosTarefas(){
+        if(tfdataInicioT.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Introduza a Data Inicial da Tarefa.");
+            return true;
+        }
+        if(tfdataFimT.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Introduza a Data Final da Tarefa.");
             return true;
         }
         return false;
@@ -877,6 +1204,19 @@ public class GUI extends JFrame{
             listarTarefasConcluidas.setVisible(false);
             listarTarefasInacabadas.setVisible(false);
             delete.setVisible(false);
+            tarefas.setVisible(false);
+            pessoasDisponiveisTarefa.setVisible(false);
+            pessoasDisponiveisProjeto.setVisible(false);
+            orientadores.setVisible(false);
+            ips.setVisible(false);
+            pessoasProjeto.setVisible(false);
+            label3.setVisible(false);
+            label4.setVisible(false);
+            label5.setVisible(false);
+            label6.setVisible(false);
+            label7.setVisible(false);
+            label8.setVisible(false);
+            label9.setVisible(false);
 
             // Menu visivel
             label.setVisible(true);
@@ -886,7 +1226,6 @@ public class GUI extends JFrame{
             buttonE.setVisible(true);
             buttonCP.setVisible(true);
             buttonAP.setVisible(true);
-
         }
     }
 
@@ -988,36 +1327,217 @@ public class GUI extends JFrame{
         }
     }
 
-    // Click no botão Next em editar Projeto
+    // Click num botão Continuar
     private class buttonNextListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
-            buttonDocente.setVisible(false);
-            buttonBolseiro.setVisible(false);
-            buttonLicenciado.setVisible(false);
-            buttonMestrado.setVisible(false);
-            buttonDoutorado.setVisible(false);
-            label.setVisible(false);
-            buttonS.setVisible(false);
-            buttonPC.setVisible(false);
-            buttonLPNC.setVisible(false);
-            buttonE.setVisible(false);
-            buttonCP.setVisible(false);
-            buttonAP.setVisible(false);
-            projetos.setVisible(false);
-            next.setVisible(false);
-            buttonE.setVisible(false);
+            if (e.getSource() == next) {
+                projetos.setVisible(false);
+                next.setVisible(false);
+                label3.setVisible(false);
 
-            label.setVisible(false);
-            criarTarefa.setVisible(true);
-            associarTarefaPessoa.setVisible(true);
-            associarPessoaProjeto.setVisible(true);
-            eliminarTarefa.setVisible(true);
-            listarTarefasNaoIniciadas.setVisible(true);
-            atualizatTaxaExecução.setVisible(true);
-            buttonVoltarM.setVisible(true);
-            listarTarefasConcluidas.setVisible(true);
-            listarTarefasInacabadas.setVisible(true);
+                criarTarefa.setVisible(true);
+                associarTarefaPessoa.setVisible(true);
+                associarPessoaProjeto.setVisible(true);
+                eliminarTarefa.setVisible(true);
+                listarTarefasNaoIniciadas.setVisible(true);
+                atualizatTaxaExecução.setVisible(true);
+                buttonVoltarM.setVisible(true);
+                listarTarefasConcluidas.setVisible(true);
+                listarTarefasInacabadas.setVisible(true);
+            }
+            else if (e.getSource() == nextTarefas) {
+                label4.setVisible(false);
+                tarefas.setVisible(false);
+                nextTarefas.setVisible(false);
+                label5.setVisible(true);
+                panel.add(label5);
+
+                NomePessoasDisponiveisTarefa.clear();
+
+                // JList pessoas
+                for(Pessoa p: cisuc.getPessoasDisponiveisTarefa(projetoEscolhido, tarefaEscolhida)) {
+                    if(p.getNumeroMecanografico()>0){
+                        Docente dc = (Docente) p;
+                        NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                    } else {
+                        if (p.getCusto() == 1000) {
+                            Doutorado d = (Doutorado) p;
+                            NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                        }
+                        else if (p.getCusto() == 800) {
+                            Mestre m = (Mestre) p;
+                            NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
+                        } else if (p.getCusto() == 500){
+                            Licenciado l = (Licenciado) p;
+                            NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                        }
+                    }
+                }
+
+                pessoasDisponiveisTarefa = new JList<>(NomePessoasDisponiveisTarefa);
+                pessoasDisponiveisTarefa.setBounds(350, 70, 900, 300);
+                pessoasDisponiveisTarefa.setBackground(new Color(178, 178, 178));
+                pessoasDisponiveisTarefa.setVisible(true);
+                panel.add(pessoasDisponiveisTarefa);
+                panel.setSize(panel.getWidth() - 1, panel.getHeight());
+
+                MouseListener mouseListener = new MouseAdapter() {
+                    public void mouseReleased(MouseEvent e) {
+                        if (e.getClickCount() == 1) {
+                            int index = pessoasDisponiveisTarefa.locationToIndex(e.getPoint());
+                            pessoaEscolhida = cisuc.getPessoasDisponiveisTarefa(projetoEscolhido, tarefaEscolhida).get(index);
+                            nextPessoas.setVisible(true);
+                        }
+                    }
+                };
+                pessoasDisponiveisTarefa.addMouseListener(mouseListener);
+            }
+            else if (e.getSource() == nextPessoas) {
+                associarPessoaATarefa();
+
+                pessoasDisponiveisTarefa.setVisible(false);
+                nextPessoas.setVisible(false);
+                label5.setVisible(false);
+                label6.setVisible(true);
+                panel.add(label6);
+
+                Nometarefa.clear();
+
+                for (Tarefa t : cisuc.getTarefasProjeto(projetoEscolhido)) {
+                    // Design
+                    if (t.getTaxaEsforco() == 0.5) {
+                        Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                    }
+                    // Desenvolvimento
+                    else if (t.getTaxaEsforco() == 1) {
+                        Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                    }
+                    // Documentação
+                    else if (t.getTaxaEsforco() == 0.25) {
+                        Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                    }
+                }
+
+                tarefas = new JList<>(Nometarefa);
+                tarefas.setBounds(350, 70, 900, 300);
+                tarefas.setBackground(new Color(178, 178, 178));
+                tarefas.setVisible(true);
+                panel.add(tarefas);
+                panel.setSize(panel.getWidth()-1, panel.getHeight());
+            }
+            else if (e.getSource() == nextPessoas2) {
+                pessoasDisponiveisProjeto.setVisible(false);
+                nextPessoas2.setVisible(false);
+                label7.setVisible(false);
+
+                //Se a pessoa escolhida for um Bolseiro Licenciado ou um Bolseiro Mestre, pedir orientador(es).
+                if (pessoaEscolhida.getNumeroMecanografico() == 0 && pessoaEscolhida.getCusto() != 1000) {
+                    label8.setVisible(true);
+                    panel.add(label8);
+                    NomeOrientadores.clear();
+                    for(Pessoa p: cisuc.getOrientadoresDisponiveis(projetoEscolhido, pessoaEscolhida)) {
+                        Docente dc = (Docente) p;
+                        NomeOrientadores.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                    }
+                    orientadores = new JList<>(NomeOrientadores);
+                    orientadores.setBounds(350, 70, 900, 300);
+                    orientadores.setBackground(new Color(178, 178, 178));
+                    orientadores.setVisible(true);
+                    panel.add(orientadores);
+                    panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+                    MouseListener mouseListener = new MouseAdapter() {
+                        public void mouseReleased(MouseEvent e) {
+                            if (e.getClickCount() == 1) {
+                                int index = orientadores.locationToIndex(e.getPoint());
+                                orientadoresEscolhidos.add(cisuc.getOrientadoresDisponiveis(projetoEscolhido, pessoaEscolhida).get(index));
+                                addOrientadores.setVisible(true);
+                            }
+                        }
+                    };
+                    orientadores.addMouseListener(mouseListener);
+                }
+                else {
+                    label9.setVisible(true);
+                    panel.add(label9);
+                    associarPessoaAProjeto();
+
+                    orientadores.setVisible(false);
+                    next2.setVisible(false);
+
+                    NomePessoasProjeto.clear();
+
+                    // JList pessoas
+                    if (projetoEscolhido.getIp() != null) {
+                        Docente p = projetoEscolhido.getIp();
+                        NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
+                    }
+                    for(Pessoa p: projetoEscolhido.getPessoasEnvolvidas()) {
+                        if(p.getNumeroMecanografico()>0){
+                            Docente dc = (Docente) p;
+                            NomePessoasProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                        }else {
+                            if (p.getCusto() == 1000) {
+                                Doutorado d = (Doutorado) p;
+                                NomePessoasProjeto.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                            }
+                            else if (p.getCusto() == 800) {
+                                Mestre m = (Mestre) p;
+                                NomePessoasProjeto.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
+                            } else if (p.getCusto() == 500){
+                                Licenciado l = (Licenciado) p;
+                                NomePessoasProjeto.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                            }
+                        }
+                    }
+                    pessoasProjeto = new JList<>(NomePessoasProjeto);
+                    pessoasProjeto.setBounds(350, 70, 900, 300);
+                    pessoasProjeto.setBackground(new Color(178, 178, 178));
+                    pessoasProjeto.setVisible(true);
+                    panel.add(pessoasProjeto);
+                    panel.setSize(panel.getWidth()-1, panel.getHeight());
+                }
+            }
+            else if (e.getSource() == next2) {
+                associarPessoaAProjeto();
+
+                ips.setVisible(false);
+                orientadores.setVisible(false);
+                next2.setVisible(false);
+
+                NomePessoasProjeto.clear();
+
+                // JList pessoas
+                if (projetoEscolhido.getIp() != null) {
+                    Docente p = projetoEscolhido.getIp();
+                    NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
+                }
+                for(Pessoa p: projetoEscolhido.getPessoasEnvolvidas()) {
+                    if(p.getNumeroMecanografico()>0){
+                        Docente dc = (Docente) p;
+                        NomePessoasProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                    }else {
+                        if (p.getCusto() == 1000) {
+                            Doutorado d = (Doutorado) p;
+                            NomePessoasProjeto.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                        }
+                        else if (p.getCusto() == 800) {
+                            Mestre m = (Mestre) p;
+                            NomePessoasProjeto.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
+                        } else if (p.getCusto() == 500){
+                            Licenciado l = (Licenciado) p;
+                            NomePessoasProjeto.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                        }
+                    }
+                }
+                pessoasProjeto = new JList<>(NomePessoasProjeto);
+                pessoasProjeto.setBounds(350, 70, 900, 300);
+                pessoasProjeto.setBackground(new Color(178, 178, 178));
+                pessoasProjeto.setVisible(true);
+                panel.add(pessoasProjeto);
+                panel.setSize(panel.getWidth()-1, panel.getHeight());
+            }
         }
     }
 
@@ -1044,8 +1564,8 @@ public class GUI extends JFrame{
             atualizatTaxaExecução.setVisible(false);
             buttonVoltarM.setVisible(false);
 
-
-            label2.setVisible(true);
+            label3.setVisible(true);
+            panel.add(label3);
             projetos.setVisible(true);
 
             MouseListener mouseListener = new MouseAdapter() {
@@ -1101,7 +1621,7 @@ public class GUI extends JFrame{
 
             }
             tarefas = new JList<>(Nometarefa);
-            tarefas.setBounds(350, 40, 1100, 300);
+            tarefas.setBounds(350, 70, 1100, 300);
             tarefas.setBackground(new Color(178, 178, 178));
             tarefas.setVisible(true);
             panel.add(tarefas);
@@ -1152,6 +1672,121 @@ public class GUI extends JFrame{
         }
     }
 
+    //Click no botão Associar Pessoa a Tarefa
+    private class ActionPessoaATarefa implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(true);
+            pessoas.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label4.setVisible(true);
+            panel.add(label4);
+
+            Nometarefa.clear();
+
+            for (Tarefa t : cisuc.getTarefasDisponiveis(projetoEscolhido)) {
+                // Design
+                if (t.getTaxaEsforco() == 0.5) {
+                    Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Desenvolvimento
+                else if (t.getTaxaEsforco() == 1) {
+                    Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+                // Documentação
+                else if (t.getTaxaEsforco() == 0.25) {
+                    Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (t.getResponsavel() != null? t.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + t.getDataInicio() + " | Data Fim: " + t.getDataFim() + " | Percentagem Conclusão: " + t.getPercentagemConclusao() + " | Duracao Estimada: "+ t.getDuracaoEstimada());
+                }
+            }
+
+            tarefas = new JList<>(Nometarefa);
+            tarefas.setBounds(350, 70, 900, 300);
+            tarefas.setBackground(new Color(178, 178, 178));
+            tarefas.setVisible(true);
+            panel.add(tarefas);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            MouseListener mouseListener = new MouseAdapter() {
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getClickCount() == 1) {
+                        int index = tarefas.locationToIndex(e.getPoint());
+                        Object item = tarefas.getModel().getElementAt(index);
+                        tarefaEscolhida = cisuc.getTarefasDisponiveis(projetoEscolhido).get(index);
+                        nextTarefas.setVisible(true);
+                    }
+                }
+            };
+            tarefas.addMouseListener(mouseListener);
+        }
+    }
+
+    //Click no botão Associar Pessoa a Projeto
+    private class ActionPessoaAProjeto implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            label.setVisible(false);
+            criarTarefa.setVisible(false);
+            associarTarefaPessoa.setVisible(false);
+            associarPessoaProjeto.setVisible(false);
+            eliminarTarefa.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            atualizatTaxaExecução.setVisible(false);
+            buttonVoltarM.setVisible(true);
+            pessoas.setVisible(false);
+            listarTarefasNaoIniciadas.setVisible(false);
+            listarTarefasConcluidas.setVisible(false);
+            listarTarefasInacabadas.setVisible(false);
+            label7.setVisible(true);
+            panel.add(label7);
+
+            NomePessoasDisponiveisProjeto.clear();
+
+            // JList pessoas
+            for(Pessoa p: cisuc.getPessoasDisponiveisProjeto(projetoEscolhido)) {
+                if(p.getNumeroMecanografico()>0){
+                    Docente dc = (Docente) p;
+                    NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                }else {
+                    if (p.getCusto() == 1000) {
+                        Doutorado d = (Doutorado) p;
+                        NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                    }
+                    else if (p.getCusto() == 800) {
+                        Mestre m = (Mestre) p;
+                        NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
+                    } else if (p.getCusto() == 500){
+                        Licenciado l = (Licenciado) p;
+                        NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                    }
+                }
+            }
+            pessoasDisponiveisProjeto = new JList<>(NomePessoasDisponiveisProjeto);
+            pessoasDisponiveisProjeto.setBounds(350, 70, 900, 300);
+            pessoasDisponiveisProjeto.setBackground(new Color(178, 178, 178));
+            pessoasDisponiveisProjeto.setVisible(true);
+            panel.add(pessoasDisponiveisProjeto);
+            panel.setSize(panel.getWidth()-1, panel.getHeight());
+
+            MouseListener mouseListener = new MouseAdapter() {
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getClickCount() == 1) {
+                        int index = pessoasDisponiveisProjeto.locationToIndex(e.getPoint());
+                        pessoaEscolhida = cisuc.getPessoasDisponiveisProjeto(projetoEscolhido).get(index);
+                        nextPessoas2.setVisible(true);
+                    }
+                }
+            };
+            pessoasDisponiveisProjeto.addMouseListener(mouseListener);
+        }
+    }
+
     private class buttonVoltarMTarefaListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             tarefas.setVisible(false);
@@ -1171,6 +1806,7 @@ public class GUI extends JFrame{
     // Click Design
     private class buttonDesignListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            design.setVisible(false);
             desenvolvimento.setVisible(false);
             documentacao.setVisible(false);
             criarTarefaDesign.setVisible(true);
@@ -1181,6 +1817,7 @@ public class GUI extends JFrame{
     private class buttonDesenvolvimentoListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             design.setVisible(false);
+            desenvolvimento.setVisible(false);
             documentacao.setVisible(false);
             criarTarefaDesenvolvimento.setVisible(true);
         }
@@ -1191,68 +1828,12 @@ public class GUI extends JFrame{
         public void actionPerformed(ActionEvent e) {
             design.setVisible(false);
             desenvolvimento.setVisible(false);
+            documentacao.setVisible(false);
             criarTarefaDocumentacao.setVisible(true);
         }
     }
 
-    // Criar Design
-    private class ActionCriarTarefaDesign implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
-            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
 
-            Design design = new Design(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
-            cisuc.getTarefas().add(design);
-            cisuc.getTarefasProjeto(projetoEscolhido).add(design);
-            for(Projeto p: cisuc.getProjetos()){
-                if(p == projetoEscolhido){
-                    p.getTarefas().add(design);
-                }
-            }
-            Nometarefa.addElement("[Tarefa de Design]" + " | Responsável: " + (design.getResponsavel() != null? design.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + design.getDataInicio() + " | Data Fim: " + design.getDataFim() + " | Percentagem Conclusão: " + design.getPercentagemConclusao() + " | Duracao Estimada: "+ design.getDuracaoEstimada());
-            tfdataInicioT.setText(null);
-            tfdataFimT.setText(null);
-        }
-    }
-
-    // Criar Desenvolvimento
-    private class ActionCriarTarefaDesenvolvimento implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
-            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
-
-            Desenvolvimento desenvolvimento = new Desenvolvimento(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
-            cisuc.getTarefas().add(desenvolvimento);
-            for (Projeto p : cisuc.getProjetos()){
-                if(projetoEscolhido == p) {
-                    p.getTarefas().add(desenvolvimento);
-                }
-            }
-            Nometarefa.addElement("[Tarefa de Desenvolvimento]" + " | Responsável: " + (desenvolvimento.getResponsavel() != null? desenvolvimento.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + desenvolvimento.getDataInicio() + " | Data Fim: " + desenvolvimento.getDataFim() + " | Percentagem Conclusão: " + desenvolvimento.getPercentagemConclusao() + " | Duracao Estimada: "+ desenvolvimento.getDuracaoEstimada());
-            tfdataInicioT.setText(null);
-            tfdataFimT.setText(null);
-        }
-    }
-
-    // Criar Documentacao
-    private class ActionCriarTarefaDocumentacao implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
-            long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(tfdataInicioT.getText()),  LocalDate.parse(tfdataFimT.getText()));
-
-            Documentacao documentacao = new Documentacao(tfdataInicioT.getText(), 0, tfdataFimT.getText(), duracaoEstimada);
-            cisuc.getTarefas().add(documentacao);
-            cisuc.getTarefasProjeto(projetoEscolhido).add(documentacao);
-            for (Projeto p : cisuc.getProjetos()){
-                if(projetoEscolhido == p) {
-                    p.getTarefas().add(documentacao);
-                }
-            }
-            Nometarefa.addElement("[Tarefa de Documentação]" + " | Responsável: " + (documentacao.getResponsavel() != null? documentacao.getResponsavel().getNome():"Não Atribuído") + " | Data Inicio: " + documentacao.getDataInicio() + " | Data Fim: " + documentacao.getDataFim() + " | Percentagem Conclusão: " + documentacao.getPercentagemConclusao() + " | Duracao Estimada: "+ documentacao.getDuracaoEstimada());
-            tfdataInicioT.setText(null);
-            tfdataFimT.setText(null);
-        }
-    }
 
     // Listar tarefas inacabadas
     private class tarefasInacabadas implements ActionListener {
@@ -1283,7 +1864,7 @@ public class GUI extends JFrame{
             }
             tarefasForaPrazo = new JList<>(TarefaForaPrazo);
             tarefasForaPrazo.setBackground(new Color(178,178,178));
-            tarefasForaPrazo.setBounds(300, 40, 900, 300);
+            tarefasForaPrazo.setBounds(300, 70, 900, 300);
             tarefasForaPrazo.setVisible(true);
             panel.add(tarefasForaPrazo);
             panel.setSize(panel.getWidth()-1, panel.getHeight());
@@ -1325,7 +1906,7 @@ public class GUI extends JFrame{
             }
             tarefasConcluidas = new JList<>(TarefasConcluidas);
             tarefasConcluidas.setBackground(new Color(178,178,178));
-            tarefasConcluidas.setBounds(300, 40, 900, 300);
+            tarefasConcluidas.setBounds(300, 70, 900, 300);
             tarefasConcluidas.setVisible(true);
             panel.add(tarefasConcluidas);
             panel.setSize(panel.getWidth()-1, panel.getHeight());
@@ -1367,7 +1948,7 @@ public class GUI extends JFrame{
             }
             tarefasInacab = new JList<>(TarefasNaoIniciadas);
             tarefasInacab.setBackground(new Color(178,178,178));
-            tarefasInacab.setBounds(300, 40, 900, 300);
+            tarefasInacab.setBounds(300, 70, 900, 300);
             tarefasInacab.setVisible(true);
             panel.add(tarefasInacab);
             panel.setSize(panel.getWidth()-1, panel.getHeight());
@@ -1426,7 +2007,7 @@ public class GUI extends JFrame{
 
             }
             tarefas = new JList<>(Nometarefa);
-            tarefas.setBounds(350, 40, 1100, 300);
+            tarefas.setBounds(350, 70, 1100, 300);
             tarefas.setBackground(new Color(178, 178, 178));
             tarefas.setVisible(true);
             panel.add(tarefas);

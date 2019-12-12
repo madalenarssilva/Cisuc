@@ -20,6 +20,7 @@ public class Cisuc {
 
     private ArrayList<Pessoa> pessoas;
     private ArrayList<Projeto> projetos;
+    private ArrayList<Projeto> projetosTerminados;
     private ArrayList<Tarefa> tarefas;
     private boolean exitMenu = false;
 
@@ -38,6 +39,7 @@ public class Cisuc {
         System.out.println("-----------Inicio----------");
         pessoas = new ArrayList<>();
         projetos = new ArrayList<>();
+        projetosTerminados = new ArrayList<>();
         tarefas = new ArrayList<>();
 
         lerFicheirosPessoas();
@@ -111,7 +113,7 @@ public class Cisuc {
                     System.out.print("Opção inválida. Volte a escolher o projeto: ");
                     n = scanner.nextInt();
                 }
-                Projeto projeto = projetos.get(n-1);
+                Projeto projeto = projetos.get(n - 1);
 
                 System.out.println();
                 System.out.println("Operações: ");
@@ -123,7 +125,9 @@ public class Cisuc {
                 System.out.println("6. Listar tarefas não concluídas na data estimada.");
                 System.out.println("7. Listar tarefas não iniciadas.");
                 System.out.println("8. Listar tarefas concluídas.");
-                System.out.println("9. Sair");
+                System.out.println("9. Indicar custo do projeto.");
+                System.out.println("10. Terminar projeto.");
+                System.out.println("11. Sair");
                 System.out.print("Escolha uma opção: ");
 
                 int opcao2 = scanner.nextInt();
@@ -168,6 +172,13 @@ public class Cisuc {
                         printTarefas(tarefasConcluidas);
                         break;
                     case 9:
+                        System.out.print("O custo do projeto é de " + projeto.calculaCustoPorTarefa() + "€.");
+                        break;
+                    case 10:
+                        terminarProjeto(projeto);
+                        printProjetos();
+                        break;
+                    case 11:
                         break;
                     default:
                         System.out.println("Escolha uma opção existente.");
@@ -388,7 +399,7 @@ public class Cisuc {
                         }
 
                         //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
-                        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(s[1]),  LocalDate.parse(s[2]));
+                        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(s[1]), LocalDate.parse(s[2]));
 
                         switch (s[0]) {
                             case "DESIGN":
@@ -504,15 +515,15 @@ public class Cisuc {
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
         // Não aceitar inputs vazios
-        while(nome.isEmpty()){
+        while (nome.isEmpty()) {
             System.out.println("Input vazio");
             System.out.println("Nome: ");
             nome = scanner.nextLine();
         }
         // Não aceitar nomes repetidos
-        Boolean flag= true;
-            for (Projeto p : projetos) {
-                while(flag) {
+        Boolean flag = true;
+        for (Projeto p : projetos) {
+            while (flag) {
                 if (p.getNome().equals(nome)) {
                     System.out.println("Nome já existente. Introduza outro.");
                     System.out.println("Nome: ");
@@ -527,15 +538,15 @@ public class Cisuc {
         System.out.println("Acrónimo: ");
         String acronimo = scanner.nextLine();
         // Não aceitar inputs vazios
-        while(acronimo.isEmpty()){
+        while (acronimo.isEmpty()) {
             System.out.println("Input vazio");
             System.out.println("Acrónimo: ");
             acronimo = scanner.nextLine();
         }
         // Não aceitar acronimos repetidos
-        Boolean flagA= true;
+        Boolean flagA = true;
         for (Projeto p : projetos) {
-            while(flagA) {
+            while (flagA) {
                 if (p.getAcronimo().equals(acronimo)) {
                     System.out.println("Acrónimo já existente. Introduza outro.");
                     System.out.println("Acrónimo: ");
@@ -550,7 +561,7 @@ public class Cisuc {
         System.out.println("DataInicio (yyyy-MM-dd): ");
         String dataInicio = scanner.nextLine();
         //Não aceitar inputs vazios nem datas inválidas.
-        while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
+        while (dataInicio.isEmpty() || !validarData1(dataInicio)) {
             if (dataInicio.isEmpty())
                 System.out.println("Input vazio");
             System.out.println("DataInicio (yyyy-MM-dd): ");
@@ -561,7 +572,7 @@ public class Cisuc {
         System.out.println("DataFim (yyyy-MM-dd): ");
         String dataFim = scanner.nextLine();
         //Não aceitar inputs vazios nem datas inválidas.
-        while(dataFim.isEmpty() || !validarData1(dataFim)) {
+        while (dataFim.isEmpty() || !validarData1(dataFim)) {
             if (dataFim.isEmpty())
                 System.out.println("Input vazio");
             System.out.println("DataFim (yyyy-MM-dd): ");
@@ -569,7 +580,7 @@ public class Cisuc {
         }
 
         //Não aceitar datas incoerentes.
-        while(!validarData2(dataInicio, dataFim)) {
+        while (!validarData2(dataInicio, dataFim)) {
             System.out.println("DataInicio (yyyy-MM-dd): ");
             dataInicio = scanner.nextLine();
             System.out.println("DataFim (yyyy-MM-dd): ");
@@ -585,16 +596,29 @@ public class Cisuc {
         for (Projeto p : projetos) {
             System.out.println(p);
         }
+        for (Projeto p : projetosTerminados) {
+            System.out.println(p);
+        }
     }
 
-    public void printProjetosNomes(){
+    public void printProjetosNomes() {
         /**
          * Method that prints all project names with an indice before the name.
          */
-        int i=1;
-        for(Projeto p: projetos){
+        int i = 1;
+        for (Projeto p : projetos) {
             System.out.println(i++ + ". " + p.getNome());
         }
+    }
+
+    public void terminarProjeto(Projeto projeto) {
+
+        /** Method that ends a project. Once eliminated, it will only be avaible for consulting.
+         * @param projeto that the user wants to terminate.
+         */
+
+        projetos.remove(projeto);
+        projetosTerminados.add(projeto);
     }
 
     //                                                 TAREFAS
@@ -608,7 +632,7 @@ public class Cisuc {
         System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
         String dataInicio = scanner.nextLine();
         //Não aceitar inputs vazios nem datas inválidas.
-        while(dataInicio.isEmpty() || !validarData1(dataInicio) || !validarData2(projeto.getDataInicio(), dataInicio)) {
+        while (dataInicio.isEmpty() || !validarData1(dataInicio) || !validarData2(projeto.getDataInicio(), dataInicio)) {
             if (dataInicio.isEmpty())
                 System.out.println("Input vazio");
             System.out.println("DataInicio (yyyy-MM-dd) entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
@@ -619,7 +643,7 @@ public class Cisuc {
         System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
         String dataFim = scanner.nextLine();
         //Não aceitar inputs vazios nem datas inválidas.
-        while(dataFim.isEmpty() || !validarData1(dataFim) || !validarData2(dataFim, projeto.getDataFim())) {
+        while (dataFim.isEmpty() || !validarData1(dataFim) || !validarData2(dataFim, projeto.getDataFim())) {
             if (dataFim.isEmpty())
                 System.out.println("Input vazio");
             System.out.println("DataFim (yyyy-MM-dd): entre " + projeto.getDataInicio() + " e " + projeto.getDataFim() + ": ");
@@ -627,7 +651,7 @@ public class Cisuc {
         }
 
         //Não aceitar datas incoerentes.
-        while(!validarData2(dataInicio, dataFim)) {
+        while (!validarData2(dataInicio, dataFim)) {
             System.out.println("DataInicio (yyyy-MM-dd): ");
             dataInicio = scanner.nextLine();
             System.out.println("DataFim (yyyy-MM-dd): ");
@@ -635,7 +659,7 @@ public class Cisuc {
         }
 
         //Fazer cálculo da duração estimada, com base nas datas de início e fim e colocá-la na class da Tarefa.
-        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(dataInicio),  LocalDate.parse(dataFim));
+        long duracaoEstimada = ChronoUnit.DAYS.between(LocalDate.parse(dataInicio), LocalDate.parse(dataFim));
 
 
         System.out.println("1. Design");
@@ -695,7 +719,7 @@ public class Cisuc {
         }
 
         //Obter objeto Tarefa.
-        Tarefa tarefa = tarefasDisponiveis.get(numTarefa-1);
+        Tarefa tarefa = tarefasDisponiveis.get(numTarefa - 1);
 
         // PESSOA RESPONSÁVEL
         ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
@@ -721,7 +745,7 @@ public class Cisuc {
             pessoasDisponiveis.add(projeto.getIp());
 
         for (int i = 0; i < pessoasDisponiveis.size(); i++) {
-            System.out.println((i+1) + ": " + pessoasDisponiveis.get(i).getNome());
+            System.out.println((i + 1) + ": " + pessoasDisponiveis.get(i).getNome());
         }
 
         if (pessoasDisponiveis.size() == 0) {
@@ -736,7 +760,7 @@ public class Cisuc {
             System.out.println("Opção inválida. Escolha a pessoa responsável pela tarefa: ");
             numPessoa = scanner.nextInt();
         }
-        responsavel = pessoasDisponiveis.get(numPessoa-1);
+        responsavel = pessoasDisponiveis.get(numPessoa - 1);
         tarefa.setResponsavel(responsavel);
     }
 
@@ -746,9 +770,8 @@ public class Cisuc {
             for (Tarefa t : tarefas) {
                 System.out.println(t);
             }
-        }
-        else {
-            for (int i=0; i<args.length; i++) {
+        } else {
+            for (int i = 0; i < args.length; i++) {
                 for (Tarefa t : args[i]) {
                     System.out.println(t);
                 }
@@ -792,7 +815,7 @@ public class Cisuc {
         }
 
         //Obter objeto Tarefa.
-        Tarefa tarefa = tarefasDisponiveis.get(numTarefa-1);
+        Tarefa tarefa = tarefasDisponiveis.get(numTarefa - 1);
 
         //Pedir a nova taxa de execução ao user.
         System.out.print("Insira a taxa de execução da tarefa: ");
@@ -825,7 +848,7 @@ public class Cisuc {
 
         ArrayList<Tarefa> tarefasNaoIniciadas = new ArrayList<>();
 
-        for(Tarefa t: projeto.getTarefas()) {
+        for (Tarefa t : projeto.getTarefas()) {
             if (t.getPercentagemConclusao() == 0)
                 tarefasNaoIniciadas.add(t);
         }
@@ -842,7 +865,7 @@ public class Cisuc {
 
         ArrayList<Tarefa> tarefasConcluidas = new ArrayList<>();
 
-        for(Tarefa t: projeto.getTarefas()) {
+        for (Tarefa t : projeto.getTarefas()) {
             if (t.getPercentagemConclusao() == 100)
                 tarefasConcluidas.add(t);
         }
@@ -868,8 +891,8 @@ public class Cisuc {
         //(Tendo em conta que a data de fim é atualizada assim que a taxa de execução for 100%).
         long diferencaDias;
 
-        for(Tarefa t: projeto.getTarefas()) {
-            diferencaDias = ChronoUnit.DAYS.between(LocalDate.parse(t.getDataInicio()),  LocalDate.parse(dataAtualString));
+        for (Tarefa t : projeto.getTarefas()) {
+            diferencaDias = ChronoUnit.DAYS.between(LocalDate.parse(t.getDataInicio()), LocalDate.parse(dataAtualString));
 
             //Se a diferença de dias registada for igual à duração estimada para a tarefa e a tarefa não estiver concluída (a 100%), adicionar ao array das tarefas fora de prazo.
             //Se a diferença de dias registada for superior à duração estimada para a tarefa, adicionar ao array das tarefas fora de prazo.
@@ -889,7 +912,7 @@ public class Cisuc {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-----Eliminar uma Tarefa------");
 
-        int j=1;
+        int j = 1;
         for (int i = 0; i < projeto.getTarefas().size(); i++) {
             System.out.println((j++) + ": " + projeto.getTarefas().get(i).toString());
         }
@@ -909,7 +932,7 @@ public class Cisuc {
         }
 
         //Obter objeto Tarefa.
-        Tarefa tarefa = projeto.getTarefas().get(numTarefa-1);
+        Tarefa tarefa = projeto.getTarefas().get(numTarefa - 1);
 
         //Eliminar tarefa do array das tarefas do projeto.
         projeto.getTarefas().remove(tarefa);
@@ -927,15 +950,15 @@ public class Cisuc {
         System.out.println("Nome: ");
         String nome = scanner.nextLine();
         // Não aceitar inputs vazios
-        while(nome.isEmpty()){
+        while (nome.isEmpty()) {
             System.out.println("Input vazio");
             System.out.println("Nome: ");
             nome = scanner.nextLine();
         }
         // Não aceitar nomes repetidos
-        Boolean flag= true;
+        Boolean flag = true;
         for (Pessoa p : pessoas) {
-            while(flag) {
+            while (flag) {
                 if (p.getNome().equals(nome)) {
                     System.out.println("Nome já existente. Introduza outro.");
                     System.out.println("Nome: ");
@@ -950,15 +973,15 @@ public class Cisuc {
         System.out.println("Mail: ");
         String mail = scanner.nextLine();
         // Não aceitar inputs vazios
-        while(mail.isEmpty()){
+        while (mail.isEmpty()) {
             System.out.println("Input vazio");
             System.out.println("Mail: ");
             mail = scanner.nextLine();
         }
         // Não aceitar mails repetidos
-        Boolean flagM= true;
+        Boolean flagM = true;
         for (Pessoa p : pessoas) {
-            while(flagM) {
+            while (flagM) {
                 if (p.getMail().equals(mail)) {
                     System.out.println("Mail já existente. Introduza outro.");
                     System.out.println("Nome: ");
@@ -977,14 +1000,14 @@ public class Cisuc {
             case 1:
                 System.out.println("Numero mecanográfico: ");
                 int numMecanografico = scanner.nextInt();
-                while(numMecanografico == 0 || numMecanografico < 0){
+                while (numMecanografico == 0 || numMecanografico < 0) {
                     System.out.println("Numero mecanográfico: ");
                     numMecanografico = scanner.nextInt();
                 }
                 System.out.println("Área Investigação: ");
                 String aI = scanner.next();
                 // Não aceitar inputs vazios
-                while(aI.isEmpty()){
+                while (aI.isEmpty()) {
                     System.out.println("Input vazio");
                     System.out.println("Área Investigação: ");
                     aI = scanner.next();
@@ -997,7 +1020,7 @@ public class Cisuc {
                 System.out.println("DataInicio (yyyy-MM-dd): ");
                 String dataInicio = scanner.nextLine();
                 //Não aceitar inputs vazios nem datas inválidas.
-                while(dataInicio.isEmpty() || !validarData1(dataInicio)) {
+                while (dataInicio.isEmpty() || !validarData1(dataInicio)) {
                     if (dataInicio.isEmpty())
                         System.out.println("Input vazio");
                     System.out.println("DataInicio (yyyy-MM-dd): ");
@@ -1008,7 +1031,7 @@ public class Cisuc {
                 System.out.println("DataFim (yyyy-MM-dd): ");
                 String dataFim = scanner.nextLine();
                 //Não aceitar inputs vazios nem datas inválidas.
-                while(dataFim.isEmpty() || !validarData1(dataFim)) {
+                while (dataFim.isEmpty() || !validarData1(dataFim)) {
                     if (dataFim.isEmpty())
                         System.out.println("Input vazio");
                     System.out.println("DataFim (yyyy-MM-dd): ");
@@ -1016,7 +1039,7 @@ public class Cisuc {
                 }
 
                 //Não aceitar datas incoerentes.
-                while(!validarData2(dataInicio, dataFim)) {
+                while (!validarData2(dataInicio, dataFim)) {
                     System.out.println("DataInicio (yyyy-MM-dd): ");
                     dataInicio = scanner.nextLine();
                     System.out.println("DataFim (yyyy-MM-dd): ");
@@ -1052,7 +1075,7 @@ public class Cisuc {
         /**
          * Method that links persons to projects.
          */
-        Scanner scanner= new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         // ESCOLHER PESSOA
         //Array das pessoas disponíveis para serem associadas a um novo projeto:
@@ -1066,8 +1089,7 @@ public class Cisuc {
                         pessoasDisponiveis.add(pessoa);
                         System.out.println((j++) + ": " + pessoa.getNome());
                     }
-                }
-                else {
+                } else {
                     pessoasDisponiveis.add(pessoa);
                     System.out.println((j++) + ": " + pessoa.getNome());
                 }
@@ -1085,7 +1107,7 @@ public class Cisuc {
             System.out.println("Opção inválida. Escolha uma pessoa: ");
             n2 = scanner.nextInt();
         }
-        Pessoa pessoa = pessoasDisponiveis.get(n2-1);
+        Pessoa pessoa = pessoasDisponiveis.get(n2 - 1);
 
         //Se for a pessoa escolhida for um BOLSEIRO só pode estar num projeto.
         if (pessoa.getNumeroMecanografico() == 0) {
@@ -1111,8 +1133,8 @@ public class Cisuc {
                         }
 
                         //Imprimir todos os orientadores possíveis.
-                        int k=1;
-                        for (int i=0; i<orientadoresPossiveis.size(); i++)
+                        int k = 1;
+                        for (int i = 0; i < orientadoresPossiveis.size(); i++)
                             System.out.println(k++ + ". " + orientadoresPossiveis.get(i).getNome());
 
                         if (orientadoresPossiveis.size() == 0) {
@@ -1127,7 +1149,7 @@ public class Cisuc {
                             num = scanner.nextInt();
                         }
                         //Adicionar orientador ao licenciado.
-                        l.getOrientadores().add(orientadoresPossiveis.get(num-1));
+                        l.getOrientadores().add(orientadoresPossiveis.get(num - 1));
 
                         System.out.print("Deseja adicionar outro orientador? (s/n): ");
                         scanner.nextLine();
@@ -1137,7 +1159,7 @@ public class Cisuc {
                             mais = scanner.nextLine();
                         }
                         orientadoresPossiveis = new ArrayList<>();
-                    } while(mais.equals("s"));
+                    } while (mais.equals("s"));
 
                     //Adicionar novo licenciado à lista de pessoas envolvidas no projeto.
                     projeto.getPessoasEnvolvidas().add(l);
@@ -1157,8 +1179,8 @@ public class Cisuc {
                         }
 
                         //Imprimir todos os orientadores possíveis.
-                        int k=1;
-                        for (int i=0; i<orientadoresPossiveis.size(); i++)
+                        int k = 1;
+                        for (int i = 0; i < orientadoresPossiveis.size(); i++)
                             System.out.println(k++ + ". " + orientadoresPossiveis.get(i).getNome());
 
                         System.out.print("Escolha um orientador: ");
@@ -1168,7 +1190,7 @@ public class Cisuc {
                             num = scanner.nextInt();
                         }
                         //Adicionar orientador ao mestre.
-                        m.getOrientadores().add(orientadoresPossiveis.get(num-1));
+                        m.getOrientadores().add(orientadoresPossiveis.get(num - 1));
 
                         System.out.print("Deseja adicionar outro orientador? (s/n): ");
                         scanner.nextLine();
@@ -1178,7 +1200,7 @@ public class Cisuc {
                             mais = scanner.nextLine();
                         }
                         orientadoresPossiveis = new ArrayList<>();
-                    } while(mais.equals("s"));
+                    } while (mais.equals("s"));
 
                     //Adicionar novo mestre à lista de pessoas envolvidas no projeto.
                     projeto.getPessoasEnvolvidas().add(m);
@@ -1201,9 +1223,9 @@ public class Cisuc {
         if (projeto.getIp() == null) {
             ArrayList<Docente> docentes = getDocentes();
             ArrayList<Docente> ipsPossiveis = new ArrayList<>();
-            int i=1;
+            int i = 1;
             //Imprimir lista de docentes.
-            for(Docente d: docentes) {
+            for (Docente d : docentes) {
                 if (!projeto.getPessoasEnvolvidas().contains(d)) {
                     ipsPossiveis.add(d);
                     System.out.println(i++ + ". " + d.getNome());
@@ -1289,10 +1311,9 @@ public class Cisuc {
             return false;
         }
 
-        if (dataElems[0].length() == 4 && dataElems[1].length() == 2 && dataElems[2].length() == 2 && ano>0 && mes>0 && dia>0 && mes<=12 && dia<=31) {
+        if (dataElems[0].length() == 4 && dataElems[1].length() == 2 && dataElems[2].length() == 2 && ano > 0 && mes > 0 && dia > 0 && mes <= 12 && dia <= 31) {
             return true;
-        }
-        else {
+        } else {
             System.out.println("Data Inválida.");
             return false;
         }
@@ -1312,8 +1333,7 @@ public class Cisuc {
 
         if (Integer.parseInt(data1) <= Integer.parseInt(data2)) {
             return true;
-        }
-        else {
+        } else {
             System.out.println("Datas incoerentes.");
             return false;
         }
@@ -1347,7 +1367,7 @@ public class Cisuc {
          * @return false if the person isn't already associated to the project.
          */
 
-        if(projeto.getIp() == pessoa)
+        if (projeto.getIp() == pessoa)
             return true;
 
         for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
@@ -1357,16 +1377,16 @@ public class Cisuc {
         return false;
     }
 
-    public boolean verificarSeAlgumProjeto(Pessoa pessoa){
+    public boolean verificarSeAlgumProjeto(Pessoa pessoa) {
         /**
          * Method that verifies if Bolseiro is already in a project.
          * @return true if Bolseiro has already a project
          * @return false if Bolseiro hasn't got a project
          */
 
-        for(Projeto p:projetos){
-            for(int i=0; i<p.getPessoasEnvolvidas().size(); i++){
-                if(p.getPessoasEnvolvidas().get(i) == pessoa){
+        for (Projeto p : projetos) {
+            for (int i = 0; i < p.getPessoasEnvolvidas().size(); i++) {
+                if (p.getPessoasEnvolvidas().get(i) == pessoa) {
                     return true;
                 }
             }
@@ -1374,13 +1394,13 @@ public class Cisuc {
         return false;
     }
 
-    public ArrayList<Docente> getDocentesProjeto(Projeto projeto){
+    public ArrayList<Docente> getDocentesProjeto(Projeto projeto) {
         ArrayList<Docente> docentesProjeto = new ArrayList<>();
 
         //Orientadores têm que ser Docentes e fazer parte do projeto.
         for (Docente d : getDocentes()) {
             //Percorrer pessoas envolvidas no projeto.
-            for (int i=0; i<projeto.getPessoasEnvolvidas().size(); i++) {
+            for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
                 if (projeto.getPessoasEnvolvidas().get(i) == d) {
                     docentesProjeto.add(d);
                 }
@@ -1392,10 +1412,12 @@ public class Cisuc {
         return docentesProjeto;
     }
 
-    // Ligação Interface
+
+    //                                             LIGAÇÃO À INTERFACE
 
     /**
      * Get Projetos
+     *
      * @return projetos
      */
     public ArrayList<Projeto> getProjetos() {
@@ -1404,6 +1426,7 @@ public class Cisuc {
 
     /**
      * Get Pessoas
+     *
      * @return pessoas
      */
     public ArrayList<Pessoa> getPessoas() {
@@ -1412,6 +1435,7 @@ public class Cisuc {
 
     /**
      * Get Tarefas
+     *
      * @return tarefas
      */
     public ArrayList<Tarefa> getTarefas() {
@@ -1420,15 +1444,124 @@ public class Cisuc {
 
     /**
      * Get Tarefas de um Projeto
+     *
      * @return tarefasProjeto
      */
-    public ArrayList<Tarefa> getTarefasProjeto(Projeto projeto){
+    public ArrayList<Tarefa> getTarefasProjeto(Projeto projeto) {
         ArrayList<Tarefa> tarefaProjeto = new ArrayList<>();
-        for(Tarefa t: projeto.getTarefas()){
+        for (Tarefa t : projeto.getTarefas()) {
             tarefaProjeto.add(t);
         }
         return tarefaProjeto;
     }
+
+    /**
+     * Get Tarefas de um Projeto às quais podemos associar uma pessoa.
+     *
+     * @param projeto
+     * @return tarefas disponíveis para associação
+     */
+    public ArrayList<Tarefa> getTarefasDisponiveis(Projeto projeto) {
+
+        //Array das tarefas do projeto que ainda não têm um responsável.
+        ArrayList<Tarefa> tarefasDisponiveis = new ArrayList<>();
+        for (int i = 0; i < projeto.getTarefas().size(); i++) {
+            if (projeto.getTarefas().get(i).getResponsavel() == null) {
+                tarefasDisponiveis.add(projeto.getTarefas().get(i));
+            }
+        }
+        return tarefasDisponiveis;
+    }
+
+    /**
+     * Get Pessoas disponíveis para serem associadas a uma nova tarefa.
+     *
+     * @param projeto
+     * @param tarefa
+     * @return pessoas disponíveis para associação
+     */
+    public ArrayList<Pessoa> getPessoasDisponiveisTarefa(Projeto projeto, Tarefa tarefa) {
+
+        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
+
+        //Encontrar bolseiros cuja duração da bolsa as permita ter a tarefa.
+        //Encontrar Pessoas que não ficarão sobrecarregadas.
+        for (Pessoa pessoa : projeto.getPessoasEnvolvidas()) {
+            System.out.println(pessoa);
+            if (pessoa.getNumeroMecanografico() == 0) {
+                if (!isSobrecarregada(pessoa, tarefa)) {
+                    Bolseiro bols = (Bolseiro) pessoa;
+                    if (validarData2(bols.getDataInicio(), tarefa.getDataInicio()) && validarData2(tarefa.getDataFim(), bols.getDataFim()))
+                        pessoasDisponiveis.add(bols);
+                }
+            } else {
+                if (!isSobrecarregada(pessoa, tarefa))
+                    pessoasDisponiveis.add(pessoa);
+            }
+        }
+        //Adicionar o ip se existir e se não estiver sobrecarregado.
+        if (!isSobrecarregada(projeto.getIp(), tarefa) && projeto.getIp() != null)
+            pessoasDisponiveis.add(projeto.getIp());
+
+        return pessoasDisponiveis;
+    }
+
+    public ArrayList<Pessoa> getPessoasDisponiveisProjeto(Projeto projeto) {
+        //Array das pessoas disponíveis para serem associadas a um novo projeto:
+        //Todas as pessoas que ainda não estiverem no projeto, excluindo bolseiros que já estejam noutro projeto.
+        ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
+
+        for (Pessoa pessoa : pessoas) {
+            if (!verificaRepeticao(projeto, pessoa)) {
+                if (pessoa.getNumeroMecanografico() == 0) {
+                    if (!verificarSeAlgumProjeto(pessoa)) {
+                        pessoasDisponiveis.add(pessoa);
+                    }
+                } else {
+                    pessoasDisponiveis.add(pessoa);
+                }
+            }
+        }
+        return pessoasDisponiveis;
+    }
+
+    public ArrayList<Docente> getOrientadoresDisponiveis(Projeto projeto, Pessoa pessoa) {
+        //Obter todos os docentes do projeto.
+        ArrayList<Docente> docentesProjeto = getDocentesProjeto(projeto);
+        ArrayList<Docente> orientadoresPossiveis = new ArrayList<>();
+
+        // LICENCIADO
+        if (pessoa.getCusto() == 500) {
+            Licenciado l = (Licenciado) pessoa;
+
+            //Obter todos os orientadores possíveis para a pessoa.
+            for (Docente d : docentesProjeto) {
+                if (!l.getOrientadores().contains(d))
+                    orientadoresPossiveis.add(d);
+            }
+        }
+        // MESTRE
+        if (pessoa.getCusto() == 800) {
+            Mestre m = (Mestre) pessoa;
+
+            //Obter todos os orientadores possíveis para a pessoa.
+            for (Docente d : docentesProjeto) {
+                if (!m.getOrientadores().contains(d))
+                    orientadoresPossiveis.add(d);
+            }
+        }
+        return orientadoresPossiveis;
+    }
+
+    public ArrayList<Docente> getIpsPossiveis(Projeto projeto) {
+        ArrayList<Docente> docentes = getDocentes();
+        ArrayList<Docente> ipsPossiveis = new ArrayList<>();
+
+        for (Docente d : docentes) {
+            if (!projeto.getPessoasEnvolvidas().contains(d)) {
+                ipsPossiveis.add(d);
+            }
+        }
+        return ipsPossiveis;
+    }
 }
-
-
