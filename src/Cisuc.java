@@ -49,7 +49,6 @@ public class Cisuc {
         // Inicializa o GUI
         try {
             GUI gui = new GUI(this);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -61,6 +60,7 @@ public class Cisuc {
                 Menu();
             }
         }
+        escreverFicheirosObjetos();
         System.exit(0);
 
         System.out.println("-----------Fim----------");
@@ -522,8 +522,8 @@ public class Cisuc {
         }
         // Não aceitar nomes repetidos
         Boolean flag = true;
-        for (Projeto p : projetos) {
-            while (flag) {
+        while (flag) {
+            for (Projeto p : projetos) {
                 if (p.getNome().equals(nome)) {
                     System.out.println("Nome já existente. Introduza outro.");
                     System.out.println("Nome: ");
@@ -545,8 +545,8 @@ public class Cisuc {
         }
         // Não aceitar acronimos repetidos
         Boolean flagA = true;
-        for (Projeto p : projetos) {
-            while (flagA) {
+        while (flagA) {
+            for (Projeto p : projetos) {
                 if (p.getAcronimo().equals(acronimo)) {
                     System.out.println("Acrónimo já existente. Introduza outro.");
                     System.out.println("Acrónimo: ");
@@ -957,8 +957,8 @@ public class Cisuc {
         }
         // Não aceitar nomes repetidos
         Boolean flag = true;
-        for (Pessoa p : pessoas) {
-            while (flag) {
+        while (flag) {
+            for (Pessoa p : pessoas) {
                 if (p.getNome().equals(nome)) {
                     System.out.println("Nome já existente. Introduza outro.");
                     System.out.println("Nome: ");
@@ -980,11 +980,11 @@ public class Cisuc {
         }
         // Não aceitar mails repetidos
         Boolean flagM = true;
-        for (Pessoa p : pessoas) {
-            while (flagM) {
+        while (flagM) {
+            for (Pessoa p : pessoas) {
                 if (p.getMail().equals(mail)) {
                     System.out.println("Mail já existente. Introduza outro.");
-                    System.out.println("Nome: ");
+                    System.out.println("Mail: ");
                     mail = scanner.nextLine();
                 } else {
                     flagM = false;
@@ -1350,8 +1350,12 @@ public class Cisuc {
 
         double carga = 0.0;
         for (Tarefa t : tarefas) {
-            if (t.getResponsavel() == pessoa && t.getPercentagemConclusao() != 100)
-                carga += t.getTaxaEsforco();
+            if (t.getResponsavel() != null) {
+                if(pessoa != null) {
+                    if (t.getResponsavel().getMail().equals(pessoa.getMail()) && t.getPercentagemConclusao() != 100)
+                        carga += t.getTaxaEsforco();
+                }
+            }
         }
         if (carga + tarefa.getTaxaEsforco() > 1)
             return true;
@@ -1367,11 +1371,13 @@ public class Cisuc {
          * @return false if the person isn't already associated to the project.
          */
 
-        if (projeto.getIp() == pessoa)
-            return true;
+        if (projeto.getIp() != null) {
+            if (projeto.getIp().getMail().equals(pessoa.getMail()))
+                return true;
+        }
 
         for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
-            if (projeto.getPessoasEnvolvidas().get(i) == pessoa)
+            if (projeto.getPessoasEnvolvidas().get(i).getMail().equals(pessoa.getMail()))
                 return true;
         }
         return false;
@@ -1386,7 +1392,7 @@ public class Cisuc {
 
         for (Projeto p : projetos) {
             for (int i = 0; i < p.getPessoasEnvolvidas().size(); i++) {
-                if (p.getPessoasEnvolvidas().get(i) == pessoa) {
+                if (p.getPessoasEnvolvidas().get(i).getMail().equals(pessoa.getMail())) {
                     return true;
                 }
             }
@@ -1401,13 +1407,15 @@ public class Cisuc {
         for (Docente d : getDocentes()) {
             //Percorrer pessoas envolvidas no projeto.
             for (int i = 0; i < projeto.getPessoasEnvolvidas().size(); i++) {
-                if (projeto.getPessoasEnvolvidas().get(i) == d) {
+                if (projeto.getPessoasEnvolvidas().get(i).getMail().equals(d.getMail())) {
                     docentesProjeto.add(d);
                 }
             }
             //Ver se o docente é investigador principal do projeto.
-            if (projeto.getIp() == d)
+            if (projeto.getIp() != null) {
+                if (projeto.getIp().getMail().equals(d.getMail()))
                 docentesProjeto.add(d);
+            }
         }
         return docentesProjeto;
     }

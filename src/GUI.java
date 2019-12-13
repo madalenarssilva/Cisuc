@@ -133,6 +133,15 @@ public class GUI extends JFrame{
         setTitle("Gestão Projetos Cisuc");
         setSize(1500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cisuc.escreverFicheirosObjetos();
+                e.getWindow().dispose();
+            }
+        });
+
         setResizable(true);
 
         panel = new JPanel();
@@ -239,7 +248,10 @@ public class GUI extends JFrame{
         Nomeproj.clear();
         // JList de projetos
         for(Projeto p: cisuc.getProjetos()) {
-            Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Investigador Principal: " + p.getIp().getNome() + " | Pessoas Envolvidas: " + p.getPessoasEnvolvidasNome());
+            if (p.getIp() != null)
+                Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Investigador Principal: " + p.getIp().getNome() + " | Pessoas Envolvidas: " + p.getPessoasEnvolvidasNome());
+            else
+                Nomeproj.addElement(p.getNome() + " | Acrónimo: " + p.getAcronimo() + " | Custo Projeto: " + p.calculaCustoPorTarefa() + " | Pessoas Envolvidas: " + p.getPessoasEnvolvidasNome());
         }
         projetos = new JList<>(Nomeproj);
         projetos.setBackground(new Color(178,178,178));
@@ -1459,47 +1471,82 @@ public class GUI extends JFrame{
                     orientadores.addMouseListener(mouseListener);
                 }
                 else {
-                    label9.setVisible(true);
-                    panel.add(label9);
-                    associarPessoaAProjeto();
+                    if (projetoEscolhido.getIp() == null) {
+                        associarPessoaAProjeto();
+                        System.out.println(projetoEscolhido.getIp());
+                        orientadores.setVisible(false);
+                        label9.setVisible(false);
+                        label10.setVisible(true);
+                        panel.add(label10);
 
-                    orientadores.setVisible(false);
-                    next2.setVisible(false);
-
-                    NomePessoasProjeto.clear();
-
-                    // JList pessoas
-                    if (projetoEscolhido.getIp() != null) {
-                        Docente p = projetoEscolhido.getIp();
-                        NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
-                    }
-                    for(Pessoa p: projetoEscolhido.getPessoasEnvolvidas()) {
-                        if(p.getNumeroMecanografico()>0){
+                        NomeIpsPossiveis.clear();
+                        for (Pessoa p : cisuc.getIpsPossiveis(projetoEscolhido)) {
                             Docente dc = (Docente) p;
-                            NomePessoasProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
-                        }else {
-                            if (p.getCusto() == 1000) {
-                                Doutorado d = (Doutorado) p;
-                                NomePessoasProjeto.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                            NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                        }
+                        ips = new JList<>(NomeIpsPossiveis);
+                        ips.setBounds(350, 70, 900, 300);
+                        ips.setBackground(new Color(178, 178, 178));
+                        ips.setVisible(true);
+                        panel.add(ips);
+                        panel.setSize(panel.getWidth() - 1, panel.getHeight());
+
+                        MouseListener mouseListener = new MouseAdapter() {
+                            public void mouseReleased(MouseEvent e) {
+                                if (e.getClickCount() == 1) {
+                                    int index = ips.locationToIndex(e.getPoint());
+                                    ipEscolhido = cisuc.getIpsPossiveis(projetoEscolhido).get(index);
+                                    addIp.setVisible(true);
+                                }
                             }
-                            else if (p.getCusto() == 800) {
-                                Mestre m = (Mestre) p;
-                                NomePessoasProjeto.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
-                            } else if (p.getCusto() == 500){
-                                Licenciado l = (Licenciado) p;
-                                NomePessoasProjeto.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) +" | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                        };
+                        ips.addMouseListener(mouseListener);
+                    } else {
+                        label9.setVisible(true);
+                        panel.add(label9);
+                        associarPessoaAProjeto();
+
+                        orientadores.setVisible(false);
+                        next2.setVisible(false);
+
+                        NomePessoasProjeto.clear();
+
+                        // JList pessoas
+                        if (projetoEscolhido.getIp() != null) {
+                            Docente p = projetoEscolhido.getIp();
+                            NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
+                        }
+                        for (Pessoa p : projetoEscolhido.getPessoasEnvolvidas()) {
+                            if (p.getNumeroMecanografico() > 0) {
+                                Docente dc = (Docente) p;
+                                NomePessoasProjeto.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                            } else {
+                                if (p.getCusto() == 1000) {
+                                    Doutorado d = (Doutorado) p;
+                                    NomePessoasProjeto.addElement(p.getNome() + "[Doutorado] " + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(d.getDataInicio(), d.getDataFim()) + " | Duração Bolsa: " + d.getDuracao_bolsa());
+                                } else if (p.getCusto() == 800) {
+                                    Mestre m = (Mestre) p;
+                                    NomePessoasProjeto.addElement(p.getNome() + "[Mestre]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(m.getDataInicio(), m.getDataFim()) + " | Duração Bolsa: " + m.getDuracao_bolsa() + " | Orientadores: " + m.getOrientadoresNome());
+                                } else if (p.getCusto() == 500) {
+                                    Licenciado l = (Licenciado) p;
+                                    NomePessoasProjeto.addElement(p.getNome() + "[Licenciado]" + " | mail: " + p.getMail() + " | Custo Bolsa: " + p.calculaCusto(l.getDataInicio(), l.getDataFim()) + " | Duração Bolsa: " + l.getDuracao_bolsa() + " | Orientadores: " + l.getOrientadoresNome());
+                                }
                             }
                         }
+                        pessoasProjeto = new JList<>(NomePessoasProjeto);
+                        pessoasProjeto.setBounds(350, 70, 900, 300);
+                        pessoasProjeto.setBackground(new Color(178, 178, 178));
+                        pessoasProjeto.setVisible(true);
+                        panel.add(pessoasProjeto);
+                        panel.setSize(panel.getWidth() - 1, panel.getHeight());
                     }
-                    pessoasProjeto = new JList<>(NomePessoasProjeto);
-                    pessoasProjeto.setBounds(350, 70, 900, 300);
-                    pessoasProjeto.setBackground(new Color(178, 178, 178));
-                    pessoasProjeto.setVisible(true);
-                    panel.add(pessoasProjeto);
-                    panel.setSize(panel.getWidth()-1, panel.getHeight());
                 }
             }
             else if (e.getSource() == next2) {
+                label9.setVisible(true);
+                panel.add(label9);
+                addIp.setVisible(false);
+                label10.setVisible(false);
                 associarPessoaAProjeto();
 
                 ips.setVisible(false);
