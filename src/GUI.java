@@ -18,7 +18,6 @@ public class GUI extends JFrame{
     private JList tarefasForaPrazo = new JList<>();
     private JList tarefasConcluidas = new JList<>();
     private JList tarefasInacab = new JList<>();
-    private JList docentes = new JList<>();
     private Projeto projetoEscolhido;
     private Tarefa tarefaEscolhida;
     private Pessoa pessoaEscolhida;
@@ -33,7 +32,6 @@ public class GUI extends JFrame{
     private JButton buttonLPNC;
     private JButton buttonPC;
     private JButton buttonE;
-    private JButton buttonS;
     private JButton buttoncriarP;
     private JButton buttoncriarPsD;
     private JButton buttonVoltarM;
@@ -49,7 +47,7 @@ public class GUI extends JFrame{
     private JButton associarTarefaPessoa;
     private JButton associarPessoaProjeto;
     private JButton eliminarTarefa;
-    private JButton atualizatTaxaExecução;
+    private JButton atualizarTaxaExecucao;
     private JButton next;
     private JButton next2;
     private JButton nextTarefas;
@@ -187,8 +185,6 @@ public class GUI extends JFrame{
         buttonPC.setBounds(500, 220, 350, 30);
         buttonE = new JButton("Editar Projeto");
         buttonE.setBounds(500, 260, 350, 30);
-        buttonS = new JButton("Sair");
-        buttonS.setBounds(500, 300, 350, 30);
 
         // CRIAR PROJETO
         NomeP = new JLabel("Nome");
@@ -292,7 +288,7 @@ public class GUI extends JFrame{
         for(Pessoa p: cisuc.getPessoas()) {
             if(p.getNumeroMecanografico()>0){
                 Docente dc = (Docente) p;
-                Nomepessoa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                Nomepessoa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
             }else {
                 if (p.getCusto() == 1000) {
                     Doutorado d = (Doutorado) p;
@@ -330,7 +326,7 @@ public class GUI extends JFrame{
         tfNumMecanografico.setVisible(false);
         panel.add(tfNumMecanografico);
 
-        AreaInv = new JLabel("Área Investigação");
+        AreaInv = new JLabel("Area Investigação");
         AreaInv.setBounds(20,250,200,30);
         AreaInv.setVisible(false);
         panel.add(AreaInv);
@@ -455,9 +451,9 @@ public class GUI extends JFrame{
         associarPessoaProjeto = new JButton("Associar pessoa a projeto.");
         associarPessoaProjeto.setBounds(500, 140, 350, 30);
         associarPessoaProjeto.setVisible(false);
-        atualizatTaxaExecução= new JButton("Atualizar taxa execução");
-        atualizatTaxaExecução.setBounds(500, 180, 350, 30);
-        atualizatTaxaExecução.setVisible(false);
+        atualizarTaxaExecucao= new JButton("Atualizar taxa execução");
+        atualizarTaxaExecucao.setBounds(500, 180, 350, 30);
+        atualizarTaxaExecucao.setVisible(false);
         listarTarefasInacabadas = new JButton("Tarefas não concluídas na data estimada.");
         listarTarefasInacabadas.setBounds(500, 220, 350, 30);
         listarTarefasInacabadas.setVisible(false);
@@ -499,12 +495,11 @@ public class GUI extends JFrame{
         panel.add(buttonLPNC);
         panel.add(buttonPC);
         panel.add(buttonE);
-        panel.add(buttonS);
         panel.add(criarTarefa);
         panel.add(associarTarefaPessoa);
         panel.add(associarPessoaProjeto);
         panel.add(eliminarTarefa);
-        panel.add(atualizatTaxaExecução);
+        panel.add(atualizarTaxaExecucao);
         panel.add(listarTarefasConcluidas);
         panel.add(listarTarefasInacabadas);
         panel.add(listarTarefasNaoIniciadas);
@@ -565,7 +560,7 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             Boolean a = verificaInputsVazios();
-            Boolean b = verificaRepetições();
+            Boolean b = verificaRepeticoes();
             Boolean c = validarData1(tfDataInicioP.getText());
             Boolean d = validarData1(tfDataFimP.getText());
 
@@ -583,7 +578,7 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             Boolean a = verificaInputsVaziosDocente();
-            Boolean b = verificaRepetiçõesPessoas();
+            Boolean b = verificaRepeticoesPessoas();
             if(!a && !b) {
                 addPessoaD();
             }
@@ -595,7 +590,7 @@ public class GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             Boolean a = verificaInputsVaziosPessoaBolseiro();
-            Boolean b = verificaRepetiçõesPessoas();
+            Boolean b = verificaRepeticoesPessoas();
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
@@ -613,7 +608,7 @@ public class GUI extends JFrame{
         public void actionPerformed(ActionEvent e) {
 
             Boolean a = verificaInputsVaziosPessoaBolseiro();
-            Boolean b = verificaRepetiçõesPessoas();
+            Boolean b = verificaRepeticoesPessoas();
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
@@ -631,7 +626,7 @@ public class GUI extends JFrame{
         public void actionPerformed(ActionEvent e) {
 
             Boolean a = verificaInputsVaziosPessoaBolseiro();
-            Boolean b = verificaRepetiçõesPessoas();
+            Boolean b = verificaRepeticoesPessoas();
             Boolean c = validarData1(tfdataInicioB.getText());
             Boolean d = validarData1(tfdataFimB.getText());
             if(!a && !b && c && d) {
@@ -707,7 +702,7 @@ public class GUI extends JFrame{
                 NomeIpsPossiveis.clear();
                 for(Pessoa p: cisuc.getIpsPossiveis(projetoEscolhido)) {
                     Docente dc = (Docente) p;
-                    NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                    NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                 }
                 ips = new JList<>(NomeIpsPossiveis);
                 ips.setBounds(350, 70, 900, 300);
@@ -750,7 +745,7 @@ public class GUI extends JFrame{
             int num = Integer.parseInt(nM);
             Docente d = new Docente(tfNamePs.getText(), tfMail.getText(), num, tfAreaInv.getText());
             cisuc.getPessoas().add(d);
-            Nomepessoa.addElement(d.getNome() + "[Docente]" +  " | mail: " + d.getMail()  +" | número Mecanográfico: " + d.getNumeroMecanografico() + " | Área Investigação: " + d.getAreaInvestigacao());
+            Nomepessoa.addElement(d.getNome() + "[Docente]" +  " | mail: " + d.getMail()  +" | número Mecanográfico: " + d.getNumeroMecanografico() + " | Area Investigação: " + d.getAreaInvestigacao());
             tfNamePs.setText(null);
             tfMail.setText(null);
             tfNumMecanografico.setText(null);
@@ -948,7 +943,7 @@ public class GUI extends JFrame{
             return true;
         }
         if(tfAreaInv.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Escreva o a Área de Investigação");
+            JOptionPane.showMessageDialog(null, "Escreva o a Area de Investigação");
             return true;
         }
         return false;
@@ -986,7 +981,7 @@ public class GUI extends JFrame{
         return false;
     }
 
-    private Boolean verificaRepetições(){
+    private Boolean verificaRepeticoes(){
         // Não aceitar nomes repetidos
         for (Projeto p : cisuc.getProjetos()) {
             if (p.getNome().equals(tfNameP.getText())) {
@@ -1002,7 +997,7 @@ public class GUI extends JFrame{
         return false;
     }
 
-    private Boolean verificaRepetiçõesPessoas(){
+    private Boolean verificaRepeticoesPessoas(){
         // Não aceitar nomes repetidos
         for (Pessoa p : cisuc.getPessoas()) {
             if (p.getNome().equals(tfNamePs.getText())) {
@@ -1091,7 +1086,6 @@ public class GUI extends JFrame{
 
             // Resto invisivel
             label.setVisible(false);
-            buttonS.setVisible(false);
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
@@ -1135,7 +1129,6 @@ public class GUI extends JFrame{
 
             // Resto invisível
             label.setVisible(false);
-            buttonS.setVisible(false);
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
@@ -1211,7 +1204,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(false);
             listarTarefasConcluidas.setVisible(false);
             listarTarefasInacabadas.setVisible(false);
@@ -1232,7 +1225,6 @@ public class GUI extends JFrame{
 
             // Menu visivel
             label.setVisible(true);
-            buttonS.setVisible(true);
             buttonPC.setVisible(true);
             buttonLPNC.setVisible(true);
             buttonE.setVisible(true);
@@ -1353,7 +1345,7 @@ public class GUI extends JFrame{
                 associarPessoaProjeto.setVisible(true);
                 eliminarTarefa.setVisible(true);
                 listarTarefasNaoIniciadas.setVisible(true);
-                atualizatTaxaExecução.setVisible(true);
+                atualizarTaxaExecucao.setVisible(true);
                 buttonVoltarM.setVisible(true);
                 listarTarefasConcluidas.setVisible(true);
                 listarTarefasInacabadas.setVisible(true);
@@ -1371,7 +1363,7 @@ public class GUI extends JFrame{
                 for(Pessoa p: cisuc.getPessoasDisponiveisTarefa(projetoEscolhido, tarefaEscolhida)) {
                     if(p.getNumeroMecanografico()>0){
                         Docente dc = (Docente) p;
-                        NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                        NomePessoasDisponiveisTarefa.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                     } else {
                         if (p.getCusto() == 1000) {
                             Doutorado d = (Doutorado) p;
@@ -1450,7 +1442,7 @@ public class GUI extends JFrame{
                     NomeOrientadores.clear();
                     for(Pessoa p: cisuc.getOrientadoresDisponiveis(projetoEscolhido, pessoaEscolhida)) {
                         Docente dc = (Docente) p;
-                        NomeOrientadores.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                        NomeOrientadores.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                     }
                     orientadores = new JList<>(NomeOrientadores);
                     orientadores.setBounds(350, 70, 900, 300);
@@ -1482,7 +1474,7 @@ public class GUI extends JFrame{
                         NomeIpsPossiveis.clear();
                         for (Pessoa p : cisuc.getIpsPossiveis(projetoEscolhido)) {
                             Docente dc = (Docente) p;
-                            NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                            NomeIpsPossiveis.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                         }
                         ips = new JList<>(NomeIpsPossiveis);
                         ips.setBounds(350, 70, 900, 300);
@@ -1514,12 +1506,12 @@ public class GUI extends JFrame{
                         // JList pessoas
                         if (projetoEscolhido.getIp() != null) {
                             Docente p = projetoEscolhido.getIp();
-                            NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
+                            NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + p.getAreaInvestigacao());
                         }
                         for (Pessoa p : projetoEscolhido.getPessoasEnvolvidas()) {
                             if (p.getNumeroMecanografico() > 0) {
                                 Docente dc = (Docente) p;
-                                NomePessoasProjeto.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                                NomePessoasProjeto.addElement(p.getNome() + "[Docente] " + " | mail: " + p.getMail() + " | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                             } else {
                                 if (p.getCusto() == 1000) {
                                     Doutorado d = (Doutorado) p;
@@ -1558,12 +1550,12 @@ public class GUI extends JFrame{
                 // JList pessoas
                 if (projetoEscolhido.getIp() != null) {
                     Docente p = projetoEscolhido.getIp();
-                    NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + p.getAreaInvestigacao());
+                    NomePessoasProjeto.addElement(p.getNome() + "[IP] [Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + p.getAreaInvestigacao());
                 }
                 for(Pessoa p: projetoEscolhido.getPessoasEnvolvidas()) {
                     if(p.getNumeroMecanografico()>0){
                         Docente dc = (Docente) p;
-                        NomePessoasProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                        NomePessoasProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                     }else {
                         if (p.getCusto() == 1000) {
                             Doutorado d = (Doutorado) p;
@@ -1595,11 +1587,9 @@ public class GUI extends JFrame{
             buttonCP.setVisible(false);
             buttonAP.setVisible(false);
             label.setVisible(false);
-            buttonS.setVisible(false);
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
-            buttonS.setVisible(false);
             listarTarefasConcluidas.setVisible(false);
             listarTarefasInacabadas.setVisible(false);
             label.setVisible(false);
@@ -1608,7 +1598,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(false);
 
             label3.setVisible(true);
@@ -1640,7 +1630,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(true);
             pessoas.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
@@ -1728,7 +1718,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(true);
             pessoas.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
@@ -1784,7 +1774,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(true);
             pessoas.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
@@ -1799,7 +1789,7 @@ public class GUI extends JFrame{
             for(Pessoa p: cisuc.getPessoasDisponiveisProjeto(projetoEscolhido)) {
                 if(p.getNumeroMecanografico()>0){
                     Docente dc = (Docente) p;
-                    NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Área Investigação: " + dc.getAreaInvestigacao());
+                    NomePessoasDisponiveisProjeto.addElement(p.getNome() + "[Docente] " +  " | mail: " + p.getMail()  +" | número Mecanográfico: " + p.getNumeroMecanografico() + " | Area Investigação: " + dc.getAreaInvestigacao());
                 }else {
                     if (p.getCusto() == 1000) {
                         Doutorado d = (Doutorado) p;
@@ -1894,7 +1884,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
 
             for(Tarefa t:cisuc.getTarefasForaPrazo(projetoEscolhido)){
                 if (t.getTaxaEsforco() == 0.5) {
@@ -1936,7 +1926,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
 
             for(Tarefa t:cisuc.getTarefasConcluidas(projetoEscolhido)){
                 if (t.getTaxaEsforco() == 0.5) {
@@ -1978,7 +1968,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
 
             for(Tarefa t:cisuc.getTarefasNaoIniciadas(projetoEscolhido)){
                 if (t.getTaxaEsforco() == 0.5) {
@@ -2017,11 +2007,9 @@ public class GUI extends JFrame{
             buttonCP.setVisible(false);
             buttonAP.setVisible(false);
             label.setVisible(false);
-            buttonS.setVisible(false);
             buttonPC.setVisible(false);
             buttonLPNC.setVisible(false);
             buttonE.setVisible(false);
-            buttonS.setVisible(false);
             listarTarefasConcluidas.setVisible(false);
             listarTarefasInacabadas.setVisible(false);
             label.setVisible(false);
@@ -2030,7 +2018,7 @@ public class GUI extends JFrame{
             associarPessoaProjeto.setVisible(false);
             eliminarTarefa.setVisible(false);
             listarTarefasNaoIniciadas.setVisible(false);
-            atualizatTaxaExecução.setVisible(false);
+            atualizarTaxaExecucao.setVisible(false);
             buttonVoltarM.setVisible(false);
 
             Nometarefa.clear();

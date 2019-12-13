@@ -721,7 +721,7 @@ public class Cisuc {
         //Obter objeto Tarefa.
         Tarefa tarefa = tarefasDisponiveis.get(numTarefa - 1);
 
-        // PESSOA RESPONSÁVEL
+        // PESSOA RESPONSAVEL
         ArrayList<Pessoa> pessoasDisponiveis = new ArrayList<>();
         Pessoa responsavel;
 
@@ -1004,12 +1004,12 @@ public class Cisuc {
                     System.out.println("Numero mecanográfico: ");
                     numMecanografico = scanner.nextInt();
                 }
-                System.out.println("Área Investigação: ");
+                System.out.println("Area Investigação: ");
                 String aI = scanner.next();
                 // Não aceitar inputs vazios
                 while (aI.isEmpty()) {
                     System.out.println("Input vazio");
-                    System.out.println("Área Investigação: ");
+                    System.out.println("Area Investigação: ");
                     aI = scanner.next();
                 }
                 Docente d = new Docente(nome, mail, numMecanografico, aI);

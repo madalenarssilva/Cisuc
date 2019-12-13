@@ -57,6 +57,7 @@ public class Projeto implements Serializable {
         this.acronimo = acronimo;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.ip = ip;
     }
 
     public Projeto(String nome, String acronimo, String dataInicio, String dataFim) {
